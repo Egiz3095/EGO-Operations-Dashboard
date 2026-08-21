@@ -1,0 +1,28 @@
+
+#reportTireId .report-layout{
+  align-items:start!important;
+}
+#reportTireId .report-summary{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+}
+#reportTireId #tireIdSummary{
+  height:auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+#reportTireId #tireIdSummary .tablewrap{
+  height:auto!important;
+  max-height:none!important;
+  overflow-y:auto!important;
+  overflow-x:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable!important;
+}
+#reportTireId #tireIdSummary thead th{
+  position:sticky!important;
+  top:0!important;
+  z-index:6!important;
+}

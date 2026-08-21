@@ -1,0 +1,12 @@
+
+#equipmentChart .hname,
+#equipmentChart .hbarlabel{
+  white-space:normal!important;
+  line-height:1.55!important;
+}
+#equipmentSummary td:first-child,
+#equipmentSummary th:first-child{
+  min-width:280px!important;
+  white-space:normal!important;
+  line-height:1.6!important;
+}

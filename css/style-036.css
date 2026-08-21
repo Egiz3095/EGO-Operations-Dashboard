@@ -1,0 +1,36 @@
+
+#reportTireId .report-layout{
+  direction:rtl!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.55fr) minmax(300px,.75fr)!important;
+  gap:14px!important;
+  align-items:stretch!important;
+}
+#reportTireId .report-summary{
+  grid-column:1!important;
+  min-width:0!important;
+  width:100%!important;
+}
+#reportTireId .report-chart{
+  grid-column:2!important;
+  min-width:0!important;
+  width:100%!important;
+}
+#reportTireId #tireIdSummary,
+#reportTireId #tireIdSummary .tablewrap{
+  width:100%!important;
+  max-width:100%!important;
+}
+@media(max-width:900px){
+  #reportTireId .report-layout{
+    grid-template-columns:1fr!important;
+  }
+  #reportTireId .report-summary{
+    grid-column:1!important;
+    grid-row:1!important;
+  }
+  #reportTireId .report-chart{
+    grid-column:1!important;
+    grid-row:2!important;
+  }
+}

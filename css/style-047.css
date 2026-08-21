@@ -1,0 +1,11 @@
+
+#egoLoginGate .oil-can,#egoLoginGate .oil-pour,#egoLoginGate .bg-tire,#egoLoginGate .tire-shadow{display:none!important}
+#egoLoginGate .real-auto-art{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+#egoLoginGate .real-tire-img{position:absolute;left:-1.5%;top:50%;width:min(31vw,430px);height:76vh;object-fit:contain;transform:translateY(-50%);filter:drop-shadow(0 28px 38px rgba(0,0,0,.55)) brightness(.72) contrast(1.12);opacity:.74;animation:realTireFloat 6s ease-in-out infinite alternate}
+#egoLoginGate .real-oil-img{position:absolute;right:-4%;top:50%;width:min(48vw,690px);height:auto;transform:translateY(-50%);filter:drop-shadow(0 24px 42px rgba(0,0,0,.48)) brightness(.78) saturate(1.05);opacity:.76;animation:realOilFloat 7s ease-in-out infinite alternate}
+#egoLoginGate .real-auto-art:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,0,0,.08) 0 18%,rgba(0,0,0,.20) 38%,rgba(0,0,0,.44) 100%)}
+@keyframes realTireFloat{from{transform:translateY(-51%) translateX(-5px) rotate(-1deg)}to{transform:translateY(-49%) translateX(7px) rotate(1deg)}}
+@keyframes realOilFloat{from{transform:translateY(-51%) translateX(4px) scale(.99)}to{transform:translateY(-49%) translateX(-7px) scale(1.015)}}
+@media(max-width:900px){#egoLoginGate .real-tire-img{left:-10%;width:42vw;opacity:.50}#egoLoginGate .real-oil-img{right:-13%;width:60vw;opacity:.50}}
+@media(max-width:560px){#egoLoginGate .real-tire-img{left:-19%;top:76%;width:68vw;height:48vh;opacity:.32}#egoLoginGate .real-oil-img{right:-22%;top:24%;width:88vw;opacity:.34}}
+@media(prefers-reduced-motion:reduce){#egoLoginGate .real-tire-img,#egoLoginGate .real-oil-img{animation:none!important}}

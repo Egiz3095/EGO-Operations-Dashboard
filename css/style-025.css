@@ -1,0 +1,209 @@
+
+/* التقرير نفسه: الرسم أعلى والملخص أسفله بعرض كامل */
+#reportActivity .report-layout{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:18px!important;
+  align-items:start!important;
+}
+#reportActivity .report-chart,
+#reportActivity .report-summary{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  overflow:visible!important;
+}
+#reportActivity #activityChart{
+  width:100%!important;
+  min-height:260px!important;
+}
+#reportActivity #activitySummary{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  overflow:visible!important;
+}
+
+/* رأس الملخص */
+#activitySummary .activity-summary-head{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  margin:0 0 10px!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(135,164,181,.28)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.025)!important;
+}
+#activitySummary .activity-summary-head span{
+  font-size:14px!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+}
+#activitySummary .activity-summary-head small{
+  font-size:9px!important;
+  color:var(--muted)!important;
+  white-space:nowrap!important;
+}
+
+/* إزالة أي قيود قديمة سببت التداخل والتمرير العشوائي */
+#activitySummary .activity-summary-wrap,
+#activitySummary .tablewrap{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  max-height:none!important;
+  height:auto!important;
+  overflow:visible!important;
+  border:1px solid rgba(135,164,181,.30)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.012)!important;
+}
+
+/* الجدول بعرض الصفحة بالكامل بدون horizontal scroll */
+#activitySummary .activity-summary-table,
+#activitySummary .activity-summary-clean{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+  border-spacing:0!important;
+  font-size:10px!important;
+}
+
+/* خلايا واضحة ومتساوية بدون التفاف غريب */
+#activitySummary .activity-summary-table th,
+#activitySummary .activity-summary-table td,
+#activitySummary .activity-summary-clean th,
+#activitySummary .activity-summary-clean td{
+  display:table-cell!important;
+  position:static!important;
+  padding:8px 6px!important;
+  line-height:1.35!important;
+  vertical-align:middle!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  border-left:1px solid rgba(135,164,181,.25)!important;
+  border-bottom:1px solid rgba(135,164,181,.25)!important;
+  background:transparent!important;
+  transform:none!important;
+}
+
+#activitySummary .activity-summary-table th:first-child,
+#activitySummary .activity-summary-table td:first-child,
+#activitySummary .activity-summary-clean th:first-child,
+#activitySummary .activity-summary-clean td:first-child{
+  border-right:1px solid rgba(135,164,181,.25)!important;
+}
+
+/* عرض الأعمدة مدروس */
+#activitySummary .activity-summary-clean th:nth-child(1),
+#activitySummary .activity-summary-clean td:nth-child(1){width:5%!important}
+#activitySummary .activity-summary-clean th:nth-child(2),
+#activitySummary .activity-summary-clean td:nth-child(2){
+  width:23%!important;
+  text-align:right!important;
+  padding-right:10px!important;
+}
+#activitySummary .activity-summary-clean th:nth-child(3),
+#activitySummary .activity-summary-clean td:nth-child(3){width:10%!important}
+#activitySummary .activity-summary-clean th:nth-child(4),
+#activitySummary .activity-summary-clean td:nth-child(4){width:10%!important}
+#activitySummary .activity-summary-clean th:nth-child(5),
+#activitySummary .activity-summary-clean td:nth-child(5){width:9%!important}
+#activitySummary .activity-summary-clean th:nth-child(6),
+#activitySummary .activity-summary-clean td:nth-child(6){width:16%!important}
+#activitySummary .activity-summary-clean th:nth-child(7),
+#activitySummary .activity-summary-clean td:nth-child(7){width:17%!important}
+#activitySummary .activity-summary-clean th:nth-child(8),
+#activitySummary .activity-summary-clean td:nth-child(8){width:10%!important}
+
+/* عناوين الأعمدة */
+#activitySummary .activity-summary-clean thead th{
+  background:rgba(70,116,144,.16)!important;
+  color:var(--text)!important;
+  font-weight:900!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+
+/* الصفوف */
+#activitySummary .activity-summary-clean tbody tr{
+  display:table-row!important;
+  height:38px!important;
+}
+#activitySummary .activity-summary-clean tbody tr:hover td{
+  background:rgba(79,145,178,.08)!important;
+}
+
+/* أهم القيم */
+#activitySummary .activity-name b{
+  display:block!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+#activitySummary .activity-pct{
+  color:#63d9f0!important;
+  font-weight:900!important;
+}
+#activitySummary .money{
+  font-family:'IBM Plex Mono',Cairo,sans-serif!important;
+  font-weight:800!important;
+}
+
+/* منع أي قواعد grid/flex قديمة من تحويل خلايا الجدول إلى بطاقات */
+#activitySummary table,
+#activitySummary thead,
+#activitySummary tbody{
+  display:table!important;
+  width:100%!important;
+}
+#activitySummary thead{display:table-header-group!important}
+#activitySummary tbody{display:table-row-group!important}
+#activitySummary tr{display:table-row!important}
+
+/* الشاشات الأصغر: تصغير الخط بدل كسر الجدول */
+@media(max-width:900px){
+  #activitySummary .activity-summary-clean{
+    font-size:8.5px!important;
+  }
+  #activitySummary .activity-summary-clean th,
+  #activitySummary .activity-summary-clean td{
+    padding:6px 3px!important;
+  }
+}
+@media(max-width:650px){
+  #reportActivity .report-chart{
+    display:none!important;
+  }
+  #activitySummary .activity-summary-head{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+  #activitySummary .activity-summary-head small{
+    white-space:normal!important;
+  }
+  #activitySummary .activity-summary-clean{
+    font-size:7.6px!important;
+  }
+}
+
+/* Light theme */
+html[data-theme="light"] #activitySummary .activity-summary-head,
+html[data-theme="light"] #activitySummary .activity-summary-wrap{
+  background:#fff!important;
+  border-color:#cbd5df!important;
+}
+html[data-theme="light"] #activitySummary .activity-summary-clean th,
+html[data-theme="light"] #activitySummary .activity-summary-clean td{
+  border-color:#d5dde5!important;
+}
+html[data-theme="light"] #activitySummary .activity-summary-clean thead th{
+  background:#eef3f7!important;
+}

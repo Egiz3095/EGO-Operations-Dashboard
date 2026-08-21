@@ -1,0 +1,30 @@
+
+/* ===== FILTER TAB ON RIGHT, DIRECTLY UNDER REPORTS TAB ===== */
+.filter-sidebar{
+  right:0!important;left:auto!important;
+  padding:16px 70px 16px 14px!important;
+  border-left:1px solid #304654!important;border-right:0!important;
+  box-shadow:-4px 0 14px rgba(0,0,0,.08)!important;
+  transform:translateX(calc(var(--filter-drawer-width) - var(--filter-drawer-tab)))!important;
+}
+.filter-sidebar.open{
+  transform:translateX(0)!important;
+  box-shadow:-14px 0 42px rgba(0,0,0,.30)!important;
+}
+.filter-sidebar-toggle{
+  left:0!important;right:auto!important;top:140px!important;
+  border:1px solid #3a586a!important;border-left:0!important;
+  border-radius:0 12px 12px 0!important;
+}
+html[data-theme="light"] .filter-sidebar{border-left-color:#ccd9e1!important;border-right:0!important}
+@media(max-width:860px){
+  .filter-sidebar{
+    right:0!important;left:auto!important;
+    padding:12px 62px 12px 10px!important;
+  }
+  .filter-sidebar-toggle{top:116px!important;left:0!important;right:auto!important}
+}
+@media(max-width:420px){
+  .filter-sidebar{padding-left:10px!important;padding-right:57px!important}
+  .filter-sidebar-toggle{top:112px!important}
+}

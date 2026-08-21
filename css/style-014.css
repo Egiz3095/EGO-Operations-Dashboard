@@ -1,0 +1,14 @@
+
+#tireLifecycleReport .tlc-timeline-table th:nth-child(8),
+#tireLifecycleReport .tlc-timeline-table td:nth-child(8),
+#tireLifecycleReport .tlc-records-table th:nth-child(10),
+#tireLifecycleReport .tlc-records-table td:nth-child(10){
+  white-space:nowrap!important;
+  font-family:'IBM Plex Mono',Cairo,sans-serif!important;
+  font-weight:800!important;
+}
+#userAdminForm [data-auto-report-permission]{
+  border:1px dashed rgba(99,152,200,.28);
+  border-radius:8px;
+  padding:7px 8px;
+}

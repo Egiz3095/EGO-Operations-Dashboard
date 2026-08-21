@@ -1,0 +1,58 @@
+
+#invoiceExtraDetails .safe-extra-scroll{
+  max-height:none!important;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  border:1px solid rgba(135,164,181,.30)!important;
+  border-radius:9px!important;
+}
+#invoiceExtraDetails .safe-extra-table{
+  width:100%!important;
+  min-width:1120px!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+  border-spacing:0!important;
+}
+#invoiceExtraDetails .safe-extra-table th,
+#invoiceExtraDetails .safe-extra-table td{
+  padding:6px 7px!important;
+  line-height:1.35!important;
+  vertical-align:middle!important;
+  border-left:1px solid rgba(135,164,181,.24)!important;
+  border-bottom:1px solid rgba(135,164,181,.24)!important;
+}
+#invoiceExtraDetails .safe-extra-table th:first-child,
+#invoiceExtraDetails .safe-extra-table td:first-child{
+  border-right:1px solid rgba(135,164,181,.24)!important;
+}
+#invoiceExtraDetails .safe-extra-table thead th{
+  font-weight:900!important;
+  background:rgba(70,116,144,.14)!important;
+  white-space:nowrap!important;
+}
+#invoiceExtraDetails .safe-extra-table th:nth-child(1),
+#invoiceExtraDetails .safe-extra-table td:nth-child(1){width:18%!important}
+#invoiceExtraDetails .safe-extra-table th:nth-child(2),
+#invoiceExtraDetails .safe-extra-table td:nth-child(2){width:11%!important;white-space:nowrap!important}
+#invoiceExtraDetails .safe-extra-table th:nth-child(3),
+#invoiceExtraDetails .safe-extra-table td:nth-child(3){width:15%!important;white-space:nowrap!important}
+#invoiceExtraDetails .safe-extra-table th:nth-child(4),
+#invoiceExtraDetails .safe-extra-table td:nth-child(4){width:16%!important}
+#invoiceExtraDetails .safe-extra-table th:nth-child(5),
+#invoiceExtraDetails .safe-extra-table td:nth-child(5){width:14%!important}
+#invoiceExtraDetails .safe-extra-table th:nth-child(6),
+#invoiceExtraDetails .safe-extra-table td:nth-child(6){width:8%!important;text-align:center!important;white-space:nowrap!important}
+#invoiceExtraDetails .safe-extra-table th:nth-child(7),
+#invoiceExtraDetails .safe-extra-table td:nth-child(7){width:11%!important;white-space:nowrap!important}
+#invoiceExtraDetails .safe-extra-table th:nth-child(8),
+#invoiceExtraDetails .safe-extra-table td:nth-child(8){width:7%!important;white-space:nowrap!important}
+#invoiceExtraDetails .safe-extra-table tbody tr:last-child td{
+  border-bottom:0!important;
+}
+html[data-theme="light"] #invoiceExtraDetails .safe-extra-table th,
+html[data-theme="light"] #invoiceExtraDetails .safe-extra-table td{
+  border-color:#d5dde5!important;
+}
+html[data-theme="light"] #invoiceExtraDetails .safe-extra-table thead th{
+  background:#eef3f7!important;
+}

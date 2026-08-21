@@ -1,0 +1,56 @@
+
+/* توحيد خلفية الزيوت والإطارات في مشهد واحد */
+#egoLoginGate{
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(38,45,51,.42),transparent 48%),
+    radial-gradient(circle at 78% 54%,rgba(211,154,54,.10),transparent 28%),
+    linear-gradient(135deg,#11161a 0%,#090d10 48%,#0b0f12 100%)!important;
+}
+#egoLoginGate:before,
+#egoLoginGate:after{
+  background:none!important;
+  opacity:0!important;
+}
+#egoLoginGate .automotive-scene:after{
+  display:none!important;
+}
+#egoLoginGate .real-auto-art:before{
+  width:100%!important;
+  inset:0!important;
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.18),transparent 28%,transparent 72%,rgba(0,0,0,.18)),
+    radial-gradient(ellipse at center,rgba(255,255,255,.025),transparent 56%)!important;
+}
+#egoLoginGate .real-auto-art:after{
+  background:
+    radial-gradient(ellipse at center,transparent 0 24%,rgba(0,0,0,.12) 48%,rgba(0,0,0,.38) 100%)!important;
+}
+#egoLoginGate .real-tire-img{
+  left:1%!important;
+  top:52%!important;
+  width:min(39vw,570px)!important;
+  opacity:.76!important;
+}
+#egoLoginGate .real-oil-img{
+  right:-1%!important;
+  top:50%!important;
+  width:min(46vw,670px)!important;
+  opacity:.74!important;
+}
+#egoLoginGate .ego-login-card{
+  background:rgba(12,16,19,.91)!important;
+  box-shadow:
+    0 30px 85px rgba(0,0,0,.62),
+    0 0 55px rgba(0,0,0,.24)!important;
+}
+@media(max-width:900px){
+  #egoLoginGate .real-tire-img{left:-10%!important;width:52vw!important;opacity:.48!important}
+  #egoLoginGate .real-oil-img{right:-12%!important;width:59vw!important;opacity:.47!important}
+}
+@media(max-width:560px){
+  #egoLoginGate{
+    background:linear-gradient(180deg,#11161a,#080b0e 48%,#0b0f12)!important;
+  }
+  #egoLoginGate .real-oil-img{right:-23%!important;top:26%!important;width:88vw!important;opacity:.28!important}
+  #egoLoginGate .real-tire-img{left:-22%!important;top:76%!important;width:82vw!important;opacity:.30!important}
+}

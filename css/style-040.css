@@ -1,0 +1,47 @@
+
+/* تقرير الإنفاق حسب المعدة:
+   التقرير/الملخص على اليمين، والرسم البياني على اليسار،
+   مع تبديل نسب العرض الأصلية بينهما. */
+#reportEquipment .report-layout{
+  direction:rtl!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr)!important;
+  gap:16px!important;
+  align-items:stretch!important;
+}
+#reportEquipment .report-summary{
+  grid-column:1!important;
+  grid-row:1!important;
+  min-width:0!important;
+  width:100%!important;
+  direction:rtl!important;
+}
+#reportEquipment .report-chart{
+  grid-column:2!important;
+  grid-row:1!important;
+  min-width:0!important;
+  width:100%!important;
+  direction:rtl!important;
+}
+
+/* الملخص يستفيد من المساحة الأكبر */
+#reportEquipment #equipmentSummary,
+#reportEquipment #equipmentSummary .summary-table-wrap{
+  width:100%!important;
+  max-width:100%!important;
+}
+
+/* الشاشات الصغيرة: التقرير أولاً ثم الرسم تحته */
+@media(max-width:900px){
+  #reportEquipment .report-layout{
+    grid-template-columns:1fr!important;
+  }
+  #reportEquipment .report-summary{
+    grid-column:1!important;
+    grid-row:1!important;
+  }
+  #reportEquipment .report-chart{
+    grid-column:1!important;
+    grid-row:2!important;
+  }
+}

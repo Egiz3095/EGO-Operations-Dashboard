@@ -1,0 +1,10 @@
+
+#invoiceExtraDetails .safe-extra-table{min-width:1040px!important;table-layout:fixed}
+#invoiceExtraDetails .safe-extra-table th,#invoiceExtraDetails .safe-extra-table td{vertical-align:middle;overflow-wrap:anywhere}
+#invoiceExtraDetails .safe-extra-table th:nth-child(1),#invoiceExtraDetails .safe-extra-table td:nth-child(1){width:11%;white-space:nowrap}
+#invoiceExtraDetails .safe-extra-table th:nth-child(2),#invoiceExtraDetails .safe-extra-table td:nth-child(2){width:16%;white-space:nowrap}
+#invoiceExtraDetails .safe-extra-table th:nth-child(3),#invoiceExtraDetails .safe-extra-table td:nth-child(3){width:18%}
+#invoiceExtraDetails .safe-extra-table th:nth-child(4),#invoiceExtraDetails .safe-extra-table td:nth-child(4){width:16%}
+#invoiceExtraDetails .safe-extra-table th:nth-child(5),#invoiceExtraDetails .safe-extra-table td:nth-child(5){width:9%;white-space:nowrap}
+#invoiceExtraDetails .safe-extra-table th:nth-child(6),#invoiceExtraDetails .safe-extra-table td:nth-child(6){width:17%;white-space:nowrap}
+#invoiceExtraDetails .safe-extra-table th:nth-child(7),#invoiceExtraDetails .safe-extra-table td:nth-child(7){width:13%;white-space:nowrap}

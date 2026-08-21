@@ -1,0 +1,14 @@
+
+#invoiceExtraDetails .safe-extra-table{
+  min-width:820px!important;
+}
+#invoiceExtraDetails .safe-extra-table th:nth-child(1),
+#invoiceExtraDetails .safe-extra-table td:nth-child(1){width:13%;white-space:nowrap}
+#invoiceExtraDetails .safe-extra-table th:nth-child(2),
+#invoiceExtraDetails .safe-extra-table td:nth-child(2){width:39%}
+#invoiceExtraDetails .safe-extra-table th:nth-child(3),
+#invoiceExtraDetails .safe-extra-table td:nth-child(3){width:12%;white-space:nowrap}
+#invoiceExtraDetails .safe-extra-table th:nth-child(4),
+#invoiceExtraDetails .safe-extra-table td:nth-child(4){width:20%;white-space:nowrap}
+#invoiceExtraDetails .safe-extra-table th:nth-child(5),
+#invoiceExtraDetails .safe-extra-table td:nth-child(5){width:16%;white-space:nowrap}

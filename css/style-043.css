@@ -1,0 +1,23 @@
+
+#egoLoginGate .pro-runner-loader{width:min(360px,88vw);margin:14px auto 2px;padding:0 10px 4px;display:none;direction:rtl}
+#egoLoginGate.is-checking .pro-runner-loader,#egoLoginGate.loading .pro-runner-loader,#egoLoginGate[data-loading="true"] .pro-runner-loader{display:block}
+#egoLoginGate.is-checking .ego-login-spinner,#egoLoginGate.loading .ego-login-spinner,#egoLoginGate[data-loading="true"] .ego-login-spinner,#egoLoginGate.is-checking .login-spinner,#egoLoginGate.loading .login-spinner{display:none!important}
+.pro-track{position:relative;height:76px;overflow:hidden;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0)),linear-gradient(90deg,rgba(79,145,178,.03),rgba(79,145,178,.07),rgba(79,145,178,.03));border:1px solid rgba(135,164,181,.16)}
+.pro-track:after{content:"";position:absolute;left:9%;right:9%;bottom:15px;height:2px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(155,176,188,.35),rgba(155,176,188,.55),rgba(155,176,188,.35),transparent)}
+.pro-road-glow{position:absolute;width:72px;height:20px;border-radius:50%;background:rgba(79,145,178,.18);filter:blur(10px);bottom:6px;left:calc(50% - 10px);animation:roadGlow 2.4s ease-in-out infinite}
+.pro-motion-lines i{position:absolute;height:1px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(140,166,181,.23),transparent);animation:motionLine 1.3s linear infinite}
+.pro-motion-lines i:nth-child(1){width:72px;top:21px;left:12%;animation-delay:-.2s}.pro-motion-lines i:nth-child(2){width:44px;top:36px;left:26%;animation-delay:-.7s}.pro-motion-lines i:nth-child(3){width:58px;top:49px;left:7%;animation-delay:-1s}
+.pro-runner,.pro-tire{position:absolute;bottom:17px;will-change:transform}
+.pro-runner{width:38px;height:47px;left:calc(50% - 58px);animation:runnerBounce .48s ease-in-out infinite alternate}
+.runner-head{position:absolute;width:10px;height:10px;border-radius:50%;left:15px;top:1px;background:#d7e3ea}
+.runner-body{position:absolute;left:17px;top:11px;width:7px;height:21px;border-radius:6px;background:linear-gradient(180deg,#8db5c9,#5f8da5);transform:rotate(10deg);transform-origin:top center}
+.runner-arm,.runner-leg{position:absolute;width:5px;border-radius:5px;background:#86a9ba;transform-origin:top center}
+.runner-arm{height:19px;top:14px;left:18px}.arm-a{animation:armA .48s ease-in-out infinite alternate}.arm-b{animation:armB .48s ease-in-out infinite alternate}
+.runner-leg{height:22px;top:30px;left:20px;background:#6e8795}.leg-a{animation:legA .48s ease-in-out infinite alternate}.leg-b{animation:legB .48s ease-in-out infinite alternate}
+.pro-tire{width:42px;height:42px;left:calc(50% + 18px);border:7px solid #24323c;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(255,255,255,.035),0 6px 14px rgba(0,0,0,.16);animation:tireRoll .72s linear infinite;background:#141c22}
+.tire-rim{position:absolute;inset:7px;border-radius:50%;border:2px solid #91aab7}.tire-rim:before{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#9db4c0;left:50%;top:50%;transform:translate(-50%,-50%)}
+.tire-rim i{position:absolute;left:50%;top:50%;width:2px;height:12px;background:#718b99;transform-origin:50% 0}.tire-rim i:nth-child(1){transform:rotate(0)}.tire-rim i:nth-child(2){transform:rotate(90deg)}.tire-rim i:nth-child(3){transform:rotate(180deg)}.tire-rim i:nth-child(4){transform:rotate(270deg)}
+.pro-dust i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(140,166,181,.28);bottom:18px;left:calc(50% + 9px);animation:dust .9s ease-out infinite}.pro-dust i:nth-child(2){animation-delay:-.3s}.pro-dust i:nth-child(3){animation-delay:-.6s}
+.pro-loader-text{margin-top:9px;text-align:center}.pro-loader-text b{display:block;font-size:11px;font-weight:900;color:var(--text,#f3f5f7)}.pro-loader-text span{display:block;margin-top:2px;font-size:8.5px;color:var(--muted,#9ca5b1)}
+@keyframes tireRoll{to{transform:rotate(360deg)}}@keyframes runnerBounce{from{transform:translateY(0)}to{transform:translateY(-2px)}}@keyframes armA{from{transform:rotate(50deg)}to{transform:rotate(-45deg)}}@keyframes armB{from{transform:rotate(-45deg)}to{transform:rotate(50deg)}}@keyframes legA{from{transform:rotate(38deg)}to{transform:rotate(-34deg)}}@keyframes legB{from{transform:rotate(-34deg)}to{transform:rotate(38deg)}}@keyframes dust{0%{opacity:0;transform:translate(0,0) scale(.5)}30%{opacity:.55}100%{opacity:0;transform:translate(-18px,-5px) scale(1.4)}}@keyframes motionLine{0%{transform:translateX(90px);opacity:0}20%{opacity:1}100%{transform:translateX(-120px);opacity:0}}@keyframes roadGlow{50%{transform:scaleX(1.3);opacity:.55}}
+@media(max-width:520px){#egoLoginGate .pro-runner-loader{width:min(320px,90vw)}.pro-track{height:68px}}

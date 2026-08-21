@@ -1,0 +1,14 @@
+
+#equipmentSummary{
+  overflow:visible!important;
+}
+#equipmentSummary .summary-table-wrap{
+  border-radius:10px!important;
+}
+#equipmentSummary .equipment-separated-summary tbody tr{
+  min-height:36px;
+}
+#equipmentSummary .equipment-separated-summary tbody td{
+  padding-top:9px!important;
+  padding-bottom:9px!important;
+}

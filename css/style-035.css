@@ -1,0 +1,31 @@
+
+#reportTireId .report-layout{
+  direction:rtl!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:16px!important;
+  align-items:stretch!important;
+}
+#reportTireId .report-summary{
+  grid-column:1!important;
+  grid-row:1!important;
+  direction:rtl!important;
+}
+#reportTireId .report-chart{
+  grid-column:2!important;
+  grid-row:1!important;
+  direction:rtl!important;
+}
+@media(max-width:900px){
+  #reportTireId .report-layout{
+    grid-template-columns:1fr!important;
+  }
+  #reportTireId .report-summary{
+    grid-column:1!important;
+    grid-row:1!important;
+  }
+  #reportTireId .report-chart{
+    grid-column:1!important;
+    grid-row:2!important;
+  }
+}

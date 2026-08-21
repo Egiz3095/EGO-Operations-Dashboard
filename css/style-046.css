@@ -1,0 +1,182 @@
+
+/* ===== Animated automotive background ===== */
+
+/* subtle whole-scene breathing */
+#egoLoginGate .automotive-scene{
+  animation:autoSceneBreath 7s ease-in-out infinite alternate;
+}
+
+/* oil side animation */
+#egoLoginGate .oil-scene{
+  animation:oilSceneFloat 5.2s ease-in-out infinite alternate;
+  transform-origin:center;
+}
+#egoLoginGate .oil-can{
+  animation:oilCanTilt 4.8s ease-in-out infinite;
+}
+#egoLoginGate .oil-pour{
+  animation:oilPourFlow 2.1s ease-in-out infinite;
+  transform-origin:50% 0;
+}
+#egoLoginGate .oil-pour:after{
+  animation:oilPoolPulse 2.1s ease-in-out infinite;
+}
+
+/* tire side animation */
+#egoLoginGate .tire-scene{
+  animation:tireSceneFloat 5.8s ease-in-out infinite alternate;
+}
+#egoLoginGate .bg-tire{
+  animation:bgTireRoll 9s linear infinite;
+}
+#egoLoginGate .bg-tire:before{
+  animation:tireTreadSpin 9s linear infinite reverse;
+}
+#egoLoginGate .bg-tire:after{
+  animation:tireHubPulse 3.6s ease-in-out infinite;
+}
+#egoLoginGate .tire-shadow{
+  animation:tireShadowPulse 5.8s ease-in-out infinite alternate;
+}
+
+/* moving light across login card */
+#egoLoginGate .ego-login-card{
+  overflow:hidden!important;
+}
+#egoLoginGate .ego-login-card .login-shimmer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  border-radius:inherit;
+}
+#egoLoginGate .ego-login-card .login-shimmer:before{
+  content:"";
+  position:absolute;
+  top:-35%;
+  left:-45%;
+  width:38%;
+  height:170%;
+  transform:rotate(18deg);
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.018),
+    rgba(211,154,54,.055),
+    rgba(255,255,255,.018),
+    transparent
+  );
+  animation:cardShimmer 8s ease-in-out infinite;
+}
+
+/* ambient particles */
+#egoLoginGate .auto-particles{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:-1;
+}
+#egoLoginGate .auto-particles i{
+  position:absolute;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:rgba(211,154,54,.18);
+  filter:blur(.2px);
+  animation:particleDrift 8s linear infinite;
+}
+#egoLoginGate .auto-particles i:nth-child(1){left:8%;top:72%;animation-delay:-1s;animation-duration:7s}
+#egoLoginGate .auto-particles i:nth-child(2){left:18%;top:28%;animation-delay:-4s;animation-duration:9s}
+#egoLoginGate .auto-particles i:nth-child(3){left:36%;top:82%;animation-delay:-2s;animation-duration:8.5s}
+#egoLoginGate .auto-particles i:nth-child(4){left:64%;top:22%;animation-delay:-5s;animation-duration:10s;background:rgba(145,160,170,.16)}
+#egoLoginGate .auto-particles i:nth-child(5){left:78%;top:74%;animation-delay:-3s;animation-duration:9.5s;background:rgba(145,160,170,.16)}
+#egoLoginGate .auto-particles i:nth-child(6){left:91%;top:38%;animation-delay:-6s;animation-duration:8s;background:rgba(145,160,170,.14)}
+
+/* center separator gently glows */
+#egoLoginGate .automotive-scene:after{
+  animation:separatorGlow 4s ease-in-out infinite alternate;
+}
+
+/* animations */
+@keyframes autoSceneBreath{
+  from{filter:brightness(.96) saturate(.96)}
+  to{filter:brightness(1.05) saturate(1.05)}
+}
+@keyframes oilSceneFloat{
+  from{translate:0 -4px}
+  to{translate:0 5px}
+}
+@keyframes oilCanTilt{
+  0%,100%{transform:rotate(-7deg) translateY(0)}
+  50%{transform:rotate(-9deg) translateY(-4px)}
+}
+@keyframes oilPourFlow{
+  0%,100%{transform:rotate(24deg) scaleY(.96);opacity:.52}
+  50%{transform:rotate(24deg) scaleY(1.08);opacity:.78}
+}
+@keyframes oilPoolPulse{
+  0%,100%{transform:scaleX(.92);opacity:.25}
+  50%{transform:scaleX(1.15);opacity:.48}
+}
+@keyframes tireSceneFloat{
+  from{translate:0 -3px}
+  to{translate:0 5px}
+}
+@keyframes bgTireRoll{
+  to{rotate:360deg}
+}
+@keyframes tireTreadSpin{
+  to{transform:rotate(360deg)}
+}
+@keyframes tireHubPulse{
+  0%,100%{box-shadow:inset 0 0 0 16px #171c20,0 0 0 rgba(109,124,134,0)}
+  50%{box-shadow:inset 0 0 0 16px #171c20,0 0 22px rgba(109,124,134,.10)}
+}
+@keyframes tireShadowPulse{
+  from{transform:scaleX(.92);opacity:.42}
+  to{transform:scaleX(1.08);opacity:.62}
+}
+@keyframes cardShimmer{
+  0%,18%{left:-55%;opacity:0}
+  30%{opacity:1}
+  52%{left:120%;opacity:.8}
+  53%,100%{left:120%;opacity:0}
+}
+@keyframes particleDrift{
+  0%{transform:translate3d(0,18px,0) scale(.7);opacity:0}
+  15%{opacity:.4}
+  70%{opacity:.18}
+  100%{transform:translate3d(18px,-70px,0) scale(1.35);opacity:0}
+}
+@keyframes separatorGlow{
+  from{opacity:.32;filter:blur(0)}
+  to{opacity:.85;filter:blur(.3px)}
+}
+
+/* mobile: lighter motion for performance */
+@media(max-width:560px){
+  #egoLoginGate .bg-tire{animation-duration:14s}
+  #egoLoginGate .oil-scene,
+  #egoLoginGate .tire-scene{animation-duration:7s}
+  #egoLoginGate .auto-particles i:nth-child(n+5){display:none}
+}
+
+/* accessibility */
+@media(prefers-reduced-motion:reduce){
+  #egoLoginGate .automotive-scene,
+  #egoLoginGate .oil-scene,
+  #egoLoginGate .oil-can,
+  #egoLoginGate .oil-pour,
+  #egoLoginGate .oil-pour:after,
+  #egoLoginGate .tire-scene,
+  #egoLoginGate .bg-tire,
+  #egoLoginGate .bg-tire:before,
+  #egoLoginGate .bg-tire:after,
+  #egoLoginGate .tire-shadow,
+  #egoLoginGate .ego-login-card .login-shimmer:before,
+  #egoLoginGate .auto-particles i,
+  #egoLoginGate .automotive-scene:after{
+    animation:none!important;
+  }
+}

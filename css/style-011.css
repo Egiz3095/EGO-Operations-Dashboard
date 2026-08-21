@@ -1,0 +1,74 @@
+
+/* ===== COLLAPSIBLE FILTER DRAWER ===== */
+:root{--filter-drawer-width:620px;--filter-drawer-tab:58px}
+.filter-sidebar{
+  position:fixed;left:0;right:auto;top:0;bottom:0;width:var(--filter-drawer-width);height:100vh;
+  z-index:3004;display:flex;flex-direction:column;
+  padding:16px 70px 16px 14px;
+  background:linear-gradient(180deg,#101a23 0%,#13222d 100%);
+  border-right:1px solid #304654;
+  box-shadow:4px 0 14px rgba(0,0,0,.08);
+  transform:translateX(calc(-1 * (var(--filter-drawer-width) - var(--filter-drawer-tab))));
+  transition:transform .24s ease,box-shadow .24s ease;
+  overflow-y:auto;overflow-x:hidden;
+}
+.filter-sidebar.open{transform:translateX(0);box-shadow:14px 0 42px rgba(0,0,0,.30)}
+.filter-sidebar-toggle{
+  position:absolute;right:0;top:150px;width:58px;min-height:112px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  border:1px solid #3a586a;border-right:0;border-radius:12px 0 0 12px;
+  background:linear-gradient(180deg,#2f806e,#286858);color:#fff;cursor:pointer;
+  box-shadow:0 5px 18px rgba(0,0,0,.18);z-index:3;padding:10px 5px;
+}
+.filter-sidebar-toggle:hover{background:linear-gradient(180deg,#39927e,#2e7462)}
+.filter-sidebar-toggle .toggle-icon{font:900 20px Arial;line-height:1}
+.filter-sidebar-toggle b{font:900 11px Cairo;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.4px}
+.filter-toggle-count{
+  display:none;min-width:22px;height:22px;padding:0 5px;border-radius:999px;
+  align-items:center;justify-content:center;background:#fff;color:#286858;
+  font:900 10px 'IBM Plex Mono',monospace;writing-mode:horizontal-tb;
+}
+.filter-toggle-count.show{display:inline-flex}
+.filter-sidebar-head{padding:5px 4px 13px;margin-bottom:11px;border-bottom:1px solid #304654}
+.filter-sidebar-title{font:900 20px Cairo;color:#f6f9fb}
+.filter-sidebar-sub{font-size:10px;color:#8ea0ad;margin-top:2px;line-height:1.65}
+.filter-sidebar-body{flex:1;min-height:0}
+.filter-sidebar .filters{
+  position:static!important;top:auto!important;display:grid!important;
+  grid-template-columns:1fr 1fr!important;gap:9px!important;
+  margin:0!important;padding:12px!important;max-height:none!important;overflow:visible!important;
+  background:#15222c!important;border:1px solid #334958!important;border-radius:14px!important;
+  box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+.filter-sidebar .filters #search{grid-column:1/-1}
+.filter-sidebar .filters input,.filter-sidebar .filters select{min-height:44px!important;font-size:12px!important}
+.filter-sidebar-actions{display:flex;gap:8px;margin-top:12px}
+.filter-sidebar-actions .btn{flex:1;min-height:40px}
+.filter-sidebar-backdrop{
+  position:fixed;inset:0;background:rgba(3,10,15,.50);z-index:3003;
+  opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease;
+}
+.filter-sidebar-backdrop.show{opacity:1;visibility:visible}
+html[data-theme="light"] .filter-sidebar{background:linear-gradient(180deg,#f9fbfc,#eef4f7);border-right-color:#ccd9e1}
+html[data-theme="light"] .filter-sidebar-title{color:#183d58}
+html[data-theme="light"] .filter-sidebar-sub{color:#647b8a}
+html[data-theme="light"] .filter-sidebar .filters{background:#fff!important;border-color:#d4e0e7!important}
+html[data-theme="light"] .filter-sidebar-toggle{background:linear-gradient(180deg,#398a77,#2e715f);color:#fff}
+
+/* The original filter header is removed from normal page flow once JS moves it here. */
+body>.wrap>.filters{display:none!important}
+
+@media(max-width:760px){
+  :root{--filter-drawer-width:min(92vw,430px);--filter-drawer-tab:54px}
+  .filter-sidebar{padding:12px 62px 12px 10px}
+  .filter-sidebar-toggle{width:54px;min-height:98px;top:135px}
+  .filter-sidebar .filters{grid-template-columns:1fr!important;padding:9px!important;gap:7px!important}
+  .filter-sidebar .filters #search{grid-column:auto}
+  .filter-sidebar-actions{flex-direction:column}
+}
+@media(max-width:420px){
+  :root{--filter-drawer-width:96vw;--filter-drawer-tab:50px}
+  .filter-sidebar{padding-right:57px}
+  .filter-sidebar-toggle{width:50px;top:125px}
+}
+@media print{.filter-sidebar,.filter-sidebar-backdrop{display:none!important}}

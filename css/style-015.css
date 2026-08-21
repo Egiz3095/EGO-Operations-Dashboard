@@ -1,0 +1,16 @@
+
+.safe-extra-block{margin-top:14px;padding:13px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.018)}
+.safe-extra-title{margin:0 0 3px;font:900 14px Cairo;color:var(--text)}
+.safe-extra-sub{margin:0 0 10px;color:var(--muted);font-size:10px;line-height:1.6}
+.safe-extra-scroll{overflow:auto;max-height:380px;border:1px solid var(--line);border-radius:9px}
+.safe-extra-table{width:100%;min-width:760px!important;font-size:10px!important}
+.safe-extra-table th,.safe-extra-table td{padding:8px!important}
+.safe-note{display:block;color:var(--muted);font-size:8.5px;margin-top:2px}
+.safe-alert-details{margin-top:12px}
+.safe-alert-empty{padding:14px;text-align:center;border:1px dashed var(--line);border-radius:10px;color:var(--muted)}
+.safe-alert-card{padding:14px;border:1px solid var(--line);border-right:4px solid #4f91b2;border-radius:11px;background:rgba(79,145,178,.07)}
+.safe-alert-card h3{margin:6px 0 10px;font:900 15px Cairo}
+.safe-alert-card p{margin:4px 0;line-height:1.7;font-size:11px}
+.safe-alert-card .safe-label{color:#8fbcd4;font-size:9px;font-weight:900}
+#alertsList .alert-item{cursor:pointer}
+#alertsList .alert-item.safe-selected{outline:2px solid rgba(79,145,178,.45);outline-offset:1px}

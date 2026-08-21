@@ -1,0 +1,159 @@
+
+/* ===== PROFESSIONAL FINAL DRAWER FIX =====
+   Launchers are independent from drawers so neither closed drawer can hide the other button.
+   Both drawers are fully outside the viewport while closed. */
+:root{
+  --ui-launcher-width:58px;
+  --ui-launcher-gap:10px;
+  --ui-launcher-right:10px;
+}
+#uiLauncherStack{
+  position:fixed!important;
+  top:18px!important;
+  right:var(--ui-launcher-right)!important;
+  left:auto!important;
+  z-index:5006!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:var(--ui-launcher-gap)!important;
+  width:var(--ui-launcher-width)!important;
+  pointer-events:none!important;
+}
+#uiLauncherStack > .report-sidebar-toggle,
+#uiLauncherStack > .filter-sidebar-toggle{
+  position:static!important;
+  inset:auto!important;
+  right:auto!important;left:auto!important;top:auto!important;bottom:auto!important;
+  width:var(--ui-launcher-width)!important;
+  min-width:var(--ui-launcher-width)!important;
+  max-width:var(--ui-launcher-width)!important;
+  min-height:108px!important;
+  margin:0!important;
+  padding:10px 5px!important;
+  border:1px solid #3a586a!important;
+  border-radius:13px!important;
+  pointer-events:auto!important;
+  transform:none!important;
+  visibility:visible!important;
+  opacity:1!important;
+  box-shadow:0 7px 22px rgba(0,0,0,.22)!important;
+}
+#uiLauncherStack > .report-sidebar-toggle{
+  background:linear-gradient(180deg,#2f7898,#245e78)!important;
+}
+#uiLauncherStack > .filter-sidebar-toggle{
+  background:linear-gradient(180deg,#318573,#296b5e)!important;
+}
+#uiLauncherStack > button:hover{filter:brightness(1.08)}
+#uiLauncherStack > button.launcher-open{
+  outline:2px solid rgba(255,255,255,.35)!important;
+  outline-offset:2px!important;
+}
+#uiLauncherStack .toggle-icon{font-size:20px!important;line-height:1!important}
+#uiLauncherStack b{
+  writing-mode:vertical-rl!important;
+  text-orientation:mixed!important;
+  font:900 10px Cairo,sans-serif!important;
+  letter-spacing:.35px!important;
+}
+#uiLauncherStack .filter-toggle-count{
+  writing-mode:horizontal-tb!important;
+  flex:none!important;
+}
+
+/* Closed drawers are 100% off-canvas. No 58px strip is left behind. */
+.report-sidebar,
+.filter-sidebar{
+  right:0!important;
+  left:auto!important;
+  top:0!important;
+  bottom:0!important;
+  height:100vh!important;
+  transform:translateX(105%)!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  transition:transform .24s ease,opacity .18s ease,visibility 0s linear .24s!important;
+  z-index:5004!important;
+  box-shadow:none!important;
+}
+.report-sidebar.open,
+.filter-sidebar.open{
+  transform:translateX(0)!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  transition:transform .24s ease,opacity .18s ease,visibility 0s!important;
+  box-shadow:-14px 0 42px rgba(0,0,0,.30)!important;
+}
+
+/* The toggles now live in #uiLauncherStack, not inside these panels. */
+.report-sidebar > .report-sidebar-toggle,
+.filter-sidebar > .filter-sidebar-toggle{display:none!important}
+
+.report-sidebar{
+  width:300px!important;
+  max-width:min(92vw,300px)!important;
+  padding:16px 76px 16px 14px!important;
+  border-left:1px solid #304654!important;
+  border-right:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+.filter-sidebar{
+  width:min(620px,94vw)!important;
+  max-width:94vw!important;
+  padding:16px 76px 16px 14px!important;
+  border-left:1px solid #304654!important;
+  border-right:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+.filter-sidebar .filter-sidebar-body{overflow:visible!important;min-height:0!important}
+.filter-sidebar .filters{
+  position:static!important;
+  display:grid!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  transform:none!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+}
+
+/* Backdrops stay below both panels and launchers. */
+.report-sidebar-backdrop,
+.filter-sidebar-backdrop{z-index:5003!important}
+
+/* Keep enough breathing room for the independent launchers. */
+body>.wrap{padding-right:80px!important}
+
+@media(max-width:760px){
+  :root{--ui-launcher-width:50px;--ui-launcher-right:6px;--ui-launcher-gap:8px}
+  #uiLauncherStack{top:10px!important}
+  #uiLauncherStack > .report-sidebar-toggle,
+  #uiLauncherStack > .filter-sidebar-toggle{
+    min-height:92px!important;
+    border-radius:11px!important;
+    padding:8px 4px!important;
+  }
+  #uiLauncherStack b{font-size:8.8px!important}
+  .report-sidebar{width:min(300px,92vw)!important;max-width:92vw!important;padding:12px 64px 12px 10px!important}
+  .filter-sidebar{width:96vw!important;max-width:96vw!important;padding:12px 64px 12px 10px!important}
+  .filter-sidebar .filters{grid-template-columns:1fr!important;gap:7px!important;padding:9px!important}
+  .filter-sidebar .filters #search{grid-column:auto!important}
+  body>.wrap{padding-right:60px!important}
+}
+@media(max-width:420px){
+  :root{--ui-launcher-width:46px;--ui-launcher-right:4px;--ui-launcher-gap:7px}
+  #uiLauncherStack > .report-sidebar-toggle,
+  #uiLauncherStack > .filter-sidebar-toggle{min-height:86px!important}
+  .report-sidebar,.filter-sidebar{padding-right:58px!important}
+  body>.wrap{padding-right:54px!important}
+}
+@media print{
+  #uiLauncherStack,.report-sidebar,.filter-sidebar,.report-sidebar-backdrop,.filter-sidebar-backdrop{display:none!important}
+  body>.wrap{padding-right:0!important}
+}

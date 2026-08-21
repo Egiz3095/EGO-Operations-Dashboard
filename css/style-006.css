@@ -1,0 +1,29 @@
+
+/* ===== REPORT FOCUS MODE: REPORT ONLY, KEEP CURRENT FILTER STATE ===== */
+body:not(.nav-home) .wrap > .top,
+body:not(.nav-home) .wrap > .filters,
+body:not(.nav-home) .wrap > .kpis-front{
+  display:none!important;
+}
+body:not(.nav-home) .wrap{
+  padding-top:14px!important;
+}
+body:not(.nav-home) .nav-report-view.nav-report-active,
+body:not(.nav-home) .records-breadcrumb-anchor.nav-report-active{
+  margin-top:0!important;
+}
+/* Keep the small report breadcrumb and collapsible reports drawer as the only navigation chrome. */
+body:not(.nav-home) .report-breadcrumb{
+  position:sticky;
+  top:8px;
+  z-index:62;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+@media(max-width:800px){
+  body:not(.nav-home) .wrap{padding-top:8px!important}
+  body:not(.nav-home) .report-breadcrumb{top:5px}
+}
+@media print{
+  body:not(.nav-home) .report-breadcrumb{display:none!important}
+}

@@ -1,0 +1,147 @@
+
+@media print{
+  /* Clean print: no footer sentence, watermark-like caption, or replacement text. */
+  #singlePrintStage .ref-footer,
+  #fullPrintStage .ref-footer,
+  #singlePrintStage .cover-footer,
+  #fullPrintStage .cover-footer,
+  #singlePrintStage footer,
+  #fullPrintStage footer{
+    display:none!important;
+    content:none!important;
+  }
+
+  /* All-records section: strict white background + black text for maximum clarity. */
+  #fullPrintStage .stage-records,
+  #singlePrintStage .stage-records,
+  #fullPrintStage .stage-records .section-title,
+  #singlePrintStage .stage-records .section-title,
+  #fullPrintStage .stage-records .tablewrap,
+  #singlePrintStage .stage-records .tablewrap,
+  #fullPrintStage .stage-records table,
+  #singlePrintStage .stage-records table,
+  #fullPrintStage .stage-records thead,
+  #singlePrintStage .stage-records thead,
+  #fullPrintStage .stage-records tbody,
+  #singlePrintStage .stage-records tbody,
+  #fullPrintStage .stage-records tr,
+  #singlePrintStage .stage-records tr,
+  #fullPrintStage .stage-records th,
+  #singlePrintStage .stage-records th,
+  #fullPrintStage .stage-records td,
+  #singlePrintStage .stage-records td,
+  #fullPrintStage .stage-records .report-explain,
+  #singlePrintStage .stage-records .report-explain,
+  #fullPrintStage .stage-records .report-explain *,
+  #singlePrintStage .stage-records .report-explain *{
+    background:#fff!important;
+    background-color:#fff!important;
+    color:#000!important;
+    text-shadow:none!important;
+    box-shadow:none!important;
+  }
+
+  #fullPrintStage .stage-records .section-title,
+  #singlePrintStage .stage-records .section-title{
+    border:0!important;
+    border-bottom:1pt solid #000!important;
+    padding:0 0 2mm!important;
+    margin:0 0 2mm!important;
+    font-size:10pt!important;
+    font-weight:900!important;
+  }
+
+  #fullPrintStage .stage-records .tablewrap,
+  #singlePrintStage .stage-records .tablewrap{
+    width:100%!important;
+    max-width:100%!important;
+    border:.6pt solid #000!important;
+    border-radius:0!important;
+    overflow:visible!important;
+    max-height:none!important;
+    height:auto!important;
+  }
+
+  /* Keep each detailed record on one physical line. */
+  #fullPrintStage .stage-records table,
+  #singlePrintStage .stage-records table{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    table-layout:auto!important;
+    border-collapse:collapse!important;
+    font-size:4.65pt!important;
+    line-height:1.05!important;
+    letter-spacing:-.10pt!important;
+  }
+
+  #fullPrintStage .stage-records th,
+  #singlePrintStage .stage-records th,
+  #fullPrintStage .stage-records td,
+  #singlePrintStage .stage-records td{
+    white-space:nowrap!important;
+    word-break:keep-all!important;
+    overflow-wrap:normal!important;
+    hyphens:none!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    padding:.70mm .38mm!important;
+    line-height:1.05!important;
+    vertical-align:middle!important;
+    border:.3pt solid #555!important;
+    width:auto!important;
+    max-width:none!important;
+  }
+
+  #fullPrintStage .stage-records th,
+  #singlePrintStage .stage-records th{
+    font-size:4.55pt!important;
+    font-weight:900!important;
+  }
+
+  #fullPrintStage .stage-records .mono,
+  #singlePrintStage .stage-records .mono,
+  #fullPrintStage .stage-records .money,
+  #singlePrintStage .stage-records .money{
+    color:#000!important;
+    font-size:4.45pt!important;
+    letter-spacing:-.16pt!important;
+  }
+
+  #fullPrintStage .stage-records tbody tr:nth-child(odd) td,
+  #fullPrintStage .stage-records tbody tr:nth-child(even) td,
+  #singlePrintStage .stage-records tbody tr:nth-child(odd) td,
+  #singlePrintStage .stage-records tbody tr:nth-child(even) td{
+    background:#fff!important;
+    color:#000!important;
+  }
+
+  #fullPrintStage .stage-records thead,
+  #singlePrintStage .stage-records thead{
+    display:table-header-group!important;
+  }
+
+  #fullPrintStage .stage-records tr,
+  #singlePrintStage .stage-records tr,
+  #fullPrintStage .stage-records td,
+  #singlePrintStage .stage-records td,
+  #fullPrintStage .stage-records th,
+  #singlePrintStage .stage-records th{
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+  }
+
+  /* Keep the explanatory block monochrome too, but allow natural prose wrapping. */
+  #fullPrintStage .stage-records .report-explain,
+  #singlePrintStage .stage-records .report-explain{
+    border:.6pt solid #000!important;
+    border-right:2pt solid #000!important;
+    margin-top:3mm!important;
+  }
+  #fullPrintStage .stage-records .report-explain *,
+  #singlePrintStage .stage-records .report-explain *{
+    white-space:normal!important;
+    word-break:normal!important;
+    overflow-wrap:normal!important;
+  }
+}

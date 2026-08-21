@@ -1,0 +1,239 @@
+
+/* ===== Dark automotive login: half motor oil / half tires ===== */
+#egoLoginGate{
+  --auto-bg:#080b0e;
+  --auto-panel:#11161b;
+  --auto-panel-2:#171d23;
+  --auto-line:#29323a;
+  --auto-text:#f2f5f7;
+  --auto-muted:#8e9aa4;
+  --auto-gold:#d39a36;
+  --auto-gold-2:#b9791f;
+  position:fixed!important;
+  overflow:hidden!important;
+  background:#080b0e!important;
+  isolation:isolate!important;
+}
+#egoLoginGate:before{
+  content:"";
+  position:absolute!important;
+  inset:0 50% 0 0!important;
+  height:auto!important;
+  z-index:-3!important;
+  background:
+    radial-gradient(circle at 73% 42%,rgba(221,160,52,.16),transparent 18%),
+    radial-gradient(ellipse at 18% 70%,rgba(196,126,25,.12),transparent 27%),
+    linear-gradient(145deg,rgba(3,5,6,.25),rgba(0,0,0,.78)),
+    repeating-linear-gradient(112deg,rgba(210,150,45,.055) 0 2px,transparent 2px 19px),
+    linear-gradient(180deg,#16120c,#080a0c 55%,#050708)!important;
+}
+/* Oil side: metallic can + flowing oil abstract silhouette */
+#egoLoginGate:after{
+  content:"";
+  position:absolute!important;
+  inset:0 0 0 50%!important;
+  z-index:-3!important;
+  background:
+    radial-gradient(circle at 34% 32%,rgba(255,255,255,.055),transparent 14%),
+    radial-gradient(circle at 64% 67%,rgba(87,97,104,.12),transparent 25%),
+    repeating-radial-gradient(ellipse at 76% 55%,transparent 0 17px,rgba(114,126,135,.075) 18px 21px,transparent 22px 35px),
+    repeating-linear-gradient(58deg,rgba(255,255,255,.025) 0 2px,transparent 2px 17px),
+    linear-gradient(145deg,#151b20,#070a0d 58%,#030506)!important;
+}
+#egoLoginGate .ego-login-card{
+  position:relative!important;
+  z-index:5!important;
+  width:min(430px,calc(100vw - 30px))!important;
+  background:rgba(14,18,22,.94)!important;
+  border:1px solid rgba(116,130,140,.28)!important;
+  border-radius:20px!important;
+  box-shadow:0 28px 85px rgba(0,0,0,.58),0 0 0 1px rgba(255,255,255,.018) inset!important;
+  backdrop-filter:blur(18px)!important;
+  -webkit-backdrop-filter:blur(18px)!important;
+}
+#egoLoginGate .ego-login-card:before{
+  height:3px!important;
+  background:linear-gradient(90deg,transparent,var(--auto-gold),transparent)!important;
+}
+#egoLoginGate .ego-login-card:after{
+  content:"نظام إدارة ومتابعة الإطارات والزيوت"!important;
+  color:#77838c!important;
+  background:#0c1014!important;
+  border-top:1px solid #242b31!important;
+}
+#egoLoginGate .ego-login-brand img{
+  background:#10161b!important;
+  border-color:#303941!important;
+  box-shadow:0 9px 25px rgba(0,0,0,.35)!important;
+}
+#egoLoginGate .ego-login-brand h1{
+  color:#f2f5f7!important;
+  letter-spacing:.2px!important;
+}
+#egoLoginGate .ego-login-brand p,
+#egoLoginGate .ego-login-field label{
+  color:#98a3ac!important;
+}
+#egoLoginGate .ego-login-field input{
+  color:#eef2f4!important;
+  background:#0c1115!important;
+  border-color:#303941!important;
+}
+#egoLoginGate .ego-login-field input::placeholder{color:#65717b!important}
+#egoLoginGate .ego-login-field input:focus{
+  border-color:var(--auto-gold)!important;
+  box-shadow:0 0 0 3px rgba(211,154,54,.11)!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"]{
+  color:#111!important;
+  background:linear-gradient(180deg,#dfa63f,#bd7e23)!important;
+  box-shadow:0 8px 22px rgba(190,125,32,.23)!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"]:hover{
+  background:linear-gradient(180deg,#e8b34d,#c88a2b)!important;
+}
+
+/* Large background illustrations made only with CSS */
+#egoLoginGate .automotive-scene{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  overflow:hidden;
+}
+#egoLoginGate .oil-scene{
+  position:absolute;
+  right:6%;
+  top:50%;
+  width:240px;
+  height:330px;
+  transform:translateY(-47%);
+  opacity:.58;
+}
+#egoLoginGate .oil-can{
+  position:absolute;
+  right:34px;
+  bottom:32px;
+  width:118px;
+  height:188px;
+  border-radius:15px 15px 22px 22px;
+  border:2px solid rgba(214,158,58,.22);
+  background:linear-gradient(115deg,#12171b 0 28%,#292119 29% 48%,#0b0e11 49% 100%);
+  box-shadow:0 25px 60px rgba(0,0,0,.45);
+  transform:rotate(-7deg);
+}
+#egoLoginGate .oil-can:before{
+  content:"MOTOR\A OIL";
+  white-space:pre;
+  position:absolute;
+  inset:53px 14px auto;
+  padding:15px 4px;
+  text-align:center;
+  color:rgba(226,174,76,.72);
+  border:1px solid rgba(211,154,54,.28);
+  font:900 15px/1.35 Arial,sans-serif;
+  letter-spacing:2px;
+}
+#egoLoginGate .oil-can:after{
+  content:"";
+  position:absolute;
+  width:54px;height:24px;
+  right:25px;top:-17px;
+  border-radius:6px 6px 2px 2px;
+  background:#161c20;
+  border:2px solid rgba(207,155,64,.18);
+}
+#egoLoginGate .oil-pour{
+  position:absolute;
+  width:18px;height:138px;
+  right:156px;top:26px;
+  border-radius:50% 40% 55% 45%;
+  background:linear-gradient(90deg,#6f4717,#d19431 45%,#5b390f);
+  transform:rotate(24deg);
+  filter:drop-shadow(0 0 9px rgba(197,132,35,.18));
+  opacity:.65;
+}
+#egoLoginGate .oil-pour:after{
+  content:"";
+  position:absolute;
+  width:78px;height:22px;
+  left:-23px;bottom:-8px;
+  border-radius:50%;
+  background:rgba(160,101,20,.35);
+  filter:blur(2px);
+}
+
+#egoLoginGate .tire-scene{
+  position:absolute;
+  left:4%;
+  top:50%;
+  width:300px;
+  height:360px;
+  transform:translateY(-50%);
+  opacity:.58;
+}
+#egoLoginGate .bg-tire{
+  position:absolute;
+  width:190px;height:190px;
+  left:25px;top:78px;
+  border:34px solid #171d21;
+  border-radius:50%;
+  box-shadow:inset 0 0 0 3px #343d43,0 28px 60px rgba(0,0,0,.48);
+}
+#egoLoginGate .bg-tire:before{
+  content:"";
+  position:absolute;
+  inset:-27px;
+  border-radius:50%;
+  border:8px dashed rgba(104,117,126,.36);
+  transform:rotate(12deg);
+}
+#egoLoginGate .bg-tire:after{
+  content:"";
+  position:absolute;
+  inset:24px;
+  border-radius:50%;
+  border:8px solid #4b565d;
+  box-shadow:inset 0 0 0 16px #171c20;
+}
+#egoLoginGate .tire-shadow{
+  position:absolute;
+  width:220px;height:34px;
+  left:10px;top:257px;
+  border-radius:50%;
+  background:rgba(0,0,0,.55);
+  filter:blur(12px);
+}
+
+/* vertical separator between oil and tire halves */
+#egoLoginGate .automotive-scene:after{
+  content:"";
+  position:absolute;
+  top:7%;bottom:7%;left:50%;
+  width:1px;
+  background:linear-gradient(transparent,rgba(211,154,54,.15),rgba(125,139,149,.13),transparent);
+}
+
+/* loader adapted to dark automotive theme */
+#egoLoginGate .pro-track{
+  background:#0b1014!important;
+  border-color:#293239!important;
+}
+#egoLoginGate .pro-loader-text b{color:#dfe5e8!important}
+#egoLoginGate .pro-loader-text span{color:#74818a!important}
+#egoLoginGate .runner-body{background:linear-gradient(180deg,#d6a34b,#a96d1d)!important}
+#egoLoginGate .runner-arm{background:#c08a35!important}
+#egoLoginGate .runner-leg{background:#7e8589!important}
+
+@media(max-width:900px){
+  #egoLoginGate .oil-scene{right:-55px;opacity:.28;transform:translateY(-47%) scale(.82)}
+  #egoLoginGate .tire-scene{left:-75px;opacity:.30;transform:translateY(-50%) scale(.82)}
+}
+@media(max-width:560px){
+  #egoLoginGate:before{inset:0 0 50% 0!important}
+  #egoLoginGate:after{inset:50% 0 0 0!important}
+  #egoLoginGate .automotive-scene:after{top:50%;bottom:auto;left:7%;right:7%;width:auto;height:1px}
+  #egoLoginGate .oil-scene{right:-90px;top:23%;opacity:.18}
+  #egoLoginGate .tire-scene{left:-100px;top:76%;opacity:.20}
+  #egoLoginGate .ego-login-card{background:rgba(12,16,20,.96)!important}
+}

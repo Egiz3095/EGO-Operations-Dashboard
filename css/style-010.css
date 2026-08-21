@@ -1,0 +1,96 @@
+
+@media print{
+  /* FINAL RECORDS-ONLY FIX: keep every other print section unchanged. */
+  #fullPrintStage .stage-records,
+  #singlePrintStage .stage-records{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:visible!important;
+    page-break-inside:auto!important;
+    break-inside:auto!important;
+  }
+
+  #fullPrintStage .stage-records .tablewrap,
+  #singlePrintStage .stage-records .tablewrap{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    page-break-inside:auto!important;
+    break-inside:auto!important;
+  }
+
+  #fullPrintStage .stage-records table,
+  #singlePrintStage .stage-records table{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    height:auto!important;
+    table-layout:auto!important;
+    border-collapse:collapse!important;
+    page-break-inside:auto!important;
+    break-inside:auto!important;
+    /* Readable, but still compact enough to keep all 13 columns inside A4 landscape. */
+    font-size:5.05pt!important;
+    line-height:1.08!important;
+    letter-spacing:-.08pt!important;
+  }
+
+  #fullPrintStage .stage-records thead,
+  #singlePrintStage .stage-records thead{
+    display:table-header-group!important;
+  }
+  #fullPrintStage .stage-records tbody,
+  #singlePrintStage .stage-records tbody{
+    display:table-row-group!important;
+    page-break-inside:auto!important;
+    break-inside:auto!important;
+  }
+
+  /* A record may move as a whole to the next page, but is never cut in half. */
+  #fullPrintStage .stage-records tr,
+  #singlePrintStage .stage-records tr{
+    height:auto!important;
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+  }
+
+  #fullPrintStage .stage-records th,
+  #singlePrintStage .stage-records th,
+  #fullPrintStage .stage-records td,
+  #singlePrintStage .stage-records td{
+    white-space:nowrap!important;
+    word-break:keep-all!important;
+    overflow-wrap:normal!important;
+    padding:.78mm .42mm!important;
+    vertical-align:middle!important;
+  }
+
+  #fullPrintStage .stage-records th,
+  #singlePrintStage .stage-records th{
+    font-size:4.95pt!important;
+  }
+  #fullPrintStage .stage-records .mono,
+  #singlePrintStage .stage-records .mono,
+  #fullPrintStage .stage-records .money,
+  #singlePrintStage .stage-records .money{
+    font-size:4.85pt!important;
+  }
+
+  /* The records explanation comes after the table naturally; no fixed-page constraint. */
+  #fullPrintStage .stage-records .report-explain,
+  #singlePrintStage .stage-records .report-explain{
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+  }
+}

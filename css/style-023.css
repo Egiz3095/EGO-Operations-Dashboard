@@ -1,0 +1,51 @@
+
+#supplierExtraDetails{
+  overflow:visible!important;
+}
+#supplierExtraDetails .safe-extra-scroll{
+  max-height:none!important;
+  height:auto!important;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  border:1px solid rgba(135,164,181,.34)!important;
+  border-radius:9px!important;
+}
+#supplierExtraDetails .safe-extra-table{
+  width:100%!important;
+  min-width:860px!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+}
+#supplierExtraDetails .safe-extra-table th,
+#supplierExtraDetails .safe-extra-table td{
+  padding:5px 6px!important;
+  line-height:1.35!important;
+  vertical-align:middle!important;
+  border-left:1px solid rgba(135,164,181,.24)!important;
+  border-bottom:1px solid rgba(135,164,181,.24)!important;
+}
+#supplierExtraDetails .safe-extra-table th:first-child,
+#supplierExtraDetails .safe-extra-table td:first-child{
+  border-right:1px solid rgba(135,164,181,.24)!important;
+}
+#supplierExtraDetails .safe-extra-table thead th{
+  position:static!important;
+  white-space:nowrap!important;
+}
+#supplierExtraDetails .safe-extra-table th:nth-child(1),
+#supplierExtraDetails .safe-extra-table td:nth-child(1){width:20%}
+#supplierExtraDetails .safe-extra-table th:nth-child(2),
+#supplierExtraDetails .safe-extra-table td:nth-child(2){width:17%;white-space:nowrap}
+#supplierExtraDetails .safe-extra-table th:nth-child(3),
+#supplierExtraDetails .safe-extra-table td:nth-child(3){width:20%}
+#supplierExtraDetails .safe-extra-table th:nth-child(4),
+#supplierExtraDetails .safe-extra-table td:nth-child(4){width:18%}
+#supplierExtraDetails .safe-extra-table th:nth-child(5),
+#supplierExtraDetails .safe-extra-table td:nth-child(5){width:10%;white-space:nowrap;text-align:center}
+#supplierExtraDetails .safe-extra-table th:nth-child(6),
+#supplierExtraDetails .safe-extra-table td:nth-child(6){width:15%;white-space:nowrap}
+
+html[data-theme="light"] #supplierExtraDetails .safe-extra-table th,
+html[data-theme="light"] #supplierExtraDetails .safe-extra-table td{
+  border-color:#cbd5df!important;
+}

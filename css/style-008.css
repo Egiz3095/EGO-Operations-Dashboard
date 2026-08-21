@@ -1,0 +1,121 @@
+
+/* ===== SCREEN: standalone report print action ===== */
+.single-report-print-btn{
+  margin-inline-start:auto!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  gap:6px!important;min-height:34px!important;padding:6px 10px!important;border:1px solid rgba(79,145,178,.34)!important;
+  border-radius:9px!important;background:rgba(47,111,143,.13)!important;color:#bfe4f4!important;font:900 10px Cairo!important;
+  white-space:nowrap!important;cursor:pointer!important
+}
+.single-report-print-btn:hover{background:rgba(47,111,143,.23)!important;text-decoration:none!important;transform:translateY(-1px)}
+html[data-theme="light"] .single-report-print-btn{background:#eaf4f9!important;color:#245f7d!important;border-color:#c4dce8!important}
+@media(max-width:560px){.report-breadcrumb{flex-wrap:wrap!important}.single-report-print-btn{width:100%!important;margin-inline-start:0!important;margin-top:3px!important}}
+
+/* Dedicated print stages are built only when the user presses Print. */
+#singlePrintStage,#fullPrintStage{display:none}
+
+@media print{
+  @page{size:A4 landscape;margin:6mm}
+
+  /* Kill UI and legacy print structures in both explicit print modes. */
+  body.print-mode-single > *:not(#singlePrintStage),
+  body.print-mode-full > *:not(#fullPrintStage){display:none!important}
+
+  body.print-mode-single #singlePrintStage,
+  body.print-mode-full #fullPrintStage{
+    display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+    margin:0!important;padding:0!important;background:#fff!important;color:#000!important;overflow:visible!important
+  }
+
+  body.print-mode-single,body.print-mode-full,
+  body.print-mode-single html,body.print-mode-full html{
+    background:#fff!important;height:auto!important;min-height:0!important;overflow:visible!important
+  }
+
+  #singlePrintStage *,#fullPrintStage *{animation:none!important;transition:none!important;box-shadow:none!important;filter:none!important}
+  #singlePrintStage .report-breadcrumb,#fullPrintStage .report-breadcrumb,
+  #singlePrintStage .single-report-print-btn,#fullPrintStage .single-report-print-btn,
+  #singlePrintStage .si-filters,#fullPrintStage .si-filters,
+  #singlePrintStage #supplierInvoicesJump,#fullPrintStage #supplierInvoicesJump{display:none!important}
+
+  /* ---------- Single analytical report: use its dedicated reference print page. ---------- */
+  #singlePrintStage .ref-print-page{
+    display:grid!important;grid-template-rows:auto auto 1fr auto auto!important;
+    width:100%!important;height:184mm!important;min-height:184mm!important;max-height:184mm!important;
+    box-sizing:border-box!important;padding:5mm 6mm 4mm!important;margin:0!important;overflow:hidden!important;
+    background:#fff!important;color:#202634!important;
+    page-break-before:auto!important;break-before:auto!important;page-break-after:auto!important;break-after:auto!important;
+    page-break-inside:avoid!important;break-inside:avoid-page!important
+  }
+
+  /* ---------- Single supplier-invoice report: allow natural multi-page flow. ---------- */
+  #singlePrintStage #supplierInvoicesReport,
+  #singlePrintStage .supplier-print-clone{
+    display:block!important;visibility:visible!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+    margin:0!important;padding:0!important;background:#fff!important;color:#000!important;border:0!important;overflow:visible!important;
+    page-break-before:auto!important;break-before:auto!important;page-break-after:auto!important;break-after:auto!important
+  }
+  #singlePrintStage #supplierInvoicesReport *{visibility:visible!important}
+  #singlePrintStage .si-table-wrap,#singlePrintStage .si-mini,#singlePrintStage .tablewrap{
+    max-height:none!important;height:auto!important;overflow:visible!important
+  }
+
+  /* ---------- Single records report. ---------- */
+  #singlePrintStage .stage-records{display:block!important;width:100%!important;margin:0!important;padding:0!important}
+  #singlePrintStage .stage-records .nav-records-part{display:block!important;visibility:visible!important}
+  #singlePrintStage .stage-records .section-title{
+    page-break-before:auto!important;break-before:auto!important;page-break-after:avoid!important;break-after:avoid-page!important
+  }
+  #singlePrintStage .stage-records .tablewrap{
+    display:block!important;max-height:none!important;height:auto!important;overflow:visible!important;
+    page-break-before:auto!important;break-before:auto!important
+  }
+
+  /* ---------- Full package: cover is page 1 exactly; no hidden pages exist in the stage. ---------- */
+  #fullPrintStage .stage-cover{
+    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;
+    width:100%!important;height:184mm!important;min-height:184mm!important;max-height:184mm!important;box-sizing:border-box!important;
+    margin:0!important;padding:10mm 18mm!important;background:#fff!important;color:#000!important;overflow:hidden!important;
+    page-break-before:auto!important;break-before:auto!important;page-break-after:always!important;break-after:page!important;
+    page-break-inside:avoid!important;break-inside:avoid-page!important
+  }
+  #fullPrintStage .stage-cover .cover-logo-wrap{width:38mm!important;height:38mm!important;margin-bottom:5mm!important}
+  #fullPrintStage .stage-cover .cover-rule{margin-bottom:5mm!important}
+  #fullPrintStage .stage-cover h1{font-size:23pt!important}
+  #fullPrintStage .stage-cover h2{margin:3mm 0 6mm!important;font-size:13pt!important}
+  #fullPrintStage .stage-cover .cover-footer{margin-top:8mm!important}
+
+  /* Supplier analytical report and every analytical report after it: one page each. */
+  #fullPrintStage .ref-print-page{
+    display:grid!important;grid-template-rows:auto auto 1fr auto auto!important;
+    width:100%!important;height:184mm!important;min-height:184mm!important;max-height:184mm!important;
+    box-sizing:border-box!important;padding:5mm 6mm 4mm!important;margin:0!important;overflow:hidden!important;background:#fff!important;
+    page-break-before:auto!important;break-before:auto!important;page-break-after:always!important;break-after:page!important;
+    page-break-inside:avoid!important;break-inside:avoid-page!important
+  }
+
+  /* Supplier invoices follow the analytical pages and can span naturally. */
+  #fullPrintStage #supplierInvoicesReport,
+  #fullPrintStage .supplier-print-clone{
+    display:block!important;visibility:visible!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+    margin:0!important;padding:0!important;background:#fff!important;color:#000!important;border:0!important;overflow:visible!important;
+    page-break-before:auto!important;break-before:auto!important;page-break-after:auto!important;break-after:auto!important
+  }
+  #fullPrintStage #supplierInvoicesReport *{visibility:visible!important}
+  #fullPrintStage .si-table-wrap,#fullPrintStage .si-mini,#fullPrintStage .tablewrap{max-height:none!important;height:auto!important;overflow:visible!important}
+
+  /* Records are the final section and start on a new page only when needed. */
+  #fullPrintStage .stage-records{
+    display:block!important;width:100%!important;margin:0!important;padding:0!important;
+    page-break-before:always!important;break-before:page!important
+  }
+  #fullPrintStage .stage-records .nav-records-part{display:block!important;visibility:visible!important}
+  #fullPrintStage .stage-records .section-title{page-break-before:auto!important;break-before:auto!important;page-break-after:avoid!important;break-after:avoid-page!important}
+  #fullPrintStage .stage-records .tablewrap{display:block!important;max-height:none!important;height:auto!important;overflow:visible!important;page-break-before:auto!important;break-before:auto!important}
+
+  /* The final child must never force a trailing empty sheet. */
+  #fullPrintStage > :last-child,#singlePrintStage > :last-child{page-break-after:auto!important;break-after:auto!important}
+
+  /* Tables: repeat headers and never split a row. */
+  #singlePrintStage thead,#fullPrintStage thead{display:table-header-group!important}
+  #singlePrintStage tr,#fullPrintStage tr{page-break-inside:avoid!important;break-inside:avoid!important}
+}

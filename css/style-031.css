@@ -1,0 +1,8 @@
+
+#tireIdSummary .tablewrap{
+  max-height:none!important;
+  overflow-y:visible!important;
+}
+#tireIdSummary table tbody tr td:first-child{
+  font-weight:900!important;
+}

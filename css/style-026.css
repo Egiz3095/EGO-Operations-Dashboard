@@ -1,0 +1,55 @@
+
+#activitySummary .activity-summary-clean{
+  width:100%!important;
+  min-width:0!important;
+  table-layout:fixed!important;
+}
+#activitySummary .activity-summary-clean th,
+#activitySummary .activity-summary-clean td{
+  padding:7px 6px!important;
+  line-height:1.35!important;
+  vertical-align:middle!important;
+  border-left:1px solid rgba(135,164,181,.24)!important;
+  border-bottom:1px solid rgba(135,164,181,.24)!important;
+}
+#activitySummary .activity-summary-clean th:nth-child(1),
+#activitySummary .activity-summary-clean td:nth-child(1){width:7%!important;text-align:center!important}
+#activitySummary .activity-summary-clean th:nth-child(2),
+#activitySummary .activity-summary-clean td:nth-child(2){width:20%!important;text-align:right!important}
+#activitySummary .activity-summary-clean th:nth-child(3),
+#activitySummary .activity-summary-clean td:nth-child(3){width:11%!important;text-align:center!important}
+#activitySummary .activity-summary-clean th:nth-child(4),
+#activitySummary .activity-summary-clean td:nth-child(4){width:11%!important;text-align:center!important}
+#activitySummary .activity-summary-clean th:nth-child(5),
+#activitySummary .activity-summary-clean td:nth-child(5){width:27%!important;text-align:center!important}
+#activitySummary .activity-summary-clean th:nth-child(6),
+#activitySummary .activity-summary-clean td:nth-child(6){width:14%!important;text-align:center!important;white-space:nowrap!important}
+#activitySummary .activity-summary-clean th:nth-child(7),
+#activitySummary .activity-summary-clean td:nth-child(7){width:10%!important;text-align:center!important;white-space:nowrap!important}
+
+#activitySummary .activity-top-vehicle b{
+  display:block!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+#activitySummary .activity-top-vehicle small{
+  display:block!important;
+  margin-top:3px!important;
+  color:var(--muted)!important;
+  font-size:8.5px!important;
+  white-space:nowrap!important;
+}
+#activitySummary .activity-summary-clean thead th{
+  white-space:nowrap!important;
+}
+@media(max-width:900px){
+  #activitySummary .activity-summary-clean{
+    font-size:8.5px!important;
+  }
+  #activitySummary .activity-summary-clean th,
+  #activitySummary .activity-summary-clean td{
+    padding:6px 3px!important;
+  }
+}

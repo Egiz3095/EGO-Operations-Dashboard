@@ -1,0 +1,47 @@
+
+#egoLoginGate .real-tire-img{
+  left:-2.5%!important;
+  top:51%!important;
+  width:min(38vw,560px)!important;
+  height:78vh!important;
+  object-fit:contain!important;
+  opacity:.78!important;
+  filter:
+    drop-shadow(0 34px 42px rgba(0,0,0,.62))
+    brightness(.68)
+    contrast(1.18)
+    saturate(.88)!important;
+  mix-blend-mode:normal!important;
+  animation:realTireStackFloat 7s ease-in-out infinite alternate!important;
+}
+#egoLoginGate .real-auto-art:before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;width:50%;
+  z-index:1;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 25% 70%,rgba(255,255,255,.035),transparent 28%),
+    linear-gradient(90deg,rgba(0,0,0,.08),transparent 68%);
+}
+@keyframes realTireStackFloat{
+  from{transform:translateY(-51%) translateX(-5px) scale(.99)}
+  to{transform:translateY(-49%) translateX(6px) scale(1.012)}
+}
+@media(max-width:900px){
+  #egoLoginGate .real-tire-img{
+    left:-10%!important;
+    width:52vw!important;
+    height:68vh!important;
+    opacity:.52!important;
+  }
+}
+@media(max-width:560px){
+  #egoLoginGate .real-tire-img{
+    left:-22%!important;
+    top:76%!important;
+    width:82vw!important;
+    height:46vh!important;
+    opacity:.34!important;
+  }
+}

@@ -1,0 +1,13 @@
+
+#reportTireId .report-layout{align-items:stretch!important}
+#reportTireId .report-chart,#reportTireId .report-summary{min-height:0!important}
+#reportTireId .report-summary{overflow:hidden!important}
+#reportTireId #tireIdSummary{min-height:0!important;overflow:hidden!important}
+#reportTireId #tireIdSummary .tablewrap{
+  max-height:none!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable!important;
+}

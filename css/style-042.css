@@ -1,0 +1,350 @@
+
+/* ===== Responsive fluid UX for tablet & mobile ===== */
+html,body{
+  max-width:100%!important;
+  overflow-x:hidden!important;
+}
+body{
+  -webkit-text-size-adjust:100%!important;
+  touch-action:manipulation!important;
+}
+.wrap{
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+
+/* Smooth scroll / touch */
+.tablewrap,
+.summary-table-wrap,
+.safe-extra-scroll,
+.si-table-wrap,
+.si-mini,
+#tireIdSummary .tablewrap,
+#equipmentSummary .summary-table-wrap{
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:contain!important;
+}
+
+/* Better tap targets */
+button,.btn,select,input,
+.report-nav-item,.home-report-card{
+  min-height:40px;
+}
+
+/* Tablet */
+@media (min-width:769px) and (max-width:1180px){
+  .wrap{
+    padding:10px!important;
+  }
+  .top{
+    gap:10px!important;
+    padding:12px!important;
+  }
+  .brand h1{
+    font-size:18px!important;
+    line-height:1.35!important;
+  }
+  .status{
+    gap:6px!important;
+    flex-wrap:wrap!important;
+  }
+  .actions{
+    gap:7px!important;
+    flex-wrap:wrap!important;
+  }
+
+  /* keep reports readable without squeezing */
+  .report-layout{
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+  }
+  .report-chart,
+  .report-summary{
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  /* equipment: report first, chart second */
+  #reportEquipment .report-summary{
+    grid-column:1!important;
+    grid-row:1!important;
+  }
+  #reportEquipment .report-chart{
+    grid-column:1!important;
+    grid-row:2!important;
+  }
+
+  /* Tire ID: report first, chart second */
+  #reportTireId .report-summary{
+    grid-column:1!important;
+    grid-row:1!important;
+  }
+  #reportTireId .report-chart{
+    grid-column:1!important;
+    grid-row:2!important;
+  }
+
+  .home-grid,.report-home-grid,.reports-home-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+
+  .kpis{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+
+  table{
+    font-size:9.5px!important;
+  }
+  th,td{
+    padding:6px 5px!important;
+  }
+
+  /* Fit summary tables to tablet while allowing horizontal scroll only if needed */
+  #equipmentSummary .summary-table-wrap,
+  #activitySummary .activity-summary-wrap,
+  #invoiceSummary .summary-table-wrap,
+  #supplierExtraDetails .safe-extra-scroll{
+    max-width:100%!important;
+    overflow-x:auto!important;
+  }
+}
+
+/* Mobile */
+@media (max-width:768px){
+  body{
+    font-size:13px!important;
+  }
+  .wrap{
+    padding:6px!important;
+  }
+
+  .top{
+    position:sticky!important;
+    top:0!important;
+    z-index:50!important;
+    padding:9px!important;
+    border-radius:10px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:8px!important;
+  }
+
+  .brand{
+    width:100%!important;
+    gap:8px!important;
+  }
+  .brand img{
+    width:42px!important;
+    height:42px!important;
+    flex:0 0 42px!important;
+  }
+  .brand h1{
+    font-size:15px!important;
+    line-height:1.3!important;
+    margin:0!important;
+  }
+  .brand p{
+    font-size:9px!important;
+    line-height:1.3!important;
+  }
+
+  .status{
+    display:flex!important;
+    gap:5px!important;
+    flex-wrap:wrap!important;
+  }
+  .status .pill{
+    font-size:8px!important;
+    padding:4px 6px!important;
+  }
+
+  .actions{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:6px!important;
+    width:100%!important;
+  }
+  .actions .btn{
+    width:100%!important;
+    min-height:38px!important;
+    font-size:10px!important;
+    padding:7px 6px!important;
+  }
+
+  /* Home cards */
+  .home-grid,.report-home-grid,.reports-home-grid{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .home-report-card{
+    min-height:auto!important;
+    padding:10px!important;
+  }
+
+  /* KPIs */
+  .kpis{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+  .kpi{
+    min-width:0!important;
+    padding:9px!important;
+  }
+  .kpi strong{
+    font-size:16px!important;
+  }
+  .kpi label{
+    font-size:9px!important;
+  }
+  .kpi small{
+    font-size:8px!important;
+  }
+
+  /* Reports stack vertically */
+  .report-layout,
+  #reportEquipment .report-layout,
+  #reportTireId .report-layout{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+  }
+
+  /* Data/table first, chart after it */
+  .report-summary,
+  #reportEquipment .report-summary,
+  #reportTireId .report-summary{
+    grid-column:1!important;
+    grid-row:1!important;
+    width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  .report-chart,
+  #reportEquipment .report-chart,
+  #reportTireId .report-chart{
+    grid-column:1!important;
+    grid-row:2!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .dashboard-report,
+  .card,
+  .chartbox{
+    padding:9px!important;
+    border-radius:10px!important;
+  }
+
+  .section-title{
+    font-size:13px!important;
+    line-height:1.35!important;
+    flex-wrap:wrap!important;
+    gap:5px!important;
+  }
+  .hint{
+    font-size:8px!important;
+  }
+
+  /* charts shorter on mobile */
+  .report-chart .bars,
+  .bars{
+    min-height:190px!important;
+    height:190px!important;
+  }
+
+  /* Tables */
+  .tablewrap,
+  .summary-table-wrap,
+  .safe-extra-scroll,
+  .si-table-wrap,
+  .si-mini{
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:auto!important;
+    border-radius:8px!important;
+  }
+  table{
+    font-size:8.5px!important;
+    line-height:1.25!important;
+  }
+  th,td{
+    padding:5px 4px!important;
+  }
+
+  /* prevent overly wide forced desktop min-widths on mobile */
+  #equipmentSummary table,
+  #activitySummary table,
+  #invoiceSummary table,
+  #supplierExtraDetails table,
+  #invoiceExtraDetails table{
+    min-width:720px!important;
+  }
+
+  /* Filter drawer */
+  #filterSidebar,
+  #reportSidebar{
+    width:min(92vw,360px)!important;
+    max-width:92vw!important;
+  }
+
+  /* floating launchers easier to reach */
+  .drawer-toggle,
+  .reports-drawer-toggle,
+  .nav-drawer-toggle,
+  #filterSidebarToggle,
+  #reportSidebarToggle{
+    right:8px!important;
+    bottom:10px!important;
+    max-width:calc(100vw - 16px)!important;
+  }
+
+  /* Login card */
+  .ego-login-card{
+    width:min(94vw,420px)!important;
+    padding:18px!important;
+    border-radius:16px!important;
+  }
+  .ego-login-brand h1{
+    font-size:20px!important;
+  }
+  .ego-login-field input{
+    height:44px!important;
+    font-size:14px!important;
+  }
+
+  /* avoid accidental page-wide horizontal scroll */
+  .dashboard-report,
+  .report-summary,
+  .report-chart,
+  .safe-extra-block,
+  #supplierInvoicesReport,
+  #inventoryReport{
+    max-width:100%!important;
+    box-sizing:border-box!important;
+  }
+}
+
+/* Very small phones */
+@media (max-width:420px){
+  .actions{
+    grid-template-columns:1fr!important;
+  }
+  .kpis{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .status{
+    display:none!important;
+  }
+  .brand h1{
+    font-size:14px!important;
+  }
+  .home-card-title b,
+  .home-card-title small{
+    white-space:normal!important;
+  }
+}
