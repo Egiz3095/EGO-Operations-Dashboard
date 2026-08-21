@@ -1,0 +1,63 @@
+
+@media print{
+  /* Strip expensive screen-only visual effects from the print render tree */
+  *,*::before,*::after{
+    animation:none!important;
+    transition:none!important;
+    text-shadow:none!important;
+    filter:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  /* Keep print visually clean but cheap to rasterize */
+  #singlePrintStage *,
+  #fullPrintStage *{
+    box-shadow:none!important;
+  }
+
+  /* The login/background artwork must never participate in print layout/rendering */
+  #egoLoginGate,
+  .real-auto-art,
+  .automotive-scene,
+  .auto-particles,
+  #uiLauncherStack,
+  #reportSidebar,
+  #filterSidebar,
+  .report-sidebar-backdrop,
+  .filter-sidebar-backdrop{
+    display:none!important;
+  }
+
+  /* Charts remain visible, but gradients are flattened for much faster PDF generation */
+  #singlePrintStage .ref-bar-fill,
+  #fullPrintStage .ref-bar-fill{
+    background:#17324a!important;
+  }
+
+  /* Avoid unnecessarily expensive sticky/fixed compositing in print */
+  #singlePrintStage *,
+  #fullPrintStage *{
+    position:static!important;
+  }
+  #singlePrintStage thead,
+  #fullPrintStage thead{
+    display:table-header-group!important;
+  }
+
+  /* Restore only elements that require normal table positioning semantics */
+  #singlePrintStage table,
+  #fullPrintStage table,
+  #singlePrintStage thead,
+  #fullPrintStage thead,
+  #singlePrintStage tbody,
+  #fullPrintStage tbody,
+  #singlePrintStage tr,
+  #fullPrintStage tr,
+  #singlePrintStage th,
+  #fullPrintStage th,
+  #singlePrintStage td,
+  #fullPrintStage td{
+    position:static!important;
+  }
+}

@@ -1,0 +1,55 @@
+
+/* الإجراءات السريعة خاصة بالصفحة الرئيسية فقط */
+body:not(.nav-home) .premium-quick-actions{
+  display:none!important;
+}
+body.nav-home .premium-quick-actions{
+  display:block!important;
+}
+
+/* شعار بجانب عنوان لوحة التحكم الرئيسية — يعود للرئيسية عند الضغط */
+.premium-title-row{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin-bottom:5px!important;
+}
+.premium-title-row .premium-eyebrow{
+  margin:0!important;
+}
+.premium-home-logo-btn{
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  padding:4px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid rgba(227,166,47,.34)!important;
+  border-radius:11px!important;
+  background:rgba(255,255,255,.96)!important;
+  cursor:pointer!important;
+  box-shadow:0 6px 16px rgba(0,0,0,.18)!important;
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease!important;
+}
+.premium-home-logo-btn img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  border-radius:7px!important;
+}
+.premium-home-logo-btn:hover{
+  transform:translateY(-2px)!important;
+  border-color:#e3a62f!important;
+  box-shadow:0 8px 20px rgba(227,166,47,.16)!important;
+}
+.premium-home-logo-btn:focus-visible{
+  outline:2px solid #e3a62f!important;
+  outline-offset:3px!important;
+}
+@media(max-width:760px){
+  .premium-home-logo-btn{
+    width:36px!important;height:36px!important;min-width:36px!important;
+  }
+  .premium-title-row{gap:8px!important}
+}

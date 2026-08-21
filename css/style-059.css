@@ -1,0 +1,239 @@
+
+@media print{
+  /* Data completeness is more important than forcing one report into one page */
+  @page{
+    size:A4 landscape;
+    margin:8mm;
+  }
+
+  #fullPrintStage,
+  #singlePrintStage{
+    width:100%!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    background:#fff!important;
+    color:#172431!important;
+  }
+
+  /* CRITICAL: cancel all old "one page per report" hard clipping */
+  #fullPrintStage > .ref-print-page,
+  #singlePrintStage > .ref-print-page,
+  #fullPrintStage > .professional-reference-page,
+  #singlePrintStage > .professional-reference-page,
+  #fullPrintStage > .ref-unified-operational,
+  #singlePrintStage > .ref-unified-operational,
+  #fullPrintStage > .package-print-page,
+  #singlePrintStage > .package-print-page,
+  #fullPrintStage > .auto-print-report-page,
+  #singlePrintStage > .auto-print-report-page{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    padding:5mm!important;
+    margin:0!important;
+    background:#fff!important;
+    color:#172431!important;
+    page-break-after:always!important;
+    break-after:page!important;
+    page-break-inside:auto!important;
+    break-inside:auto!important;
+  }
+
+  /* Full data table is placed below the concise chart, not squeezed beside it */
+  #fullPrintStage .ref-main,
+  #singlePrintStage .ref-main{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    margin:0!important;
+  }
+
+  #fullPrintStage .ref-chart-panel,
+  #singlePrintStage .ref-chart-panel{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    margin:0 0 4mm!important;
+    padding:3mm!important;
+    background:#fff!important;
+    border:0.25mm solid #d6dde2!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+
+  #fullPrintStage .ref-table-panel,
+  #singlePrintStage .ref-table-panel{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    margin:0!important;
+    padding:0!important;
+    background:#fff!important;
+    border:0!important;
+    break-inside:auto!important;
+    page-break-inside:auto!important;
+  }
+
+  /* All scroll wrappers must expand to natural content height */
+  #fullPrintStage .tablewrap,
+  #singlePrintStage .tablewrap,
+  #fullPrintStage .summary-table-wrap,
+  #singlePrintStage .summary-table-wrap,
+  #fullPrintStage .safe-extra-scroll,
+  #singlePrintStage .safe-extra-scroll,
+  #fullPrintStage .si-table-wrap,
+  #singlePrintStage .si-table-wrap,
+  #fullPrintStage .records-direct-table-wrap,
+  #singlePrintStage .records-direct-table-wrap,
+  #fullPrintStage [class*="table-wrap"],
+  #singlePrintStage [class*="table-wrap"]{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    position:static!important;
+    clip:auto!important;
+    contain:none!important;
+  }
+
+  /* Readable tables — no tiny 4pt font */
+  #fullPrintStage table,
+  #singlePrintStage table{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    height:auto!important;
+    table-layout:auto!important;
+    border-collapse:collapse!important;
+    background:#fff!important;
+    color:#172431!important;
+    font-size:7.2pt!important;
+    line-height:1.35!important;
+  }
+  #fullPrintStage thead,
+  #singlePrintStage thead{
+    display:table-header-group!important;
+  }
+  #fullPrintStage th,
+  #singlePrintStage th{
+    padding:1.8mm 1.2mm!important;
+    background:#e8eef2!important;
+    color:#14283a!important;
+    border:.25mm solid #9fadb7!important;
+    font-size:7.2pt!important;
+    font-weight:900!important;
+    line-height:1.3!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    word-break:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  #fullPrintStage td,
+  #singlePrintStage td{
+    padding:1.6mm 1.1mm!important;
+    background:#fff!important;
+    color:#1d2933!important;
+    border:.2mm solid #c5ced5!important;
+    font-size:7.1pt!important;
+    line-height:1.35!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    word-break:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  #fullPrintStage tbody tr:nth-child(even) td,
+  #singlePrintStage tbody tr:nth-child(even) td{
+    background:#f8fafb!important;
+  }
+  #fullPrintStage tr,
+  #singlePrintStage tr{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+
+  /* Records: override old fixed layout / tiny fonts */
+  #fullPrintStage .records-direct-table,
+  #singlePrintStage .records-direct-table{
+    table-layout:auto!important;
+    font-size:6.2pt!important;
+  }
+  #fullPrintStage .records-direct-table th,
+  #singlePrintStage .records-direct-table th{
+    font-size:6.2pt!important;
+    padding:1.4mm .7mm!important;
+  }
+  #fullPrintStage .records-direct-table td,
+  #singlePrintStage .records-direct-table td{
+    font-size:6.1pt!important;
+    padding:1.25mm .65mm!important;
+  }
+
+  /* Never crop report explanations or details */
+  #fullPrintStage .ref-comment,
+  #singlePrintStage .ref-comment,
+  #fullPrintStage .report-explain,
+  #singlePrintStage .report-explain,
+  #fullPrintStage .full-analysis,
+  #singlePrintStage .full-analysis,
+  #fullPrintStage .dynamic-analysis,
+  #singlePrintStage .dynamic-analysis{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    background:#f7f9fa!important;
+    color:#263845!important;
+    border-right:1mm solid #c99221!important;
+    padding:3mm!important;
+    margin-top:4mm!important;
+    font-size:7pt!important;
+    line-height:1.6!important;
+    break-inside:auto!important;
+  }
+
+  /* Charts show top items only; table below contains ALL items */
+  #fullPrintStage .ref-bars,
+  #singlePrintStage .ref-bars{
+    display:grid!important;
+    gap:1.2mm!important;
+  }
+  #fullPrintStage .ref-bar-row,
+  #singlePrintStage .ref-bar-row{
+    min-height:4mm!important;
+  }
+  #fullPrintStage .ref-bar-name,
+  #singlePrintStage .ref-bar-name,
+  #fullPrintStage .ref-bar-value,
+  #singlePrintStage .ref-bar-value{
+    font-size:6.4pt!important;
+  }
+
+  /* Avoid hiding data through inherited screen utility classes */
+  #fullPrintStage .nav-suppressed,
+  #singlePrintStage .nav-suppressed,
+  #fullPrintStage .permission-hidden:not([data-print-permission]),
+  #singlePrintStage .permission-hidden:not([data-print-permission]){
+    max-height:none!important;
+    overflow:visible!important;
+  }
+}

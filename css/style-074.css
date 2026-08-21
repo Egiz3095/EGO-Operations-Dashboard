@@ -1,0 +1,83 @@
+
+/* ===== FINAL FILTER BADGE SYNC + IMAGE-BASED LIGHT PDF EXPORT ===== */
+.pdf-export-main-btn{font-weight:800!important}
+.single-report-pdf-btn{margin-inline-start:6px!important}
+@media(max-width:560px){
+  .report-breadcrumb .single-report-pdf-btn{width:100%!important;margin-inline-start:0!important;margin-top:3px!important}
+}
+#pdfExportStage{display:none}
+body.pdf-export-rendering #pdfExportStage{
+  display:block!important;position:fixed!important;left:-22000px!important;top:0!important;width:1400px!important;max-width:1400px!important;
+  margin:0!important;padding:0!important;background:#fff!important;color:#17212b!important;z-index:-1!important;opacity:0!important;
+  pointer-events:none!important;overflow:visible!important;direction:rtl!important;color-scheme:light!important;
+}
+body.pdf-export-rendering,body.pdf-export-rendering html{background:#fff!important}
+#pdfExportStage *{box-sizing:border-box!important;animation:none!important;transition:none!important}
+#pdfExportStage .pdf-export-cover{
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;
+  width:100%!important;min-height:1040px!important;padding:80px 90px!important;margin:0 0 22px!important;background:#fff!important;color:#111827!important;overflow:hidden!important;
+  border:1px solid #e5e7eb!important;border-radius:18px!important;
+}
+#pdfExportStage .pdf-export-cover .cover-logo-wrap{width:180px!important;height:180px!important;margin-bottom:28px!important}
+#pdfExportStage .pdf-export-cover .cover-logo{width:100%!important;height:100%!important;object-fit:contain!important}
+#pdfExportStage .pdf-export-cover .cover-rule{background:#397ea9!important;width:65%!important;height:2px!important;margin-bottom:30px!important}
+#pdfExportStage .pdf-export-cover h1{color:#111827!important;font:900 44px Cairo!important;line-height:1.35!important;margin:0!important}
+#pdfExportStage .pdf-export-cover h2{color:#374151!important;font:800 28px Cairo!important;margin:22px 0 28px!important}
+#pdfExportStage .pdf-export-cover .cover-meta{background:#f8fafc!important;color:#111827!important;border:1px solid #cbd5e1!important;padding:24px 40px!important;border-radius:16px!important;font-size:24px!important}
+#pdfExportStage .cover-footer,#pdfExportStage footer{display:none!important}
+#pdfExportStage .pdf-export-page{
+  display:block!important;visibility:visible!important;width:100%!important;max-width:none!important;margin:0 0 24px!important;padding:22px!important;
+  background:#fff!important;color:#17212b!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;
+}
+#pdfExportStage .pdf-export-page:last-child{margin-bottom:0!important}
+#pdfExportStage .dashboard-report,#pdfExportStage #supplierInvoicesReport,#pdfExportStage .supplier-print-clone,
+#pdfExportStage .nav-records-part,#pdfExportStage #recordsTitle,#pdfExportStage #recordsTable,#pdfExportStage #recordsExplain{
+  display:block!important;visibility:visible!important;background:#fff!important;color:#17212b!important;border:1px solid #d7e0e8!important;
+  border-radius:16px!important;box-shadow:none!important;
+}
+#pdfExportStage .section-title,#pdfExportStage .si-head h2,#pdfExportStage h2,#pdfExportStage h3{color:#163b5c!important}
+#pdfExportStage .hint,#pdfExportStage .si-head p,#pdfExportStage .si-note,#pdfExportStage .report-explain,#pdfExportStage .report-explain *{color:#526273!important}
+#pdfExportStage .report-layout{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr)!important;gap:18px!important;align-items:stretch!important}
+#pdfExportStage .dashboard-summary,#pdfExportStage .summary-table-wrap,#pdfExportStage .monthly-note,#pdfExportStage .report-explain{display:block!important;visibility:visible!important}
+#pdfExportStage .report-chart,#pdfExportStage .report-summary,#pdfExportStage .si-card,#pdfExportStage .si-mini,
+#pdfExportStage .card,#pdfExportStage .chartbox,#pdfExportStage .tablewrap,#pdfExportStage .summary-table-wrap{
+  background:#fff!important;color:#17212b!important;border-color:#d7e0e8!important;box-shadow:none!important;
+}
+#pdfExportStage .report-explain,#pdfExportStage .explain-box,#pdfExportStage .explain-stat,#pdfExportStage .explain-scope{
+  background:#f7fafc!important;border-color:#cbdde8!important;color:#334155!important;box-shadow:none!important;
+}
+#pdfExportStage .report-explain b,#pdfExportStage .explain-box b,#pdfExportStage .explain-stat strong{color:#183d58!important}
+#pdfExportStage .bars{background:repeating-linear-gradient(to top,transparent 0,transparent 44px,#edf2f6 45px)!important;border-bottom-color:#9fb1be!important}
+#pdfExportStage .bar{background:linear-gradient(180deg,#67acd7 0%,#3278a8 100%)!important;border-color:#76b6dc!important;box-shadow:none!important}
+#pdfExportStage .baritem b{background:#fff!important;color:#17364d!important;border-color:#d4dee6!important}
+#pdfExportStage .bar .inside-label{color:#fff!important;text-shadow:none!important}
+#pdfExportStage th{background:#eaf1f6!important;color:#172b3a!important;border-color:#c8d5df!important;position:static!important}
+#pdfExportStage td{background:#fff!important;color:#1f2937!important;border-color:#dfe6eb!important}
+#pdfExportStage tbody tr:nth-child(even) td{background:#fafcfd!important}
+#pdfExportStage .money,#pdfExportStage .mono{color:#245d86!important}
+#pdfExportStage .si-state{background:#f8fafc!important;color:#526273!important;border-color:#d7e0e8!important}
+#pdfExportStage .si-state.ok{background:#ecfdf5!important;color:#047857!important;border-color:#a7f3d0!important}
+#pdfExportStage .si-filters,#pdfExportStage .single-report-print-btn,#pdfExportStage .single-report-pdf-btn,
+#pdfExportStage .filter-sidebar,#pdfExportStage .report-sidebar,#pdfExportStage .actions{display:none!important}
+#pdfExportStage .si-table-wrap,#pdfExportStage .summary-table-wrap,#pdfExportStage .tablewrap{max-height:none!important;height:auto!important;overflow:visible!important}
+#pdfExportStage table{width:100%!important;min-width:0!important}
+#pdfExportStage thead{display:table-header-group!important}
+#pdfExportStage tr{break-inside:avoid!important;page-break-inside:avoid!important}
+#pdfExportStage .report-breadcrumb{display:flex!important;align-items:center!important;gap:8px!important;background:#f8fafc!important;border:1px solid #d7e0e8!important;border-radius:12px!important;padding:10px 12px!important;margin:0 0 12px!important;color:#17364d!important}
+#pdfExportStage .report-breadcrumb .crumb-sep{color:#64748b!important}
+#pdfExportStage .report-breadcrumb strong{color:#0f172a!important;font-weight:900!important}
+#pdfExportStage .breadcrumb-logo-btn,#pdfExportStage .breadcrumb-home-text{background:#fff!important;color:#17364d!important;border:1px solid #d7e0e8!important}
+#pdfExportStage .breadcrumb-logo-btn img{max-height:24px!important}
+#pdfExportStage .pdf-export-records{padding:8px!important;background:#fff!important;color:#000!important}
+#pdfExportStage .pdf-export-records .nav-records-part{display:block!important;visibility:visible!important}
+#pdfExportStage .pdf-export-records .section-title.nav-records-part{display:flex!important}
+#pdfExportStage .pdf-export-records .section-title{color:#000!important;margin:0 0 10px!important}
+#pdfExportStage .pdf-export-records .tablewrap{border:0!important;background:#fff!important;overflow:visible!important;max-height:none!important}
+#pdfExportStage .pdf-export-records table{table-layout:auto!important;border-collapse:collapse!important;font-size:10px!important;line-height:1.1!important}
+#pdfExportStage .pdf-export-records th,#pdfExportStage .pdf-export-records td{
+  background:#fff!important;color:#000!important;border:1px solid #555!important;white-space:nowrap!important;word-break:normal!important;
+  overflow-wrap:normal!important;text-overflow:clip!important;padding:4px 5px!important;vertical-align:middle!important;
+}
+#pdfExportStage .pdf-export-records th{font-weight:900!important;border-color:#000!important}
+#pdfExportStage .pdf-export-records tbody tr:nth-child(even) td{background:#fff!important}
+#pdfExportStage .pdf-export-records .report-explain{white-space:normal!important;background:#fff!important;color:#000!important;border-color:#bbb!important}

@@ -1,0 +1,365 @@
+
+/* Animated WebGL login background — isolated from the rest of the dashboard */
+#egoLoginGate{
+  background:#04050c !important;
+  background-image:none !important;
+  overflow:hidden !important;
+  isolation:isolate;
+}
+#egoLoginGate::before,
+#egoLoginGate::after{
+  background-image:none !important;
+}
+/* Disable only the previous decorative/background artwork. */
+#egoLoginGate > .real-auto-art,
+#egoLoginGate > .automotive-scene{
+  display:none !important;
+}
+#egoLoginFluidCanvas{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  display:block !important;
+}
+#egoLoginGate > .ego-login-fluid-scrim{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:radial-gradient(115% 95% at 50% 46%,
+    rgba(4,5,12,.68) 0%,
+    rgba(4,5,12,.68) 24%,
+    rgba(4,5,12,.46) 52%,
+    rgba(4,5,12,.12) 100%);
+}
+/* Preserve existing login UI and loader above the animation. */
+#egoLoginGate > #egoLoginForm{
+  position:relative !important;
+  z-index:10 !important;
+}
+#egoLoginGate > #proRunnerLoader{
+  z-index:30 !important;
+}
+
+
+/* Center the existing login box precisely in the viewport */
+#egoLoginGate{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:24px !important;
+}
+#egoLoginGate > #egoLoginForm{
+  position:relative !important;
+  inset:auto !important;
+  top:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  left:auto !important;
+  margin:0 !important;
+  transform:none !important;
+  flex:none !important;
+}
+@media (max-width:640px){
+  #egoLoginGate{padding:16px !important;}
+  #egoLoginGate > #egoLoginForm{
+    max-width:calc(100vw - 32px) !important;
+  }
+}
+
+/* Premium glass login card over the original Fluid/WebGL background */
+#egoLoginGate > #egoLoginForm{
+  background:linear-gradient(145deg,rgba(12,18,30,.38),rgba(7,11,20,.20))!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(255,255,255,.035)!important;
+  backdrop-filter:blur(22px) saturate(145%)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(145%)!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+}
+#egoLoginGate > #egoLoginForm::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:-1!important;
+  pointer-events:none!important;
+  background:
+    linear-gradient(115deg,rgba(255,255,255,.10),transparent 24%,transparent 70%,rgba(255,255,255,.035))!important;
+}
+#egoLoginGate > #egoLoginForm::after{
+  content:""!important;
+  position:absolute!important;
+  width:210px!important;height:210px!important;
+  top:-125px!important;right:-85px!important;
+  border-radius:50%!important;
+  z-index:-1!important;
+  pointer-events:none!important;
+  background:rgba(255,255,255,.055)!important;
+  filter:blur(18px)!important;
+}
+#egoLoginGate #egoLoginForm input[type="text"],
+#egoLoginGate #egoLoginForm input[type="password"]{
+  background:rgba(255,255,255,.075)!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  color:#fff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 8px 22px rgba(0,0,0,.12)!important;
+  backdrop-filter:blur(8px)!important;
+  -webkit-backdrop-filter:blur(8px)!important;
+}
+#egoLoginGate #egoLoginForm input:focus{
+  background:rgba(255,255,255,.105)!important;
+  border-color:rgba(255,255,255,.28)!important;
+  box-shadow:0 0 0 3px rgba(255,255,255,.045),0 8px 24px rgba(0,0,0,.14)!important;
+}
+
+
+/* Live username validation — visually synchronized with the Fluid background */
+#egoLoginGate #egoUsername[data-username-state="valid"]{
+  border-color:rgba(74,224,145,.72)!important;
+  box-shadow:
+    0 0 0 3px rgba(55,205,128,.075),
+    0 9px 26px rgba(31,191,113,.10),
+    inset 0 1px 0 rgba(255,255,255,.055)!important;
+}
+#egoLoginGate #egoUsername[data-username-state="invalid"]{
+  border-color:rgba(255,88,96,.68)!important;
+  box-shadow:
+    0 0 0 3px rgba(255,72,84,.065),
+    0 9px 26px rgba(225,43,58,.10),
+    inset 0 1px 0 rgba(255,255,255,.055)!important;
+}
+
+
+/* Live password + complete credential state before pressing Login */
+#egoLoginGate #egoPassword[data-password-state="valid"]{
+  border-color:rgba(74,224,145,.72)!important;
+  box-shadow:0 0 0 3px rgba(55,205,128,.075),0 9px 26px rgba(31,191,113,.10)!important;
+}
+#egoLoginGate #egoPassword[data-password-state="invalid"]{
+  border-color:rgba(255,88,96,.68)!important;
+  box-shadow:0 0 0 3px rgba(255,72,84,.065),0 9px 26px rgba(225,43,58,.10)!important;
+}
+#egoLoginGate #egoPassword[data-password-state="checking"]{
+  border-color:rgba(255,255,255,.20)!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="valid"]{
+  background:linear-gradient(135deg,#24c978,#4be09a)!important;
+  border-color:rgba(95,240,170,.68)!important;
+  color:#04140c!important;
+  box-shadow:0 10px 30px rgba(36,201,120,.24),0 0 0 1px rgba(125,255,190,.08) inset!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="invalid"]{
+  background:linear-gradient(135deg,#df3e4c,#ff6872)!important;
+  border-color:rgba(255,105,115,.62)!important;
+  color:#fff!important;
+  box-shadow:0 10px 30px rgba(223,62,76,.22),0 0 0 1px rgba(255,160,166,.08) inset!important;
+}
+
+
+/* ==========================================================
+   Fluid Smoke Login Button
+   The button uses the same visual language as the Fluid bg.
+   Neutral = cyan/violet/magenta
+   Valid   = emerald/green
+   Invalid = red/orange-red
+   ========================================================== */
+
+#egoLoginGate #egoLoginForm button[type="submit"]{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  background:rgba(6,10,18,.38)!important;
+  color:#f4f7fb!important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.08)!important;
+  backdrop-filter:blur(12px) saturate(145%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(145%)!important;
+  transition:
+    border-color .24s ease,
+    box-shadow .24s ease,
+    color .24s ease,
+    transform .16s ease!important;
+}
+
+#egoLoginGate #egoLoginForm button[type="submit"]::before,
+#egoLoginGate #egoLoginForm button[type="submit"]::after{
+  content:""!important;
+  position:absolute!important;
+  inset:-70%!important;
+  z-index:-2!important;
+  pointer-events:none!important;
+  border-radius:45%!important;
+  opacity:.88!important;
+  filter:blur(18px)!important;
+  transform-origin:center!important;
+  will-change:transform,filter,opacity!important;
+}
+
+/* primary smoke cloud */
+#egoLoginGate #egoLoginForm button[type="submit"]::before{
+  background:
+    radial-gradient(circle at 28% 42%,rgba(65,230,255,.95) 0 7%,transparent 28%),
+    radial-gradient(circle at 60% 36%,rgba(103,82,255,.92) 0 9%,transparent 30%),
+    radial-gradient(circle at 73% 62%,rgba(241,62,203,.88) 0 7%,transparent 28%),
+    radial-gradient(circle at 42% 70%,rgba(65,230,255,.64) 0 6%,transparent 26%)!important;
+  animation:egoSmokeDriftA 5.8s ease-in-out infinite alternate!important;
+}
+
+/* counter moving smoke layer */
+#egoLoginGate #egoLoginForm button[type="submit"]::after{
+  z-index:-1!important;
+  inset:-85%!important;
+  background:
+    conic-gradient(from 20deg,
+      transparent 0 8%,
+      rgba(72,224,255,.36) 16%,
+      transparent 28%,
+      rgba(130,87,255,.42) 42%,
+      transparent 56%,
+      rgba(246,71,202,.34) 70%,
+      transparent 86%)!important;
+  animation:egoSmokeDriftB 7.2s linear infinite!important;
+  opacity:.72!important;
+  filter:blur(24px)!important;
+}
+
+/* subtle inner glass veil */
+#egoLoginGate #egoLoginForm button[type="submit"] > *{
+  position:relative!important;
+  z-index:2!important;
+  text-shadow:0 1px 10px rgba(0,0,0,.26)!important;
+}
+
+#egoLoginGate #egoLoginForm button[type="submit"]:hover{
+  transform:translateY(-1px) scale(1.005)!important;
+  border-color:rgba(255,255,255,.25)!important;
+  box-shadow:
+    0 14px 38px rgba(0,0,0,.34),
+    0 0 28px rgba(90,200,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.11)!important;
+}
+
+#egoLoginGate #egoLoginForm button[type="submit"]:active{
+  transform:translateY(0) scale(.995)!important;
+}
+
+/* VALID: button smoke turns green/emerald, synced with Fluid */
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="valid"]{
+  border-color:rgba(93,240,170,.54)!important;
+  box-shadow:
+    0 12px 36px rgba(33,194,116,.18),
+    0 0 32px rgba(52,226,139,.10),
+    inset 0 1px 0 rgba(255,255,255,.10)!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="valid"]::before{
+  background:
+    radial-gradient(circle at 28% 42%,rgba(53,236,139,.96) 0 8%,transparent 28%),
+    radial-gradient(circle at 61% 36%,rgba(60,204,116,.90) 0 9%,transparent 30%),
+    radial-gradient(circle at 73% 62%,rgba(80,255,170,.86) 0 8%,transparent 28%),
+    radial-gradient(circle at 42% 70%,rgba(36,180,105,.68) 0 7%,transparent 27%)!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="valid"]::after{
+  background:
+    conic-gradient(from 20deg,
+      transparent 0 8%,
+      rgba(68,240,150,.40) 16%,
+      transparent 29%,
+      rgba(45,195,115,.46) 43%,
+      transparent 58%,
+      rgba(107,255,183,.34) 72%,
+      transparent 86%)!important;
+}
+
+/* INVALID: button smoke turns red, synced with Fluid */
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="invalid"]{
+  border-color:rgba(255,105,112,.52)!important;
+  box-shadow:
+    0 12px 36px rgba(224,55,68,.18),
+    0 0 32px rgba(255,75,85,.09),
+    inset 0 1px 0 rgba(255,255,255,.09)!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="invalid"]::before{
+  background:
+    radial-gradient(circle at 28% 42%,rgba(255,65,82,.96) 0 8%,transparent 28%),
+    radial-gradient(circle at 61% 36%,rgba(245,91,50,.90) 0 9%,transparent 30%),
+    radial-gradient(circle at 73% 62%,rgba(255,94,104,.88) 0 8%,transparent 28%),
+    radial-gradient(circle at 42% 70%,rgba(203,35,52,.68) 0 7%,transparent 27%)!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="invalid"]::after{
+  background:
+    conic-gradient(from 20deg,
+      transparent 0 8%,
+      rgba(255,81,91,.40) 16%,
+      transparent 29%,
+      rgba(240,80,42,.44) 43%,
+      transparent 58%,
+      rgba(255,118,85,.34) 72%,
+      transparent 86%)!important;
+}
+
+/* While credentials are being checked: return to fluid neutral smoke */
+#egoLoginGate #egoLoginForm button[type="submit"][data-credential-state="checking"]{
+  border-color:rgba(255,255,255,.18)!important;
+}
+
+@keyframes egoSmokeDriftA{
+  0%{
+    transform:translate3d(-4%,2%,0) rotate(-7deg) scale(1.02);
+    filter:blur(18px) saturate(120%);
+  }
+  45%{
+    transform:translate3d(6%,-4%,0) rotate(8deg) scale(1.10);
+    filter:blur(23px) saturate(145%);
+  }
+  100%{
+    transform:translate3d(-1%,5%,0) rotate(17deg) scale(1.06);
+    filter:blur(20px) saturate(132%);
+  }
+}
+@keyframes egoSmokeDriftB{
+  from{transform:rotate(0deg) scale(1.02)}
+  50%{transform:rotate(180deg) scale(1.10)}
+  to{transform:rotate(360deg) scale(1.02)}
+}
+
+
+/* Natural login transition — intentionally simple and fast */
+#egoLoginGate{
+  transition:opacity .24s ease!important;
+}
+#egoLoginGate.natural-login-exit{
+  opacity:0!important;
+  pointer-events:none!important;
+}
+#egoLoginGate.natural-login-exit > #egoLoginForm{
+  transform:scale(.992)!important;
+  transition:transform .24s ease,opacity .24s ease!important;
+  opacity:.92!important;
+}
+
+/* Simple busy state: no character, no tyre, no progress bar, no smoke. */
+#egoLoginGate #egoLoginForm button[type="submit"].login-busy{
+  cursor:wait!important;
+  opacity:.88!important;
+  filter:saturate(.9) brightness(.98)!important;
+}
+#egoLoginGate #egoLoginForm button[type="submit"].login-busy::before,
+#egoLoginGate #egoLoginForm button[type="submit"].login-busy::after{
+  animation-play-state:paused!important;
+  opacity:.28!important;
+}
+
+/* Any legacy success-transition classes are neutralized. */
+#egoLoginGate.ego-smoke-success,
+#egoLoginGate.ego-liquid-merge,
+#egoLoginGate.ego-split-opening{
+  animation:none!important;
+}

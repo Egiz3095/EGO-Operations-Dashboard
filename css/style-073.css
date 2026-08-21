@@ -1,0 +1,116 @@
+
+.home-logo-link{cursor:pointer!important;transition:transform .15s ease,box-shadow .15s ease,filter .15s ease}
+.home-logo-link:hover{transform:translateY(-1px) scale(1.025);box-shadow:0 7px 22px rgba(0,0,0,.24)!important;filter:brightness(1.04)}
+.home-logo-link:focus-visible{outline:3px solid rgba(94,174,211,.55);outline-offset:3px}
+@media print{.home-logo-link{cursor:default!important;transform:none!important;outline:0!important}}
+
+
+/* ===== RESPONSIVE MODEL: DESKTOP / TABLET / MOBILE ===== */
+:root{
+  --responsive-gap:14px;
+}
+html,body{max-width:100%;overflow-x:hidden}
+img,svg,canvas{max-width:100%}
+.wrap{width:100%!important;max-width:1760px!important;margin-inline:auto!important}
+
+/* Desktop / large screens */
+@media (min-width:1201px){
+  .wrap{padding-inline:22px!important}
+  .filters{grid-template-columns:1.35fr repeat(7,minmax(120px,1fr))!important}
+  .kpis{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+  .home-grid,.report-home-grid,.reports-home-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+
+/* Laptop / tablet landscape */
+@media (min-width:769px) and (max-width:1200px){
+  .wrap{padding:14px!important}
+  .top{position:sticky!important;top:8px!important;border-radius:14px!important;padding:14px 16px!important}
+  .brand h1{font-size:21px!important}
+  .brand img{width:58px!important;height:58px!important}
+  .actions{gap:6px!important}
+  .actions .btn{padding:8px 10px!important;font-size:12px!important}
+  .filters{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;padding:10px!important}
+  .kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .report-layout{grid-template-columns:1fr!important}
+  .home-grid,.report-home-grid,.reports-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .tablewrap{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+  table{min-width:1100px!important}
+}
+
+/* Tablet portrait / large phones */
+@media (min-width:521px) and (max-width:768px){
+  body{font-size:14px}
+  .wrap{padding:10px!important}
+  .top{position:sticky!important;top:4px!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px!important;padding:12px!important;border-radius:12px!important}
+  .brand{width:100%!important}
+  .brand h1{font-size:19px!important;line-height:1.35!important}
+  .brand img{width:50px!important;height:50px!important}
+  .status,.actions{width:100%!important;justify-content:flex-start!important}
+  .actions .btn{flex:1 1 145px!important;min-height:40px!important;font-size:12px!important}
+  .filters{position:sticky!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;padding:9px!important;border-radius:11px!important}
+  .filters input,.filters select{min-height:41px!important;font-size:13px!important}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .kpi strong{font-size:19px!important}
+  .home-grid,.report-home-grid,.reports-home-grid{grid-template-columns:1fr 1fr!important;gap:10px!important}
+  .dashboard-report,.card,.chartbox{border-radius:12px!important;padding:12px!important}
+  .report-layout,.grid2{grid-template-columns:1fr!important}
+  .tablewrap{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+  table{min-width:1000px!important;font-size:10px!important}
+  .drawer-toggle,.reports-drawer-toggle,.nav-drawer-toggle{bottom:16px!important;right:12px!important;max-width:calc(100vw - 24px)!important}
+}
+
+/* Mobile */
+@media (max-width:520px){
+  body{font-size:13px!important}
+  .wrap{padding:7px!important}
+  .top{position:sticky!important;top:3px!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;padding:10px!important;border-radius:10px!important}
+  .brand{align-items:center!important;gap:8px!important}
+  .brand img{width:44px!important;height:44px!important;border-radius:10px!important}
+  .brand h1{font-size:17px!important;line-height:1.3!important}
+  .brand p{font-size:10px!important}
+  .report-datetime{gap:4px!important}
+  .report-datetime span{font-size:9px!important;padding:3px 6px!important}
+  .status{display:none!important}
+  .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;width:100%!important}
+  .actions .btn{width:100%!important;min-width:0!important;min-height:38px!important;font-size:11px!important;padding:7px 6px!important}
+  .filters{position:sticky!important;grid-template-columns:1fr!important;gap:6px!important;padding:8px!important;border-radius:10px!important;margin:8px 0!important}
+  .filters input,.filters select{min-height:40px!important;font-size:12px!important;padding:8px 9px!important}
+  .kpis{grid-template-columns:1fr 1fr!important;gap:6px!important}
+  .card{padding:10px!important}
+  .kpi label{font-size:9px!important}
+  .kpi strong{font-size:16px!important;line-height:1.2!important;overflow-wrap:anywhere}
+  .kpi small{font-size:8px!important}
+  .home-grid,.report-home-grid,.reports-home-grid{display:grid!important;grid-template-columns:1fr!important;gap:9px!important}
+  .home-card,.report-home-card,.report-card{min-height:auto!important;padding:12px!important}
+  .dashboard-report,.chartbox{padding:10px!important;border-radius:10px!important}
+  .section-title{font-size:14px!important;gap:6px!important;align-items:flex-start!important}
+  .hint{font-size:9px!important}
+  .report-layout,.grid2{grid-template-columns:1fr!important;gap:8px!important}
+  .bars{min-height:185px!important;height:185px!important;gap:6px!important;padding-inline:4px!important}
+  .baritem{min-width:28px!important}
+  .baritem b{font-size:7px!important;min-width:42px!important;padding:2px 3px!important}
+  .tablewrap{width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;border-radius:8px!important}
+  table{min-width:900px!important;font-size:9px!important}
+  th,td{padding:6px 5px!important}
+  .invoice-kpis{grid-template-columns:1fr 1fr!important}
+  .invoice-head{flex-direction:column!important;align-items:stretch!important}
+  .invoice-no{font-size:16px!important}
+  .drawer,.reports-drawer,.nav-drawer{width:min(88vw,340px)!important;max-width:88vw!important}
+  .drawer-toggle,.reports-drawer-toggle,.nav-drawer-toggle{right:8px!important;bottom:10px!important;font-size:12px!important;padding:9px 11px!important}
+  .breadcrumb,.report-breadcrumb{font-size:11px!important;gap:5px!important;flex-wrap:wrap!important}
+  .breadcrumb-logo,.report-breadcrumb-logo{width:30px!important;height:30px!important}
+  .full-analysis,.report-analysis,.dynamic-analysis{font-size:11px!important;line-height:1.7!important;padding:10px!important}
+}
+
+/* Very small phones */
+@media (max-width:360px){
+  .actions{grid-template-columns:1fr!important}
+  .kpis{grid-template-columns:1fr!important}
+  .brand h1{font-size:15px!important}
+}
+
+/* Better touch behavior */
+@media (hover:none) and (pointer:coarse){
+  button,.btn,.nav-item,.drawer-item,.report-card,.home-card{min-height:42px}
+  .btn:hover,.report-card:hover,.home-card:hover{transform:none!important}
+}

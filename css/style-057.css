@@ -1,0 +1,167 @@
+
+/* ==========================================================
+   CANONICAL SIDE LAUNCHER SYSTEM
+   نظام واحد نهائي لكل الأزرار الجانبية
+   ========================================================== */
+#uiLauncherStack{
+  --c-launcher-w:64px;
+  --c-launcher-h:118px;
+  --c-launcher-gap:9px;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:var(--c-launcher-gap)!important;
+}
+
+/* الشكل الهندسي موحد 100% */
+#uiLauncherStack > button{
+  box-sizing:border-box!important;
+  position:relative!important;
+  width:var(--c-launcher-w)!important;
+  min-width:var(--c-launcher-w)!important;
+  max-width:var(--c-launcher-w)!important;
+  height:var(--c-launcher-h)!important;
+  min-height:var(--c-launcher-h)!important;
+  max-height:var(--c-launcher-h)!important;
+  flex:0 0 var(--c-launcher-h)!important;
+  margin:0!important;
+  padding:9px 5px!important;
+  border-radius:14px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  overflow:hidden!important;
+  text-align:center!important;
+  font-family:Cairo,Tajawal,Arial,sans-serif!important;
+  transform:none;
+}
+
+/* الأيقونة موحدة */
+#uiLauncherStack > button .launcher-icon,
+#uiLauncherStack > button .toggle-icon{
+  position:static!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:28px!important;
+  min-width:28px!important;
+  max-width:28px!important;
+  height:28px!important;
+  min-height:28px!important;
+  max-height:28px!important;
+  flex:0 0 28px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  font:900 20px/28px Arial,sans-serif!important;
+  writing-mode:horizontal-tb!important;
+  text-orientation:mixed!important;
+  transform:none!important;
+}
+
+/* النص في كل الأزرار رأسي وبنفس الحجم والموضع */
+#uiLauncherStack > button .launcher-label,
+#uiLauncherStack > button b{
+  position:static!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:22px!important;
+  min-width:22px!important;
+  max-width:22px!important;
+  height:61px!important;
+  min-height:61px!important;
+  max-height:61px!important;
+  flex:0 0 61px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  writing-mode:vertical-rl!important;
+  text-orientation:mixed!important;
+  transform:rotate(180deg)!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-align:center!important;
+  font:900 11px/1 Cairo,Tajawal,Arial,sans-serif!important;
+  letter-spacing:0!important;
+}
+
+/* الألوان فقط تختلف حسب الوظيفة، الشكل لا يتغير */
+#uiLauncherStack > #reportSidebarToggle{
+  background:linear-gradient(180deg,#3a2d14,#211b12)!important;
+  border:1px solid #8b6929!important;
+  color:#efb43a!important;
+}
+#uiLauncherStack > #filterSidebarToggle{
+  background:linear-gradient(180deg,#15342f,#10231f)!important;
+  border:1px solid #427a6f!important;
+  color:#74cbb8!important;
+}
+#uiLauncherStack > #userAdminOpen{
+  background:linear-gradient(180deg,#183043,#112330)!important;
+  border:1px solid #3b6680!important;
+  color:#7bb8dc!important;
+}
+#uiLauncherStack > #comparisonsOpen{
+  background:linear-gradient(180deg,#30273c,#211b2b)!important;
+  border:1px solid #6b577d!important;
+  color:#c1a2d8!important;
+}
+#uiLauncherStack > #egoLogoutBtn{
+  background:linear-gradient(180deg,#361d20,#241416)!important;
+  border:1px solid #76434a!important;
+  color:#e78b91!important;
+}
+
+/* إجبار النص والأيقونة على لون الزر، لإلغاء الأبيض القديم */
+#uiLauncherStack > button .launcher-icon,
+#uiLauncherStack > button .toggle-icon,
+#uiLauncherStack > button .launcher-label,
+#uiLauncherStack > button b{
+  color:inherit!important;
+}
+
+/* hover موحد */
+#uiLauncherStack > button:hover{
+  transform:translateY(-1px)!important;
+  filter:brightness(1.16)!important;
+  box-shadow:0 9px 22px rgba(0,0,0,.30)!important;
+}
+#uiLauncherStack > button:active{
+  transform:none!important;
+}
+#uiLauncherStack > button.ego-one-only-selected,
+#uiLauncherStack > button.launcher-open,
+#uiLauncherStack > button[aria-expanded="true"]{
+  outline:2px solid currentColor!important;
+  outline-offset:2px!important;
+  filter:brightness(1.12)!important;
+}
+
+/* الجوال: نفس النسب والشكل */
+@media(max-width:760px){
+  #uiLauncherStack{
+    --c-launcher-w:52px;
+    --c-launcher-h:94px;
+    --c-launcher-gap:7px;
+  }
+  #uiLauncherStack > button{
+    padding:6px 3px!important;
+    gap:4px!important;
+    border-radius:11px!important;
+  }
+  #uiLauncherStack > button .launcher-icon,
+  #uiLauncherStack > button .toggle-icon{
+    width:23px!important;min-width:23px!important;max-width:23px!important;
+    height:23px!important;min-height:23px!important;max-height:23px!important;
+    flex-basis:23px!important;
+    font-size:17px!important;line-height:23px!important;
+  }
+  #uiLauncherStack > button .launcher-label,
+  #uiLauncherStack > button b{
+    width:18px!important;min-width:18px!important;max-width:18px!important;
+    height:52px!important;min-height:52px!important;max-height:52px!important;
+    flex-basis:52px!important;
+    font-size:9px!important;
+  }
+}

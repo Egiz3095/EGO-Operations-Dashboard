@@ -1,0 +1,122 @@
+
+/* ===== إصلاح نهائي: إظهار محتويات الفلاتر عند فتح لوحة الفلاتر ===== */
+#filterSidebar.filter-sidebar{
+  background:#0d1419!important;
+  border-left:1px solid #30404a!important;
+  color:#e7edf0!important;
+}
+#filterSidebar.open,
+#filterSidebar.is-open,
+body.filter-sidebar-open #filterSidebar{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+}
+
+/* جسم لوحة الفلاتر */
+#filterSidebar .filter-sidebar-body{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:calc(100vh - 100px)!important;
+}
+
+/* أهم إصلاح: التنسيق القديم كان يخفي .filters في الصفحة الرئيسية */
+#filterSidebar .filter-sidebar-body > .filters,
+#filterSidebar .filters{
+  display:grid!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  position:static!important;
+  transform:none!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:12px!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important;
+  background:#11191f!important;
+  border:1px solid #293740!important;
+  border-radius:12px!important;
+  box-shadow:none!important;
+}
+
+/* إظهار كل عناصر الفلترة بلا استثناء */
+#filterSidebar .filters > *,
+#filterSidebar .filters label,
+#filterSidebar .filters .field,
+#filterSidebar .filters .filter-field,
+#filterSidebar .filters select,
+#filterSidebar .filters input,
+#filterSidebar .filters button{
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+}
+#filterSidebar .filters label,
+#filterSidebar .filters .field,
+#filterSidebar .filters .filter-field{
+  display:block!important;
+}
+#filterSidebar .filters select,
+#filterSidebar .filters input{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:38px!important;
+  color:#e9eef1!important;
+  background:#0b1115!important;
+  border:1px solid #34434d!important;
+  border-radius:8px!important;
+}
+#filterSidebar .filters label{
+  color:#aab7bf!important;
+}
+#filterSidebar .filters select:focus,
+#filterSidebar .filters input:focus{
+  border-color:#5da798!important;
+  box-shadow:0 0 0 3px rgba(93,167,152,.10)!important;
+  outline:none!important;
+}
+
+/* البحث يأخذ العرض الكامل */
+#filterSidebar .filters #search,
+#filterSidebar .filters [type="search"]{
+  grid-column:1/-1!important;
+}
+
+/* لا تسمح لقواعد الصفحة الرئيسية بإخفاء فلاتر اللوحة */
+body.nav-home #filterSidebar .filters,
+body:not(.nav-home) #filterSidebar .filters{
+  display:grid!important;
+}
+
+/* عنوان اللوحة */
+#filterSidebar .filter-sidebar-head{
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  color:#e8eef1!important;
+}
+
+/* الهاتف */
+@media(max-width:760px){
+  #filterSidebar .filters{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+    padding:10px!important;
+  }
+  #filterSidebar .filters #search,
+  #filterSidebar .filters [type="search"]{
+    grid-column:auto!important;
+  }
+}

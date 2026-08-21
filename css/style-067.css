@@ -1,0 +1,78 @@
+
+#reportInvoice .invoice-summary-below,
+#reportInvoice #invoiceSummary{
+  width:100%!important;
+  max-width:100%!important;
+}
+#reportInvoice #invoiceSummary .invoice-stock-summary-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:visible!important;
+  overflow-y:visible!important;
+  border-radius:12px!important;
+}
+#reportInvoice #invoiceSummary .invoice-summary-fit{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+}
+#reportInvoice #invoiceSummary .invoice-summary-fit th,
+#reportInvoice #invoiceSummary .invoice-summary-fit td{
+  padding:8px 5px!important;
+  font-size:11px!important;
+  line-height:1.35!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:anywhere!important;
+  text-overflow:clip!important;
+  overflow:visible!important;
+}
+
+/* توزيع العرض حسب أهمية العمود */
+#reportInvoice #invoiceSummary .invoice-summary-fit th:nth-child(1),
+#reportInvoice #invoiceSummary .invoice-summary-fit td:nth-child(1){width:18%!important}
+#reportInvoice #invoiceSummary .invoice-summary-fit th:nth-child(2),
+#reportInvoice #invoiceSummary .invoice-summary-fit td:nth-child(2){width:12%!important}
+#reportInvoice #invoiceSummary .invoice-summary-fit th:nth-child(3),
+#reportInvoice #invoiceSummary .invoice-summary-fit td:nth-child(3){width:10%!important}
+#reportInvoice #invoiceSummary .invoice-summary-fit th:nth-child(4),
+#reportInvoice #invoiceSummary .invoice-summary-fit td:nth-child(4){width:10%!important}
+#reportInvoice #invoiceSummary .invoice-summary-fit th:nth-child(5),
+#reportInvoice #invoiceSummary .invoice-summary-fit td:nth-child(5){width:10%!important}
+#reportInvoice #invoiceSummary .invoice-summary-fit th:nth-child(6),
+#reportInvoice #invoiceSummary .invoice-summary-fit td:nth-child(6){width:20%!important}
+#reportInvoice #invoiceSummary .invoice-summary-fit th:nth-child(7),
+#reportInvoice #invoiceSummary .invoice-summary-fit td:nth-child(7){width:20%!important}
+
+@media(max-width:900px){
+ #reportInvoice #invoiceSummary .invoice-summary-fit th,
+ #reportInvoice #invoiceSummary .invoice-summary-fit td{
+   font-size:9.5px!important;
+   padding:7px 3px!important;
+ }
+}
+@media(max-width:700px){
+ #reportInvoice #invoiceSummary .invoice-stock-summary-wrap{
+   overflow-x:auto!important;
+ }
+ #reportInvoice #invoiceSummary .invoice-summary-fit{
+   min-width:760px!important;
+ }
+}
+@media print{
+ #reportInvoice #invoiceSummary .invoice-stock-summary-wrap{
+   overflow:visible!important;
+ }
+ #reportInvoice #invoiceSummary .invoice-summary-fit{
+   min-width:0!important;
+   width:100%!important;
+   table-layout:fixed!important;
+ }
+ #reportInvoice #invoiceSummary .invoice-summary-fit th,
+ #reportInvoice #invoiceSummary .invoice-summary-fit td{
+   font-size:6.5pt!important;
+   padding:1.4mm .8mm!important;
+ }
+}

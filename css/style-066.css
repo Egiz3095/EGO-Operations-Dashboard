@@ -1,0 +1,48 @@
+
+/* استعادة تفاصيل المورد */
+#reportSupplier #supplierExtraDetails{display:block!important;width:100%!important;margin-top:14px!important}
+
+/* تقرير الفاتورة بنفس تسلسل المورد */
+#reportInvoice .invoice-chart-full{
+ width:100%!important;margin:0 0 14px!important;padding:14px!important;
+ border:1px solid var(--line,#30404a)!important;border-radius:14px!important;
+ background:var(--card,#10181e)!important;box-sizing:border-box!important
+}
+#reportInvoice .invoice-chart-full #invoiceChart{width:100%!important;min-height:310px!important}
+#reportInvoice .invoice-summary-below{width:100%!important;margin:0 0 14px!important}
+#reportInvoice #invoiceSummary{width:100%!important;max-width:none!important}
+#reportInvoice #invoiceExtraDetails{display:block!important;width:100%!important;margin-top:14px!important}
+
+/* الجداول بعرض التقرير مع فواصل واضحة */
+#reportInvoice #invoiceSummary .summary-table-wrap,
+#reportInvoice #invoiceExtraDetails .safe-extra-scroll,
+#reportInvoice #invoiceExtraDetails [class*="table-wrap"],
+#reportSupplier #supplierExtraDetails .safe-extra-scroll,
+#reportSupplier #supplierExtraDetails [class*="table-wrap"]{
+ width:100%!important;max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;
+ border:1px solid rgba(125,145,160,.24)!important;border-radius:12px!important
+}
+#reportInvoice #invoiceSummary table,#reportInvoice #invoiceExtraDetails table,
+#reportSupplier #supplierExtraDetails table{
+ width:100%!important;min-width:900px!important;border-collapse:collapse!important
+}
+#reportInvoice #invoiceSummary th,#reportInvoice #invoiceSummary td,
+#reportInvoice #invoiceExtraDetails th,#reportInvoice #invoiceExtraDetails td,
+#reportSupplier #supplierExtraDetails th,#reportSupplier #supplierExtraDetails td{
+ padding:9px 8px!important;border:1px solid rgba(130,150,165,.20)!important;
+ text-align:center!important;vertical-align:middle!important
+}
+#reportInvoice #invoiceSummary th,#reportInvoice #invoiceExtraDetails th,
+#reportSupplier #supplierExtraDetails th{
+ background:#19262f!important;color:#eef3f6!important;font-weight:900!important
+}
+@media(max-width:800px){#reportInvoice .invoice-chart-full #invoiceChart{min-height:240px!important}}
+@media print{
+ #reportInvoice .invoice-chart-full,#reportInvoice #invoiceSummary .summary-table-wrap,
+ #reportInvoice #invoiceExtraDetails .safe-extra-scroll,#reportInvoice #invoiceExtraDetails [class*="table-wrap"],
+ #reportSupplier #supplierExtraDetails .safe-extra-scroll,#reportSupplier #supplierExtraDetails [class*="table-wrap"]{
+  overflow:visible!important;max-height:none!important;background:#fff!important
+ }
+ #reportInvoice #invoiceSummary table,#reportInvoice #invoiceExtraDetails table,
+ #reportSupplier #supplierExtraDetails table{min-width:0!important}
+}

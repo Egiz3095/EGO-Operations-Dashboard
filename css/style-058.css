@@ -1,0 +1,371 @@
+
+/* ==========================================================
+   EGO PROFESSIONAL PRINT SYSTEM
+   White administrative reports + dark/gold identity
+   ========================================================== */
+@media print{
+  @page{
+    size:A4;
+    margin:10mm 9mm 12mm;
+  }
+
+  html,body{
+    background:#fff!important;
+    color:#172431!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+
+  /* Printed stages are always white, regardless of screen theme */
+  #singlePrintStage,
+  #fullPrintStage{
+    background:#fff!important;
+    color:#172431!important;
+    direction:rtl!important;
+    font-family:Cairo,Tajawal,Arial,sans-serif!important;
+  }
+
+  #singlePrintStage *,
+  #fullPrintStage *{
+    text-shadow:none!important;
+  }
+
+  /* Remove all interactive UI from print */
+  #singlePrintStage button,
+  #fullPrintStage button,
+  #singlePrintStage .actions,
+  #fullPrintStage .actions,
+  #singlePrintStage .report-breadcrumb,
+  #fullPrintStage .report-breadcrumb,
+  #singlePrintStage .filter-sidebar,
+  #fullPrintStage .filter-sidebar,
+  #singlePrintStage .report-sidebar,
+  #fullPrintStage .report-sidebar,
+  #singlePrintStage .premium-quick-actions,
+  #fullPrintStage .premium-quick-actions{
+    display:none!important;
+  }
+
+  /* Every report/page gets a clean white canvas */
+  #singlePrintStage > section,
+  #singlePrintStage > main,
+  #singlePrintStage > div,
+  #fullPrintStage > section,
+  #fullPrintStage > main,
+  #fullPrintStage > div,
+  #singlePrintStage .ref-print-page,
+  #fullPrintStage .ref-print-page,
+  #singlePrintStage .package-print-page,
+  #fullPrintStage .package-print-page,
+  #singlePrintStage .auto-print-report-page,
+  #fullPrintStage .auto-print-report-page{
+    background:#fff!important;
+    color:#172431!important;
+    box-shadow:none!important;
+    filter:none!important;
+  }
+
+  /* Unified official report header */
+  .ego-print-brand-head{
+    display:grid!important;
+    grid-template-columns:42mm 1fr 42mm!important;
+    align-items:center!important;
+    gap:5mm!important;
+    padding:0 0 4mm!important;
+    margin:0 0 4mm!important;
+    border-bottom:1.2mm solid #c99221!important;
+    background:#fff!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .ego-print-brand{
+    display:flex!important;
+    align-items:center!important;
+    gap:3mm!important;
+  }
+  .ego-print-brand img{
+    width:15mm!important;
+    height:15mm!important;
+    object-fit:contain!important;
+    background:#fff!important;
+  }
+  .ego-print-brand b{
+    display:block!important;
+    color:#14283a!important;
+    font-size:11pt!important;
+    line-height:1.25!important;
+  }
+  .ego-print-brand small{
+    display:block!important;
+    margin-top:1mm!important;
+    color:#6d7881!important;
+    font-size:6.8pt!important;
+  }
+  .ego-print-report-title{
+    text-align:center!important;
+  }
+  .ego-print-report-title strong{
+    display:block!important;
+    color:#14283a!important;
+    font-size:15pt!important;
+    font-weight:900!important;
+    line-height:1.3!important;
+  }
+  .ego-print-report-title span{
+    display:block!important;
+    margin-top:1.5mm!important;
+    color:#68747e!important;
+    font-size:7.2pt!important;
+  }
+  .ego-print-date{
+    direction:rtl!important;
+    text-align:left!important;
+    color:#4d5962!important;
+    font-size:7pt!important;
+    line-height:1.7!important;
+  }
+  .ego-print-date b{color:#172431!important}
+
+  /* Active filter summary */
+  .ego-print-filter-strip{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    align-items:center!important;
+    gap:2mm!important;
+    margin:0 0 4mm!important;
+    padding:2.5mm 3mm!important;
+    border:0.25mm solid #d9dee2!important;
+    border-radius:2mm!important;
+    background:#f7f8f9!important;
+    color:#46535d!important;
+    font-size:7pt!important;
+    break-inside:avoid!important;
+  }
+  .ego-print-filter-strip > b{
+    color:#172431!important;
+    margin-left:1mm!important;
+  }
+  .ego-print-filter-chip{
+    display:inline-flex!important;
+    align-items:center!important;
+    padding:1mm 2mm!important;
+    border:0.2mm solid #d7b66e!important;
+    border-radius:10mm!important;
+    background:#fffaf0!important;
+    color:#6b511b!important;
+    font-weight:800!important;
+  }
+
+  /* KPI cards become formal executive summary cards */
+  #singlePrintStage .ref-kpis,
+  #fullPrintStage .ref-kpis,
+  #singlePrintStage .executive-kpis,
+  #fullPrintStage .executive-kpis,
+  #singlePrintStage .inventory-print-kpis,
+  #fullPrintStage .inventory-print-kpis{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:2.2mm!important;
+    margin:0 0 4mm!important;
+    break-inside:avoid!important;
+  }
+  #singlePrintStage .ref-kpis>div,
+  #fullPrintStage .ref-kpis>div,
+  #singlePrintStage .executive-kpi,
+  #fullPrintStage .executive-kpi,
+  #singlePrintStage .inventory-print-kpi,
+  #fullPrintStage .inventory-print-kpi{
+    background:#fff!important;
+    border:0.25mm solid #d8dde1!important;
+    border-top:0.8mm solid #c99221!important;
+    border-radius:1.5mm!important;
+    padding:3mm 2mm!important;
+    color:#172431!important;
+    box-shadow:none!important;
+  }
+  #singlePrintStage .ref-kpis strong,
+  #fullPrintStage .ref-kpis strong,
+  #singlePrintStage .executive-kpi strong,
+  #fullPrintStage .executive-kpi strong{
+    color:#14283a!important;
+  }
+
+  /* Tables: full data, white, repeated header, no scroll clipping */
+  #singlePrintStage .tablewrap,
+  #fullPrintStage .tablewrap,
+  #singlePrintStage .si-table-wrap,
+  #fullPrintStage .si-table-wrap,
+  #singlePrintStage .records-direct-table-wrap,
+  #fullPrintStage .records-direct-table-wrap,
+  #singlePrintStage [class*="table-wrap"],
+  #fullPrintStage [class*="table-wrap"]{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    height:auto!important;
+    max-height:none!important;
+    min-height:0!important;
+    overflow:visible!important;
+    contain:none!important;
+    clip:auto!important;
+  }
+
+  #singlePrintStage table,
+  #fullPrintStage table{
+    width:100%!important;
+    max-width:100%!important;
+    border-collapse:collapse!important;
+    border-spacing:0!important;
+    table-layout:auto!important;
+    background:#fff!important;
+    color:#172431!important;
+    font-size:7pt!important;
+    line-height:1.35!important;
+  }
+  #singlePrintStage thead,
+  #fullPrintStage thead{
+    display:table-header-group!important;
+  }
+  #singlePrintStage tfoot,
+  #fullPrintStage tfoot{
+    display:table-footer-group!important;
+  }
+  #singlePrintStage th,
+  #fullPrintStage th{
+    padding:2mm 1.4mm!important;
+    border:0.22mm solid #aeb8c0!important;
+    background:#e9eef2!important;
+    color:#14283a!important;
+    font-weight:900!important;
+    text-align:center!important;
+    vertical-align:middle!important;
+    white-space:normal!important;
+  }
+  #singlePrintStage td,
+  #fullPrintStage td{
+    padding:1.7mm 1.3mm!important;
+    border:0.18mm solid #cfd5da!important;
+    background:#fff!important;
+    color:#202d37!important;
+    text-align:center!important;
+    vertical-align:middle!important;
+    white-space:normal!important;
+    word-break:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  #singlePrintStage tbody tr:nth-child(even) td,
+  #fullPrintStage tbody tr:nth-child(even) td{
+    background:#fafbfc!important;
+  }
+  #singlePrintStage tr,
+  #fullPrintStage tr{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+
+  /* Remove screen heights/scroll limits from all report blocks */
+  #singlePrintStage [style*="overflow"],
+  #fullPrintStage [style*="overflow"]{
+    overflow:visible!important;
+    max-height:none!important;
+  }
+  #singlePrintStage [style*="height"],
+  #fullPrintStage [style*="height"]{
+    max-height:none!important;
+  }
+
+  /* Charts/panels: white and printable */
+  #singlePrintStage canvas,
+  #fullPrintStage canvas,
+  #singlePrintStage svg,
+  #fullPrintStage svg{
+    max-width:100%!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  #singlePrintStage .ref-chart-panel,
+  #fullPrintStage .ref-chart-panel,
+  #singlePrintStage .ref-table-panel,
+  #fullPrintStage .ref-table-panel,
+  #singlePrintStage .chart-card,
+  #fullPrintStage .chart-card{
+    background:#fff!important;
+    border:0.25mm solid #d8dde1!important;
+    color:#172431!important;
+    box-shadow:none!important;
+    break-inside:avoid!important;
+  }
+  #singlePrintStage .ref-bar-track,
+  #fullPrintStage .ref-bar-track{
+    background:#e8edf1!important;
+  }
+  #singlePrintStage .ref-bar-fill,
+  #fullPrintStage .ref-bar-fill{
+    background:#17324a!important;
+  }
+
+  /* Existing title bands are simplified because official header is above them */
+  #singlePrintStage .ref-title-band,
+  #fullPrintStage .ref-title-band,
+  #singlePrintStage .package-print-head,
+  #fullPrintStage .package-print-head{
+    background:#fff!important;
+    color:#172431!important;
+    border:0!important;
+    border-bottom:0.25mm solid #d7dde1!important;
+    padding:0 0 2.5mm!important;
+    margin:0 0 3mm!important;
+    box-shadow:none!important;
+  }
+
+  /* Professional footer per report page/block */
+  .ego-print-footer{
+    display:flex!important;
+    justify-content:space-between!important;
+    align-items:center!important;
+    gap:5mm!important;
+    margin-top:4mm!important;
+    padding-top:2.5mm!important;
+    border-top:0.25mm solid #c8cfd5!important;
+    color:#6e7982!important;
+    font-size:6.5pt!important;
+    break-inside:avoid!important;
+  }
+  .ego-print-footer b{color:#263845!important}
+  .ego-print-footer .ego-print-confidential{
+    color:#8a6721!important;
+    font-weight:800!important;
+  }
+
+  /* Hide old redundant footers */
+  #singlePrintStage .ref-footer,
+  #fullPrintStage .ref-footer{
+    display:none!important;
+  }
+
+  /* Never allow dark backgrounds from recent dashboard styling to leak into print */
+  #singlePrintStage .card,
+  #fullPrintStage .card,
+  #singlePrintStage .panel,
+  #fullPrintStage .panel,
+  #singlePrintStage .home-report-card,
+  #fullPrintStage .home-report-card,
+  #singlePrintStage .executive-insight-card,
+  #fullPrintStage .executive-insight-card{
+    background:#fff!important;
+    color:#172431!important;
+    border-color:#d8dde1!important;
+    box-shadow:none!important;
+  }
+}
+
+/* Landscape only for the records report, which has many columns */
+@media print{
+  body[data-print-target="records"] #singlePrintStage .records-direct-print{
+    page:egoRecordsLandscape;
+  }
+}
+@page egoRecordsLandscape{
+  size:A4 landscape;
+  margin:8mm;
+}

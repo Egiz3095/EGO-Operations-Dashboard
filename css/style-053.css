@@ -1,0 +1,92 @@
+
+/* توحيد ألوان أزرار الجانب مع الثيم الداكن والذهبي */
+#uiLauncherStack{
+  gap:9px!important;
+}
+#uiLauncherStack button,
+#reportSidebarToggle,
+#filterSidebarToggle,
+#userAdminOpen,
+#comparisonsOpen,
+#egoLogoutBtn{
+  background:linear-gradient(145deg,#151d23,#0f161b)!important;
+  border:1px solid #2d3a43!important;
+  color:#c9d3d9!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.22)!important;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease,color .16s ease,box-shadow .16s ease!important;
+}
+
+/* الأيقونات */
+#uiLauncherStack button svg,
+#reportSidebarToggle svg,
+#filterSidebarToggle svg,
+#userAdminOpen svg,
+#comparisonsOpen svg{
+  color:#dca332!important;
+  fill:currentColor;
+}
+#uiLauncherStack button:hover,
+#reportSidebarToggle:hover,
+#filterSidebarToggle:hover,
+#userAdminOpen:hover,
+#comparisonsOpen:hover{
+  background:linear-gradient(145deg,#1d272e,#151d22)!important;
+  border-color:#9a742b!important;
+  color:#f1b644!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.28),0 0 0 1px rgba(227,166,47,.08)!important;
+  transform:translateY(-1px)!important;
+}
+#uiLauncherStack button:active,
+#reportSidebarToggle:active,
+#filterSidebarToggle:active,
+#userAdminOpen:active,
+#comparisonsOpen:active{
+  transform:translateY(0)!important;
+  background:#11181d!important;
+}
+
+/* زر تسجيل الخروج: نفس الثيم مع تمييز أحمر هادئ فقط */
+#egoLogoutBtn{
+  color:#d9c4c4!important;
+  border-color:#493238!important;
+  background:linear-gradient(145deg,#1b171a,#121517)!important;
+}
+#egoLogoutBtn:hover{
+  color:#ff8b8b!important;
+  border-color:#81505a!important;
+  background:linear-gradient(145deg,#25191d,#171416)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.28),0 0 0 1px rgba(223,102,102,.08)!important;
+}
+
+/* حالة الزر المحدد/المفتوح */
+#uiLauncherStack button.active,
+#uiLauncherStack button[aria-expanded="true"],
+#reportSidebarToggle[aria-expanded="true"],
+#filterSidebarToggle[aria-expanded="true"],
+#userAdminOpen[aria-expanded="true"],
+#comparisonsOpen[aria-expanded="true"]{
+  background:linear-gradient(145deg,#302715,#1b1b18)!important;
+  border-color:#a77b29!important;
+  color:#efb33c!important;
+  box-shadow:0 7px 20px rgba(0,0,0,.24),inset 3px 0 0 #e3a62f!important;
+}
+
+/* النصوص الصغيرة أو التلميحات داخل الأزرار */
+#uiLauncherStack button small{
+  color:#84949f!important;
+}
+#uiLauncherStack button:hover small{
+  color:#b7c1c7!important;
+}
+
+/* الجوال والتابلت */
+@media(max-width:760px){
+  #uiLauncherStack button,
+  #reportSidebarToggle,
+  #filterSidebarToggle,
+  #userAdminOpen,
+  #comparisonsOpen,
+  #egoLogoutBtn{
+    box-shadow:0 5px 14px rgba(0,0,0,.20)!important;
+  }
+}

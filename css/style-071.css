@@ -1,0 +1,32 @@
+
+/* خلفية تسجيل الدخول تملأ أي شاشة مع الحفاظ على الصورة الحالية */
+#loginScreen,.login-screen,.login-page,.loginPage,#loginPage,.auth-screen,.auth-page,.login-overlay{
+  width:100vw!important;
+  min-width:100vw!important;
+  height:100vh!important;
+  min-height:100vh!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  background-size:cover!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+  background-attachment:scroll!important;
+}
+#loginScreen > img.login-bg,.login-screen > img.login-bg,.login-page > img.login-bg,
+#loginPage > img.login-bg,.auth-screen > img.login-bg,.login-background,.login-bg-image{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  display:block!important;
+}
+@supports not (height:100dvh){
+  #loginScreen,.login-screen,.login-page,.loginPage,#loginPage,.auth-screen,.auth-page,.login-overlay{
+    height:100vh!important;
+    min-height:100vh!important;
+  }
+}

@@ -1,0 +1,43 @@
+
+/* تثبيت صور خلفية الزيوت والإطارات بالكامل */
+#egoLoginGate .real-tire-img,
+#egoLoginGate .real-oil-img,
+#egoLoginGate .real-auto-art,
+#egoLoginGate .automotive-scene,
+#egoLoginGate .oil-scene,
+#egoLoginGate .tire-scene,
+#egoLoginGate .auto-particles,
+#egoLoginGate .auto-particles i,
+#egoLoginGate .automotive-scene:after{
+  animation:none!important;
+  transition:none!important;
+}
+
+/* تثبيت موضع الصور وعدم تحريكها */
+#egoLoginGate .real-tire-img{
+  transform:translateY(-50%)!important;
+}
+#egoLoginGate .real-oil-img{
+  transform:translateY(-50%)!important;
+}
+
+/* إزالة الجزيئات المتحركة من الخلفية */
+#egoLoginGate .auto-particles{
+  display:none!important;
+}
+
+/* الإبقاء على الخلفية والإضاءة ثابتة */
+#egoLoginGate .real-auto-art{
+  filter:none!important;
+}
+
+/* حركة التحميل بعد الضغط على تسجيل الدخول تظل تعمل بشكل مستقل */
+#egoLoginGate .pro-runner-loader .pro-runner,
+#egoLoginGate .pro-runner-loader .pro-tire,
+#egoLoginGate .pro-runner-loader .runner-arm,
+#egoLoginGate .pro-runner-loader .runner-leg,
+#egoLoginGate .pro-runner-loader .pro-motion-lines i,
+#egoLoginGate .pro-runner-loader .pro-dust i,
+#egoLoginGate .pro-runner-loader .pro-road-glow{
+  animation-play-state:running!important;
+}

@@ -1,0 +1,51 @@
+
+/* Tire Position / Failure Points Report */
+#tirePositionReport{direction:rtl}
+#tirePositionReport .tp-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 14px}
+#tirePositionReport .tp-kpi{padding:13px 12px;border:1px solid var(--line,rgba(130,150,165,.22));border-radius:12px;background:var(--card,#10181e)}
+#tirePositionReport .tp-kpi span{display:block;color:var(--muted,#91a0aa);font-size:10px;margin-bottom:5px}
+#tirePositionReport .tp-kpi b{display:block;color:var(--text,#eef3f6);font-size:17px;line-height:1.35}
+#tirePositionReport .tp-kpi small{display:block;color:var(--muted,#8998a1);font-size:9px;margin-top:4px}
+#tirePositionReport .tp-card{margin:0 0 14px;padding:14px;border:1px solid var(--line,rgba(130,150,165,.22));border-radius:14px;background:var(--card,#10181e);box-shadow:0 10px 28px rgba(0,0,0,.10)}
+#tirePositionReport .tp-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+#tirePositionReport .tp-card-head h3{margin:0;color:var(--text,#eef3f6);font-size:14px}
+#tirePositionReport .tp-card-head p{margin:4px 0 0;color:var(--muted,#91a0aa);font-size:10px}
+#tirePositionReport .tp-state{display:inline-flex;padding:5px 10px;border:1px solid var(--line,rgba(130,150,165,.22));border-radius:999px;color:var(--muted,#91a0aa);font-size:10px}
+#tirePositionReport .tp-ranking{display:grid;gap:9px}
+#tirePositionReport .tp-rank-row{display:grid;grid-template-columns:minmax(210px,28%) 1fr 70px;gap:10px;align-items:center;cursor:pointer}
+#tirePositionReport .tp-rank-name{color:var(--text,#e4ebef);font-size:11px;text-align:right}
+#tirePositionReport .tp-rank-name b{display:inline-grid;place-items:center;width:22px;height:22px;margin-left:7px;border-radius:50%;background:rgba(120,140,152,.14);font-size:9px}
+#tirePositionReport .tp-rank-track{height:18px;border-radius:999px;background:rgba(128,145,155,.10);overflow:hidden;border:1px solid rgba(128,145,155,.12)}
+#tirePositionReport .tp-rank-bar{height:100%;border-radius:999px;transition:width .3s ease}
+#tirePositionReport .tp-rank-value{font-size:11px;font-weight:900;color:var(--text,#eef3f6);text-align:left}
+#tirePositionReport .tp-table-wrap,#tirePositionReport .tp-heatmap-wrap{width:100%;overflow:auto;border:1px solid var(--line,rgba(130,150,165,.20));border-radius:11px}
+#tirePositionReport .tp-table,#tirePositionReport .tp-heatmap{width:100%;min-width:800px;border-collapse:collapse;font-size:11px}
+#tirePositionReport .tp-heatmap{min-width:900px}
+#tirePositionReport th,#tirePositionReport td{padding:9px 7px;border:1px solid rgba(130,150,165,.18);text-align:center;vertical-align:middle;color:var(--text,#dce5ea)}
+#tirePositionReport th{background:rgba(28,42,52,.92);font-weight:900;cursor:pointer;user-select:none}
+html[data-theme="light"] #tirePositionReport th{background:#e7eef2;color:#14222c}
+#tirePositionReport tbody tr:hover td{background:rgba(227,166,47,.045)}
+#tirePositionReport .tp-clickable{cursor:pointer}
+#tirePositionReport .tp-table tfoot td{background:rgba(227,166,47,.07);color:var(--gold,#e4aa35);font-weight:900;border-top:2px solid rgba(227,166,47,.30)}
+#tirePositionReport .tp-sort-active::after{content:" ↕";color:var(--gold,#e4aa35)}
+#tirePositionReport .tp-heat-cell{font-weight:900;cursor:pointer;transition:filter .15s ease}
+#tirePositionReport .tp-heat-cell:hover{filter:brightness(1.15)}
+#tirePositionReport .tp-empty{padding:24px!important;text-align:center!important;color:var(--muted,#91a0aa)!important}
+#tirePositionReport .tp-data-note{margin-top:9px;color:var(--muted,#91a0aa);font-size:9px}
+@media(max-width:850px){
+ #tirePositionReport .tp-kpis{grid-template-columns:1fr 1fr}
+ #tirePositionReport .tp-rank-row{grid-template-columns:minmax(130px,38%) 1fr 48px;gap:6px}
+ #tirePositionReport .tp-rank-name,#tirePositionReport .tp-rank-value{font-size:9px}
+}
+@media(max-width:520px){
+ #tirePositionReport .tp-kpis{grid-template-columns:1fr}
+}
+@media print{
+ #tirePositionReport .tp-card,#tirePositionReport .tp-kpi{background:#fff!important;border-color:#bbb!important;box-shadow:none!important}
+ #tirePositionReport .tp-card-head h3,#tirePositionReport .tp-kpi b,#tirePositionReport td{color:#111!important}
+ #tirePositionReport .tp-table-wrap,#tirePositionReport .tp-heatmap-wrap{overflow:visible!important}
+ #tirePositionReport .tp-table,#tirePositionReport .tp-heatmap{min-width:0!important;width:100%!important;font-size:6.5pt!important}
+ #tirePositionReport th{background:#e7eef2!important;color:#111!important}
+ #tirePositionReport td,#tirePositionReport th{padding:1.4mm .8mm!important;border-color:#aaa!important}
+ #tirePositionReport .tp-rank-name,#tirePositionReport .tp-rank-value{color:#111!important}
+}

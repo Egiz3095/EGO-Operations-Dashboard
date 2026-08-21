@@ -1,0 +1,136 @@
+
+/* =========================================================
+   FINAL SIDE LAUNCHER COLORS — exact IDs override old colors
+   ========================================================= */
+#uiLauncherStack > #reportSidebarToggle,
+#reportSidebarToggle.report-sidebar-toggle{
+  background:linear-gradient(180deg,#3a2d14,#211b12)!important;
+  border:1px solid #806127!important;
+  color:#f0b83f!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,210,112,.07)!important;
+}
+#uiLauncherStack > #filterSidebarToggle,
+#filterSidebarToggle.filter-sidebar-toggle{
+  background:linear-gradient(180deg,#15342f,#10231f)!important;
+  border:1px solid #35665d!important;
+  color:#73c6b5!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.30),inset 0 1px 0 rgba(115,198,181,.06)!important;
+}
+#uiLauncherStack > #userAdminOpen,
+#userAdminOpen.user-sidebar-toggle{
+  background:linear-gradient(180deg,#183043,#112330)!important;
+  border:1px solid #365e78!important;
+  color:#78b5d8!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.30),inset 0 1px 0 rgba(120,181,216,.06)!important;
+}
+#uiLauncherStack > #comparisonsOpen,
+#comparisonsOpen.compare-sidebar-toggle{
+  background:linear-gradient(180deg,#30273c,#211b2b)!important;
+  border:1px solid #665377!important;
+  color:#c0a2d7!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.30),inset 0 1px 0 rgba(192,162,215,.06)!important;
+}
+#uiLauncherStack > #egoLogoutBtn,
+#egoLogoutBtn.logout-sidebar-toggle{
+  background:linear-gradient(180deg,#361d20,#241416)!important;
+  border:1px solid #744047!important;
+  color:#e88b91!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.30),inset 0 1px 0 rgba(232,139,145,.05)!important;
+}
+
+/* Force icon/text to follow each button accent, defeating old white styles */
+#uiLauncherStack > #reportSidebarToggle .launcher-icon,
+#uiLauncherStack > #reportSidebarToggle .launcher-label{color:#f0b83f!important}
+#uiLauncherStack > #filterSidebarToggle .launcher-icon,
+#uiLauncherStack > #filterSidebarToggle .launcher-label{color:#73c6b5!important}
+#uiLauncherStack > #userAdminOpen .launcher-icon,
+#uiLauncherStack > #userAdminOpen .launcher-label{color:#78b5d8!important}
+#uiLauncherStack > #comparisonsOpen .launcher-icon,
+#uiLauncherStack > #comparisonsOpen .launcher-label{color:#c0a2d7!important}
+#uiLauncherStack > #egoLogoutBtn .launcher-icon,
+#uiLauncherStack > #egoLogoutBtn .launcher-label{color:#e88b91!important}
+
+/* Hover: brighter but still within the dark premium design */
+#uiLauncherStack > #reportSidebarToggle:hover{background:linear-gradient(180deg,#4b3918,#2b2214)!important;border-color:#c28d2d!important}
+#uiLauncherStack > #filterSidebarToggle:hover{background:linear-gradient(180deg,#1c463f,#15312c)!important;border-color:#57a596!important}
+#uiLauncherStack > #userAdminOpen:hover{background:linear-gradient(180deg,#203e54,#172c3a)!important;border-color:#5e93b4!important}
+#uiLauncherStack > #comparisonsOpen:hover{background:linear-gradient(180deg,#40334f,#2b2338)!important;border-color:#9177a5!important}
+#uiLauncherStack > #egoLogoutBtn:hover{background:linear-gradient(180deg,#48262b,#30191c)!important;border-color:#a95b64!important}
+
+#uiLauncherStack > button:hover{
+  transform:translateY(-1px)!important;
+  filter:none!important;
+}
+#uiLauncherStack > button.ego-one-only-selected,
+#uiLauncherStack > button.active,
+#uiLauncherStack > button[aria-expanded="true"]{
+  outline:2px solid rgba(227,166,47,.48)!important;
+  outline-offset:2px!important;
+  filter:brightness(1.10)!important;
+}
+
+/* Sidebar list itself follows the charcoal / gold report design */
+#reportSidebar .report-nav-item{
+  background:#11191f!important;
+  border:1px solid #26343d!important;
+  color:#aebbc4!important;
+  box-shadow:none!important;
+}
+#reportSidebar .report-nav-item > span{
+  color:#9aabb6!important;
+}
+#reportSidebar .report-nav-item:hover{
+  background:#182128!important;
+  border-color:#4a5962!important;
+  color:#e7edf0!important;
+}
+#reportSidebar .report-nav-item.active{
+  background:linear-gradient(90deg,#3a2c13,#1b1a17)!important;
+  border-color:#956e27!important;
+  color:#f0b541!important;
+  box-shadow:inset 3px 0 0 #e3a62f!important;
+}
+#reportSidebar .report-nav-item.active > span,
+#reportSidebar .report-nav-item.active > b{
+  color:#f0b541!important;
+}
+
+/* Global clickable logo language */
+.global-home-logo,
+.premium-home-logo-btn,
+.breadcrumb-logo-btn{
+  cursor:pointer!important;
+}
+.global-home-logo img,
+.premium-home-logo-btn img,
+.breadcrumb-logo-btn img,
+#mainHomeLogo{
+  cursor:pointer!important;
+}
+.report-sidebar-brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+}
+.report-sidebar-home-logo{
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  padding:4px!important;
+  border-radius:11px!important;
+  border:1px solid #725a2c!important;
+  background:#fff!important;
+  box-shadow:0 6px 15px rgba(0,0,0,.24)!important;
+}
+.report-sidebar-home-logo img{
+  width:100%!important;height:100%!important;object-fit:contain!important;border-radius:7px!important;
+}
+.report-sidebar-home-logo:hover{
+  border-color:#e3a62f!important;
+  transform:translateY(-1px)!important;
+}
+.report-sidebar-brand-copy{min-width:0!important}
+
+@media(max-width:760px){
+  .report-sidebar-home-logo{width:36px!important;height:36px!important;min-width:36px!important}
+}

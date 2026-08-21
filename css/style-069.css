@@ -1,0 +1,75 @@
+
+/* تقرير المسحوبات الشهرية: الرسم في الأعلى والجدول تحته */
+#reportMonthly .monthly-chart-full{
+  width:100%!important;
+  margin:0 0 14px!important;
+  padding:14px!important;
+  border:1px solid var(--line,#30404a)!important;
+  border-radius:14px!important;
+  background:var(--card,#10181e)!important;
+  box-sizing:border-box!important;
+}
+#reportMonthly .monthly-chart-full #monthlyChart{
+  width:100%!important;
+  min-height:310px!important;
+}
+#reportMonthly .monthly-summary-below{
+  width:100%!important;
+  margin:0 0 14px!important;
+}
+#reportMonthly #monthlySummary{
+  width:100%!important;
+  max-width:none!important;
+}
+#reportMonthly #monthlySummary .summary-table-wrap,
+#reportMonthly #monthlySummary [class*="table-wrap"]{
+  width:100%!important;
+  max-height:none!important;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  border:1px solid rgba(125,145,160,.24)!important;
+  border-radius:12px!important;
+}
+#reportMonthly #monthlySummary table{
+  width:100%!important;
+  min-width:0!important;
+  border-collapse:collapse!important;
+  table-layout:fixed!important;
+}
+#reportMonthly #monthlySummary th,
+#reportMonthly #monthlySummary td{
+  padding:10px 8px!important;
+  border:1px solid rgba(130,150,165,.20)!important;
+  text-align:center!important;
+  vertical-align:middle!important;
+}
+#reportMonthly #monthlySummary th{
+  background:#1c2a34!important;
+  color:#eef4f7!important;
+  font-weight:900!important;
+}
+@media(max-width:800px){
+  #reportMonthly .monthly-chart-full #monthlyChart{
+    min-height:240px!important;
+  }
+}
+@media print{
+  #reportMonthly .monthly-chart-full,
+  #reportMonthly #monthlySummary .summary-table-wrap,
+  #reportMonthly #monthlySummary [class*="table-wrap"]{
+    overflow:visible!important;
+    max-height:none!important;
+    background:#fff!important;
+  }
+  #reportMonthly #monthlySummary table{
+    min-width:0!important;
+    width:100%!important;
+  }
+  #reportMonthly #monthlySummary th{
+    background:#e7eef2!important;
+    color:#111!important;
+  }
+  #reportMonthly #monthlySummary td{
+    color:#111!important;
+  }
+}

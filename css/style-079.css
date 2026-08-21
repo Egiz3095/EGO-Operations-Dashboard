@@ -1,0 +1,33 @@
+
+/* ترتيب تصاعدي / تنازلي فقط بالنقر على رأس العمود */
+table th.ego-sortable-th{
+  position:relative;
+  cursor:pointer;
+  user-select:none;
+  padding-inline-end:20px!important;
+}
+table th.ego-sortable-th::after{
+  content:"↕";
+  position:absolute;
+  inset-inline-end:6px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:9px;
+  opacity:.28;
+  pointer-events:none;
+}
+table th.ego-sortable-th.ego-sort-active[data-ego-sort-dir="asc"]::after{
+  content:"▲";
+  opacity:.9;
+}
+table th.ego-sortable-th.ego-sort-active[data-ego-sort-dir="desc"]::after{
+  content:"▼";
+  opacity:.9;
+}
+table th.ego-sortable-th:hover::after{
+  opacity:.75;
+}
+@media print{
+  table th.ego-sortable-th::after{display:none!important}
+  table th.ego-sortable-th{padding-inline-end:inherit!important}
+}

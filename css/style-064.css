@@ -1,0 +1,40 @@
+
+/* الخلفية المرفقة من المستخدم - بدون أي توليد أو تعديل للصورة */
+#egoLoginGate {
+  background-image: url("../assets/asset_005_a767c4bc689496e9.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  background-color: #090b0d !important;
+}
+
+/* منع أي طبقات صور قديمة من تغطية الخلفية الجديدة */
+#egoLoginGate .real-auto-art,
+#egoLoginGate .automotive-scene,
+#egoLoginGate .auto-particles {
+  display: none !important;
+  background: none !important;
+}
+
+/* إبقاء مربع الدخول ناحية اليمين لكن تحريكه يساراً قليلاً كما طُلب */
+#egoLoginGate {
+  justify-content: flex-end !important;
+  padding-right: 7.2vw !important;
+  padding-left: 24px !important;
+}
+#egoLoginForm {
+  transform: translateX(-34px) !important;
+}
+
+@media (max-width:1050px) {
+  #egoLoginGate {
+    justify-content:center !important;
+    padding:24px !important;
+    background-position:center center !important;
+    background-attachment:scroll !important;
+  }
+  #egoLoginForm {
+    transform:none !important;
+  }
+}
