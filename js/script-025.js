@@ -10,7 +10,8 @@
   }
 
   function refreshHome(a){
-    try{window.renderHomeMiniSummaries?.(a)}catch(e){}
+    const usage=window.EGOTireOps?.operationalRows?.(a)||a;
+    try{window.renderHomeMiniSummaries?.(usage)}catch(e){}
     try{window.renderTireLifecycleHomeMini?.()}catch(e){}
     try{window.renderTirePositionHomeMini?.(a)}catch(e){}
     try{window.renderCriticalHomeFast?.(true)}catch(e){}
@@ -18,48 +19,52 @@
   }
 
   function refreshReport(target,a){
+    const usage=window.EGOTireOps?.operationalRows?.(a)||a;
     switch(target){
       case 'reportInvoice':
-        renderBars('#invoiceChart',sumBy(a,'invoice'),'invoice');
-        renderCompactSummary('#invoiceSummary',a,'invoice','الفاتورة');
-        renderDashboardExplanation('#invoiceExplain',a,'invoice','فاتورة');
-        renderInvoice(a);
+        renderBars('#invoiceChart',sumBy(usage,'invoice'),'invoice');
+        renderCompactSummary('#invoiceSummary',usage,'invoice','الفاتورة');
+        renderDashboardExplanation('#invoiceExplain',usage,'invoice','فاتورة');
+        renderInvoice(usage);
         break;
       case 'reportEquipment':
-        renderBars('#equipmentChart',sumBy(a,'plate'),'equipment');
-        if(typeof equipmentSummary==='function')equipmentSummary(a);else renderCompactSummary('#equipmentSummary',a,'plate','المعدة');
-        renderDashboardExplanation('#equipmentExplain',a,'plate','معدة');
+        renderBars('#equipmentChart',sumBy(usage,'plate'),'equipment');
+        if(typeof equipmentSummary==='function')equipmentSummary(usage);else renderCompactSummary('#equipmentSummary',usage,'plate','المعدة');
+        renderDashboardExplanation('#equipmentExplain',usage,'plate','معدة');
         break;
       case 'reportSupplier':
-        renderTreemap('#supplierChart',sumBy(a,'supplier'),'supplier');
-        renderCompactSummary('#supplierSummary',a,'supplier','المورد');
-        renderDashboardExplanation('#supplierExplain',a,'supplier','مورد');
+        renderTreemap('#supplierChart',sumBy(usage,'supplier'),'supplier');
+        renderCompactSummary('#supplierSummary',usage,'supplier','المورد');
+        renderDashboardExplanation('#supplierExplain',usage,'supplier','مورد');
         break;
       case 'reportTire':
-        renderLollipop('#tireChart',sumBy(a,'tire_type'),'tire');
-        renderCompactSummary('#tireSummary',a,'tire_type','نوع/مقاس الكفر');
-        renderDashboardExplanation('#tireExplain',a,'tire_type','نوع/مقاس كفر');
+        renderLollipop('#tireChart',sumBy(usage,'tire_type'),'tire');
+        renderCompactSummary('#tireSummary',usage,'tire_type','نوع/مقاس الكفر');
+        renderDashboardExplanation('#tireExplain',usage,'tire_type','نوع/مقاس كفر');
         break;
       case 'reportActivity':
-        renderDonut('#activityChart',sumBy(a,'activity'),'activity');
-        renderActivitySummary(a);
-        renderDashboardExplanation('#activityExplain',a,'activity','نشاط');
+        renderDonut('#activityChart',sumBy(usage,'activity'),'activity');
+        renderActivitySummary(usage);
+        renderDashboardExplanation('#activityExplain',usage,'activity','نشاط');
         break;
       case 'reportTireId':
-        renderBars('#tireIdChart',tireIdGroupsAsc(a),'tireId');
-        renderTireIdSummary(a);
-        renderDashboardExplanation('#tireIdExplain',a,'tire_id','هوية كفر');
+        renderBars('#tireIdChart',tireIdGroupsAsc(usage),'tireId');
+        renderTireIdSummary(usage);
+        renderDashboardExplanation('#tireIdExplain',usage,'tire_id','هوية كفر');
         break;
       case 'tireLifecycleReport':
         window.renderTireLifecycleReport?.();
+        break;
+      case 'tireStatusReport':
+        window.renderTireStatusReport?.();
         break;
       case 'tirePositionReport':
         window.renderTirePositionReport?.(a);
         break;
       case 'reportMonthly':
-        renderMonthlyReport(a);
-        renderMonthlyArea(a);
-        renderMonthlyExplanation(a);
+        renderMonthlyReport(usage);
+        renderMonthlyArea(usage);
+        renderMonthlyExplanation(usage);
         break;
       case 'supplierInvoicesReport':
         window.renderSupplierInvoiceReport?.();

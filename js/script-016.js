@@ -56,20 +56,45 @@
  }
  function inventoryWithdrawalRows(){
    try{
-     // Respect the global dashboard filter, including Google Sheets source filter.
      return typeof filters==='function' ? filters() : (Array.isArray(DATA)?DATA:[]);
    }catch(e){
      return Array.isArray(DATA)?DATA:[];
    }
  }
+ function inventoryLifecycleRows(){
+   /* Current stock status must be derived from the COMPLETE history of each tire,
+      otherwise a date filter can hide its last Park/Reuse/Service-End movement. */
+   try{return Array.isArray(DATA)?DATA:[]}catch(e){return []}
+ }
+ function rowSortKey(r){
+   const t=Date.parse(String(r?.date||''))||0;
+   const id=Number(r?.id)||0;
+   return [t,id];
+ }
+ function latestTireHistories(rows){
+   const map=new Map();
+   (rows||[]).forEach(r=>{
+     const id=String(r?.tire_id||'').trim();
+     if(!id)return;
+     if(!map.has(id))map.set(id,[]);
+     map.get(id).push(r);
+   });
+   map.forEach(a=>a.sort((x,y)=>{
+     const ax=rowSortKey(x),ay=rowSortKey(y);
+     return ax[0]-ay[0]||ax[1]-ay[1];
+   }));
+   return map;
+ }
  window.__EGO_PERF_CACHE=window.__EGO_PERF_CACHE||{inventorySig:'',inventory:[],alertSig:'',alerts:[]};
 
  function buildInventory(){
    const raw=supplierInvoiceRawRows();
-   const withdrawals=inventoryWithdrawalRows();
-   const filterSig=typeof dashboardFilterSignature==='function'?dashboardFilterSignature():String(withdrawals.length);
+   const scopedRows=inventoryWithdrawalRows();
+   const lifeRows=inventoryLifecycleRows();
+   const filterSig=typeof dashboardFilterSignature==='function'?dashboardFilterSignature():String(scopedRows.length);
    const rawLast=raw[raw.length-1]||{};
-   const sig=[filterSig,raw.length,rawLast.invoice||'',rawLast.item||'',rawLast.qty||''].join('|');
+   const lifeLast=lifeRows[lifeRows.length-1]||{};
+   const sig=[filterSig,raw.length,rawLast.invoice||'',rawLast.item||'',rawLast.qty||'',lifeRows.length,lifeLast.id||'',lifeLast.operation||''].join('|');
 
    const perf=window.__EGO_PERF_CACHE;
    if(perf.inventorySig===sig)return perf.inventory;
@@ -79,61 +104,106 @@
    raw.forEach(r=>{
      const invNorm=normalizeInvNo(r.invoice);
      const item=String(r.item||'غير محدد').trim()||'غير محدد';
-     /* الجرد يكون حسب الصنف نفسه وليس حسب الصنف + رقم الفاتورة.
-        لذلك الصنف المتطابق في عدة فواتير يظهر كسطر مخزون واحد. */
      const itemNorm=normalizeInvItem(item)||'غير محدد';
-     const key=itemNorm;
-     let o=map.get(key);
+     let o=map.get(itemNorm);
      if(!o){
-       o={key,item,invoice:String(r.invoice||'').trim(),incoming:0,used:0,remain:0,
-          invoices:new Set(),suppliers:new Set(),unmatched:false,sourceRows:[]};
-       map.set(key,o);
+       o={key:itemNorm,item,invoice:String(r.invoice||'').trim(),incoming:0,used:0,newAvailable:0,
+          parkedUsed:0,remain:0,invoices:new Set(),suppliers:new Set(),unmatched:false,
+          sourceRows:[],parkedTires:[]};
+       map.set(itemNorm,o);
      }
      o.incoming+=Number(r.qty)||0;
      o.invoices.add(String(r.invoice||'').trim());
      if(r.supplier)o.suppliers.add(r.supplier);
      o.sourceRows.push(r);
 
-     /* نفس الصنف قد يكون تابعاً لأكثر من فاتورة؛ نربطه بكل فاتورة
-        حتى تتم مطابقة المسحوبات مع الفاتورة الصحيحة دون تكرار الصنف في الجرد. */
      if(!invoiceBuckets.has(invNorm))invoiceBuckets.set(invNorm,[]);
      const bucket=invoiceBuckets.get(invNorm);
      if(!bucket.includes(o))bucket.push(o);
    });
 
-   const unmatchedMap=new Map();
-   withdrawals.forEach(w=>{
-     const invNorm=normalizeInvNo(w.invoice);
-     if(!invNorm)return;
-     const tireNorm=normalizeInvItem(w.tire_type);
+   function matchPurchasedItem(row){
+     const invNorm=normalizeInvNo(row?.invoice);
+     const tireNorm=normalizeInvItem(row?.tire_type);
      let target=null;
      const bucket=invoiceBuckets.get(invNorm)||[];
      target=bucket.find(x=>normalizeInvItem(x.item)===tireNorm)||null;
-
      if(!target){
        target=bucket.find(x=>{
          const k=normalizeInvItem(x.item);
          return tireNorm&&k&&Math.min(tireNorm.length,k.length)>=4&&(tireNorm.includes(k)||k.includes(tireNorm));
        })||null;
      }
+     return target;
+   }
 
+   /* A purchased tire leaves NEW stock once: its first "جديد" movement. */
+   const issuedKeys=new Set(),unmatchedMap=new Map();
+   lifeRows.forEach(w=>{
+     if(!window.EGOTireOps?.isPurchaseIssue?.(w))return;
+     const tid=String(w.tire_id||'').trim();
+     const uniqueKey=tid?('tire:'+tid.toLowerCase()):('row:'+String(w.id||'')+'|'+String(w.date||'')+'|'+String(w.invoice||''));
+     if(issuedKeys.has(uniqueKey))return;
+     issuedKeys.add(uniqueKey);
+
+     const target=matchPurchasedItem(w);
      if(target){target.used+=1;return}
 
      const inv=String(w.invoice||'').trim()||'بدون فاتورة';
      const item=String(w.tire_type||'صنف غير محدد').trim()||'صنف غير محدد';
-     const key='__unmatched__'+invNorm+'||'+tireNorm;
+     const key='__unmatched__'+normalizeInvNo(inv)+'||'+normalizeInvItem(item);
      let u=unmatchedMap.get(key);
      if(!u){
-       u={key,item:`${item} — غير مطابق`,invoice:inv,incoming:0,used:0,remain:0,
-          invoices:new Set([inv]),suppliers:new Set(w.supplier?[w.supplier]:[]),
-          unmatched:true,sourceRows:[]};
+       u={key,item:`${item} — غير مطابق`,invoice:inv,incoming:0,used:0,newAvailable:0,
+          parkedUsed:0,remain:0,invoices:new Set([inv]),suppliers:new Set(w.supplier?[w.supplier]:[]),
+          unmatched:true,sourceRows:[],parkedTires:[]};
        unmatchedMap.set(key,u);
      }
      u.used+=1;
    });
 
+   /* "ركن" returns the SAME used tire to inventory.
+      It is available again, but clearly separated from never-used/new stock. */
+   const histories=latestTireHistories(lifeRows);
+   histories.forEach((hist,tireId)=>{
+     if(!hist.length)return;
+     const latest=hist[hist.length-1];
+     const kind=window.EGOTireOps?.tireOperationKind?.(latest.operation)||'other';
+     if(kind!=='park')return;
+
+     const firstNew=hist.find(r=>window.EGOTireOps?.isPurchaseIssue?.(r))||hist[0];
+     const itemName=String(latest.tire_type||firstNew.tire_type||'غير محدد').trim()||'غير محدد';
+     const itemNorm=normalizeInvItem(itemName)||'غير محدد';
+
+     let target=map.get(itemNorm)||null;
+     if(!target){
+       // Fuzzy match against supplier item names.
+       for(const o of map.values()){
+         const k=normalizeInvItem(o.item);
+         if(itemNorm&&k&&Math.min(itemNorm.length,k.length)>=4&&(itemNorm.includes(k)||k.includes(itemNorm))){
+           target=o;break;
+         }
+       }
+     }
+     if(!target)return;
+
+     target.parkedUsed+=1;
+     target.parkedTires.push({
+       tireId,
+       item:itemName,
+       date:latest.date||'',
+       plate:latest.plate||'',
+       vehicle:latest.vehicle||'',
+       activity:latest.activity||'',
+       supplier:firstNew.supplier||latest.supplier||'',
+       invoice:firstNew.invoice||latest.invoice||'',
+       lastOperation:latest.operation||'ركن'
+     });
+   });
+
    const rows=[...map.values(),...unmatchedMap.values()].map(o=>{
-     o.remain=(Number(o.incoming)||0)-(Number(o.used)||0);
+     o.newAvailable=(Number(o.incoming)||0)-(Number(o.used)||0);
+     o.remain=o.newAvailable+(Number(o.parkedUsed)||0);
      o.invoices.delete('');
      return o;
    }).sort((a,b)=>{
@@ -143,10 +213,12 @@
 
    perf.inventorySig=sig;
    perf.inventory=rows;
+   window.EGO_CURRENT_PARKED_TIRES=rows.flatMap(x=>(x.parkedTires||[]).map(t=>({...t,inventoryItem:x.item})));
    return rows;
  }
  function stockStatus(x){
    if(x.unmatched)return ['over','غير مطابق'];
+   if(Number(x.newAvailable)<0)return ['over','سحب جديد أكبر من الوارد'];
    if(x.remain<0)return ['over','سحب زائد'];
    if(Math.abs(x.remain)<.0001)return ['out','نفد'];
    if(x.remain<=LOW_STOCK_THRESHOLD)return ['low','مخزون منخفض'];
@@ -183,7 +255,7 @@
      if(state)state.textContent='جاري تحميل بيانات فواتير الموردين…';
      const k=document.getElementById('inventoryKpis');
      if(k)k.innerHTML=[
-       ['عدد الأصناف','…'],['إجمالي الوارد','…'],['إجمالي المسحوب','…'],['إجمالي المتبقي','…']
+       ['عدد الأصناف','…'],['إجمالي الوارد','…'],['خرج أول مرة','…'],['جديد متاح','…'],['مركون مستخدم','…'],['إجمالي المتاح','…']
      ].map(([l,v])=>`<div class="inventory-kpi"><span>${l}</span><b>${v}</b></div>`).join('');
      const bars=document.getElementById('inventoryBars');
      if(bars)bars.innerHTML='<div class="empty">جاري تحميل بيانات المخزون…</div>';
@@ -196,11 +268,15 @@
    const low=a.filter(x=>['low','out','over'].includes(stockStatus(x)[0])).length;
 
    const k=document.getElementById('inventoryKpis');
+   const parkedTotal=a.reduce((n,x)=>n+(Number(x.parkedUsed)||0),0);
+   const newAvailableTotal=a.reduce((n,x)=>n+(Number(x.newAvailable)||0),0);
    if(k)k.innerHTML=[
      ['عدد الأصناف',a.filter(x=>!x.unmatched).length],
      ['إجمالي الوارد',incoming],
-     ['إجمالي المسحوب',used],
-     ['إجمالي المتبقي',total]
+     ['خرج أول مرة',used],
+     ['جديد متاح',newAvailableTotal],
+     ['مركون مستخدم',parkedTotal],
+     ['إجمالي المتاح',total]
    ].map(([l,v])=>`<div class="inventory-kpi"><span>${l}</span><b>${Number(v).toLocaleString('en-US',{maximumFractionDigits:2})}</b></div>`).join('');
 
    const positive=a.filter(x=>x.remain>0&&!x.unmatched);
@@ -221,11 +297,28 @@
        <td>${esc(x.item)}</td>
        <td>${x.incoming.toLocaleString('en-US',{maximumFractionDigits:2})}</td>
        <td>${x.used.toLocaleString('en-US',{maximumFractionDigits:2})}</td>
-       <td>${x.remain.toLocaleString('en-US',{maximumFractionDigits:2})}</td>
+       <td>${Number(x.newAvailable||0).toLocaleString('en-US',{maximumFractionDigits:2})}</td>
+       <td><span class="parked-stock-count">${Number(x.parkedUsed||0).toLocaleString('en-US',{maximumFractionDigits:0})}</span></td>
+       <td><b>${x.remain.toLocaleString('en-US',{maximumFractionDigits:2})}</b></td>
        <td><span class="stock-badge ${c}">${l}</span></td>
        <td>${[...x.invoices].filter(Boolean).length}</td>
      </tr>`;
-   }).join('')||'<tr><td colspan="6" class="empty">لا توجد بيانات مطابقة للفلاتر العامة</td></tr>';
+   }).join('')||'<tr><td colspan="8" class="empty">لا توجد بيانات مطابقة للفلاتر العامة</td></tr>';
+
+   const parkedBody=document.getElementById('inventoryParkedTbody');
+   const parkedCount=document.getElementById('inventoryParkedCount');
+   const parked=(window.EGO_CURRENT_PARKED_TIRES||[]).slice().sort((x,y)=>String(y.date||'').localeCompare(String(x.date||'')));
+   if(parkedCount)parkedCount.textContent=`${parked.length} كفر مركون — مستخدم سابقًا`;
+   if(parkedBody)parkedBody.innerHTML=parked.length?parked.map(x=>`<tr>
+      <td class="mono"><b>${esc(x.tireId)}</b></td>
+      <td>${esc(x.inventoryItem||x.item||'—')}</td>
+      <td><span class="stock-badge parked-used">مركون — مستخدم سابقًا</span></td>
+      <td>${x.date?datefmt(x.date):'—'}</td>
+      <td>${esc(x.plate||'—')}</td>
+      <td>${esc(x.vehicle||x.activity||'—')}</td>
+      <td>${esc(x.supplier||'—')}</td>
+      <td class="mono">${esc(x.invoice||'—')}</td>
+    </tr>`).join(''):'<tr><td colspan="8" class="empty">لا توجد كفرات مركونة حاليًا</td></tr>';
 
    const ex=document.getElementById('inventoryExplain');
    if(ex){
@@ -234,9 +327,13 @@
      const allRemain=data.reduce((s,x)=>s+(Number(x.remain)||0),0);
      const unmatched=data.filter(x=>x.unmatched).reduce((s,x)=>s+x.used,0);
      const over=data.filter(x=>!x.unmatched&&x.remain<0).length;
+     const allParked=data.reduce((s,x)=>s+(Number(x.parkedUsed)||0),0);
+     const allNewAvailable=data.reduce((s,x)=>s+(Number(x.newAvailable)||0),0);
      ex.innerHTML=`<b>مراجعة المخزون:</b> الوارد من ورقة «فواتير الموردين» <b>${allIncoming.toLocaleString('en-US',{maximumFractionDigits:2})}</b>،
-       والمسحوب من ورقة «الكفرات» <b>${allUsed.toLocaleString('en-US',{maximumFractionDigits:2})}</b>،
-       والمتبقي <b>${allRemain.toLocaleString('en-US',{maximumFractionDigits:2})}</b>.
+       والذي خرج لأول تركيب بعملية «جديد» <b>${allUsed.toLocaleString('en-US',{maximumFractionDigits:2})}</b>،
+       والجديد المتاح <b>${allNewAvailable.toLocaleString('en-US',{maximumFractionDigits:2})}</b>،
+       والكفر المركون المستخدم سابقًا <b>${allParked.toLocaleString('en-US',{maximumFractionDigits:2})}</b>،
+       وإجمالي المتاح بالمخزن <b>${allRemain.toLocaleString('en-US',{maximumFractionDigits:2})}</b>.
        ${unmatched?` يوجد <b>${unmatched}</b> مسحوب غير مطابق لصنف/فاتورة في ورقة الموردين.`:'لا توجد مسحوبات غير مطابقة.'}
        ${over?` ويوجد <b>${over}</b> صنف بسحب أكبر من الوارد.`:''}`;
    }
@@ -244,13 +341,17 @@
    if(state)state.textContent=`${a.length} بند مخزون — ${low} حالة تحتاج انتباه`;
    setTimeout(()=>window.refreshInventoryEnhancements?.(),0);
  }
+ window.buildInventory=buildInventory;
+ window.inventoryFilteredData=inventoryFilteredData;
+ window.stockStatus=stockStatus;
  window.renderInventoryReport=renderInventory;
  window.addEventListener('inventory-rendered',()=>window.refreshInventoryEnhancements?.());
 
  // Executive summary
  function monthKey(d){return String(d||'').slice(0,7)}
  function renderExecutive(){
-   const a=typeof filters==='function'?filters():DATA, now=new Date(), cur=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`, prevDate=new Date(now.getFullYear(),now.getMonth()-1,1), prev=`${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}`;
+   const rawA=typeof filters==='function'?filters():DATA;
+   const a=window.EGOTireOps?.operationalRows?.(rawA)||rawA, now=new Date(), cur=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`, prevDate=new Date(now.getFullYear(),now.getMonth()-1,1), prev=`${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}`;
    const base=Array.isArray(a)?a:DATA, curRows=base.filter(r=>monthKey(r.date)===cur),prevRows=base.filter(r=>monthKey(r.date)===prev);
    const sum=r=>r.reduce((s,x)=>s+(Number(x.price)||0),0),curVal=sum(curRows),prevVal=sum(prevRows),chg=prevVal?((curVal-prevVal)/prevVal*100):0;
    const inv=buildInventory(),stock=inv.reduce((s,x)=>s+x.remain,0),low=inv.filter(x=>['low','out','over'].includes(stockStatus(x)[0])).length;
@@ -283,7 +384,8 @@
    const prevD=new Date();prevD.setMonth(prevD.getMonth()-1);
    const prevKey=`${prevD.getFullYear()}-${String(prevD.getMonth()+1).padStart(2,'0')}`;
    let cv=0,pv=0;
-   DATA.forEach(r=>{
+   const usageData=window.EGOTireOps?.operationalRows?.(DATA)||DATA;
+   usageData.forEach(r=>{
      const k=monthKey(r.date),v=Number(r.price)||0;
      if(k===nowKey)cv+=v;
      else if(k===prevKey)pv+=v;
@@ -330,7 +432,8 @@
  }
 
  function buildOperationalTrends(){
-   const base=(typeof filters==='function'?filters():DATA)||[];
+   const rawBase=(typeof filters==='function'?filters():DATA)||[];
+   const base=window.EGOTireOps?.operationalRows?.(rawBase)||rawBase;
    const now=new Date();
    const cur=ymFromDate(now), prev=previousMonthKey(now,1);
    const current=base.filter(r=>monthKey(r.date)===cur);
@@ -358,7 +461,8 @@
 
  function buildStockForecast(){
    const inv=(typeof buildInventory==='function'?buildInventory():[])||[];
-   const base=(typeof filters==='function'?filters():(Array.isArray(DATA)?DATA:[]))||[];
+   const rawBase=(typeof filters==='function'?filters():(Array.isArray(DATA)?DATA:[]))||[];
+   const base=window.EGOTireOps?.operationalRows?.(rawBase)||rawBase;
    if(!inv.length || !base.length)return [];
 
    const normalize=normalizeAnalyticsItem;

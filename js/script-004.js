@@ -39,7 +39,7 @@
     bars(target,groups,{money:true,limit:4});
   }
   window.renderHomeMiniSummaries=function(rows){
-    rows=Array.isArray(rows)?rows:[];
+    rows=window.EGOTireOps?.operationalRows?.(Array.isArray(rows)?rows:[]) || (Array.isArray(rows)?rows:[]);
     const maps={
       reportInvoice:new Map(),reportEquipment:new Map(),reportSupplier:new Map(),
       reportTire:new Map(),reportActivity:new Map(),reportTireId:new Map()
@@ -120,7 +120,7 @@
   }
 
   function init(){
-    try{if(typeof filters==='function')window.renderHomeMiniSummaries(filters())}catch(e){console.warn('Home mini summaries:',e)}
+    try{if(typeof filters==='function')window.renderHomeMiniSummaries(window.EGOTireOps?.operationalRows?.(filters())||filters())}catch(e){console.warn('Home mini summaries:',e)}
     /* Supplier mini will be updated by renderSupplierInvoiceReport; keep a meaningful placeholder meanwhile. */
     const e=document.getElementById('homeMiniChart_supplierInvoicesReport');if(e&&!e.querySelector('.home-mini-row'))e.innerHTML='<div class="home-mini-empty">يتم تحميل بيانات فواتير الموردين…</div>';
   }

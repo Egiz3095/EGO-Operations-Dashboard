@@ -71,13 +71,27 @@
    const allowedInvoices=new Set(mainRows.map(r=>invoiceKey(r.invoice)).filter(Boolean));
    const invoiceSource=limitToMain ? SI_RAW.filter(r=>allowedInvoices.has(invoiceKey(r.invoice))) : SI_RAW;
 
+   /* Supplier stock is consumed only on the FIRST installation ("جديد").
+      Parking, reuse, swap and service-end are lifecycle movements of the same tire
+      and must never consume the supplier invoice quantity again. */
+   const purchaseIssues=[];
+   const seenIssuedTires=new Set();
+   mainRows.forEach(r=>{
+     if(!window.EGOTireOps?.isPurchaseIssue?.(r))return;
+     const tid=String(r.tire_id||'').trim();
+     const key=tid?('tire:'+tid.toLowerCase()):('row:'+String(r.id||'')+'|'+String(r.date||'')+'|'+String(r.invoice||''));
+     if(seenIssuedTires.has(key))return;
+     seenIssuedTires.add(key);
+     purchaseIssues.push(r);
+   });
+
    const groups=new Map();
    invoiceSource.forEach(r=>{const k=invoiceKey(r.invoice)||`__row_${r._row}`;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(r)});
 
    // Withdrawals are always taken from the globally-filtered tire records so all quantities,
    // supplier summaries and status calculations react to the main filter immediately.
    const withdrawals=new Map();
-   mainRows.forEach(r=>{const k=invoiceKey(r.invoice);if(!k)return;if(!withdrawals.has(k))withdrawals.set(k,[]);withdrawals.get(k).push(r)});
+   purchaseIssues.forEach(r=>{const k=invoiceKey(r.invoice);if(!k)return;if(!withdrawals.has(k))withdrawals.set(k,[]);withdrawals.get(k).push(r)});
 
    SI_INVOICES=[...groups.entries()].map(([k,rows])=>{
      const inv=rows.map(x=>x.invoice).find(Boolean)||''; const w=withdrawals.get(invoiceKey(inv))||[];
@@ -123,12 +137,12 @@
    const period=dates.length?`${datefmt(dates[0])} ← ${datefmt(dates[dates.length-1])}`:'لا توجد تواريخ';
    el.innerHTML=`<div class="explain-head"><div><h3>التوضيح والتحليل الكامل — فواتير الموردين</h3><p>تسوية كمية وقيمة الفواتير مع المسحوبات المرتبطة بأرقام الفواتير، وتتغير لحظيًا حسب الفلاتر العامة وفلاتر هذا التقرير.</p></div><div class="explain-scope"><b>نطاق الفلترة الحالي:</b><br>${esc(scope)}</div></div>
    ${explanationStatsHtml([['عدد الفواتير',a.length.toLocaleString('en-US')],['عدد الموردين',suppliers.length.toLocaleString('en-US')],['إجمالي الفواتير شامل الضريبة',money(invoiceValue)+' SAR'],['الكمية الواردة',fmtQty(totalQty)],['إجمالي المسحوب',fmtQty(drawn)],['إجمالي المتبقي',fmtQty(remaining)],['نسبة السحب',rate.toFixed(1)+'%'],['فترة الفواتير',period]])}
-   <div class="explain-sections"><div class="explain-box"><b>حالة الفواتير والنتائج:</b><ul><li>بها متبقي: <b>${statusCounts.open}</b> فاتورة.</li><li>مسحوبة بالكامل: <b>${statusCounts.done}</b> فاتورة.</li><li>سحب زائد عن كمية الفاتورة: <b>${statusCounts.over}</b> فاتورة.</li><li>بدون كمية فاتورة: <b>${statusCounts.none}</b> فاتورة.</li><li>أعلى فاتورة بالقيمة: <b>${esc(topInvoice?.invoice||'—')}</b> — <b>${money(topInvoice?.invoiceTotal||0)} SAR</b>.</li></ul></div><div class="explain-box"><b>قراءة التسوية:</b><br>المتبقي = الكمية الواردة في الفاتورة − عدد المسحوبات المرتبطة بنفس رقم الفاتورة. أعلى مورد بالقيمة هو <b>${esc(topSupplier[0])}</b> بإجمالي <b>${money(topSupplier[1].value)} SAR</b>. وأكبر كمية متبقية حاليًا مرتبطة بالفاتورة <b>${esc(topRemaining?.invoice||'—')}</b> بمقدار <b>${fmtQty(topRemaining?.remainingQty||0)}</b>. الضغط على أي فاتورة يعرض بنودها والمسحوبات المرتبطة بها بالتفصيل.</div></div>`;
+   <div class="explain-sections"><div class="explain-box"><b>حالة الفواتير والنتائج:</b><ul><li>بها متبقي: <b>${statusCounts.open}</b> فاتورة.</li><li>مسحوبة بالكامل: <b>${statusCounts.done}</b> فاتورة.</li><li>سحب زائد عن كمية الفاتورة: <b>${statusCounts.over}</b> فاتورة.</li><li>بدون كمية فاتورة: <b>${statusCounts.none}</b> فاتورة.</li><li>أعلى فاتورة بالقيمة: <b>${esc(topInvoice?.invoice||'—')}</b> — <b>${money(topInvoice?.invoiceTotal||0)} SAR</b>.</li></ul></div><div class="explain-box"><b>قراءة التسوية:</b><br>المتبقي = الكمية الواردة في الفاتورة − عدد الكفرات التي تم تركيبها لأول مرة بعملية «جديد» لنفس الفاتورة. أعلى مورد بالقيمة هو <b>${esc(topSupplier[0])}</b> بإجمالي <b>${money(topSupplier[1].value)} SAR</b>. وأكبر كمية متبقية حاليًا مرتبطة بالفاتورة <b>${esc(topRemaining?.invoice||'—')}</b> بمقدار <b>${fmtQty(topRemaining?.remainingQty||0)}</b>. الضغط على أي فاتورة يعرض بنودها والمسحوبات المرتبطة بها بالتفصيل.</div></div>`;
  }
  function renderSupplierInvoiceReport(){
    buildInvoices();renderSupplierOptions();const a=filteredSI(); const k=document.getElementById('siKpis'),tb=document.getElementById('siTbody'),count=document.getElementById('siCount'); if(!k||!tb)return;
    const invoiceValue=a.reduce((s,x)=>s+x.invoiceTotal,0),totalQty=a.reduce((s,x)=>s+x.totalQty,0),drawn=a.reduce((s,x)=>s+x.withdrawnQty,0),remaining=totalQty-drawn,open=a.filter(x=>x.status==='open').length;
-   k.innerHTML=`<div class="si-kpi"><label>عدد الفواتير</label><strong>${a.length.toLocaleString('en-US')}</strong><small>ضمن الفلتر الحالي</small></div><div class="si-kpi"><label>إجمالي قيمة الفواتير</label><strong>${money(invoiceValue)}</strong><small>SAR شامل الضريبة</small></div><div class="si-kpi"><label>إجمالي الكمية الواردة</label><strong>${fmtQty(totalQty)}</strong><small>كفر / وحدة</small></div><div class="si-kpi"><label>إجمالي المسحوبات</label><strong>${fmtQty(drawn)}</strong><small>من تقرير الكفرات</small></div><div class="si-kpi"><label>إجمالي المتبقي</label><strong>${fmtQty(remaining)}</strong><small>كمية غير مسحوبة</small></div>`;
+   k.innerHTML=`<div class="si-kpi"><label>عدد الفواتير</label><strong>${a.length.toLocaleString('en-US')}</strong><small>ضمن الفلتر الحالي</small></div><div class="si-kpi"><label>إجمالي قيمة الفواتير</label><strong>${money(invoiceValue)}</strong><small>SAR شامل الضريبة</small></div><div class="si-kpi"><label>إجمالي الكمية الواردة</label><strong>${fmtQty(totalQty)}</strong><small>كفر / وحدة</small></div><div class="si-kpi"><label>خرج لأول تركيب</label><strong>${fmtQty(drawn)}</strong><small>عملية «جديد» فقط</small></div><div class="si-kpi"><label>إجمالي المتبقي</label><strong>${fmtQty(remaining)}</strong><small>كمية غير مسحوبة</small></div>`;
    if(count)count.textContent=`${a.length} فاتورة${hasMainFilters()?' — حسب الفلتر العام':''}`;
    tb.innerHTML=a.length?a.map(x=>{const cls=x.remainingQty<0?'si-neg':Math.abs(x.remainingQty)<.0001?'si-zero':'si-pos';return `<tr data-si-invoice="${esc(x.invoice)}"><td>${x.date?datefmt(x.date):'—'}</td><td>${esc(x.supplier||'—')}</td><td class="mono">${esc(x.invoice||'—')}</td><td class="si-money">${x.invoiceTotal?money(x.invoiceTotal):'—'}</td><td class="si-money">${fmtQty(x.totalQty)}</td><td class="si-money">${fmtQty(x.withdrawnQty)}</td><td class="si-money ${cls}">${fmtQty(x.remainingQty)}</td><td><span class="si-badge ${x.status}">${statusLabel(x.status)}</span></td></tr>`}).join(''):'<tr><td colspan="8" class="empty">لا توجد فواتير مطابقة</td></tr>';
    const sm=new Map();
@@ -153,7 +167,7 @@
              <tr>
                <th>المورد</th>
                <th>الوارد</th>
-               <th>المستخدم</th>
+               <th>خرج لأول تركيب</th>
                <th>المتبقي</th>
              </tr>
            </thead>
@@ -183,9 +197,9 @@
      const cls=g.remaining<0?'si-neg':Math.abs(g.remaining)<.0001?'si-zero':'si-pos';
      return `<tr><td>${esc(g.item||'—')}</td><td class="si-money">${fmtQty(g.qty)}</td><td class="si-money">${unit!=null?money(unit):'—'}</td><td class="si-money">${tax?money(tax):'—'}</td><td class="si-money">${total?money(total):'—'}</td><td class="si-money">${fmtQty(g.withdrawn)}</td><td class="si-money ${cls}">${fmtQty(g.remaining)}</td></tr>`;
    }).join(''):'<tr><td colspan="7" class="empty">لا توجد بنود في تبويب فواتير الموردين</td></tr>';
-   const wr=x.withdrawals.length?x.withdrawals.map(r=>`<tr><td>${r.date?datefmt(r.date):'—'}</td><td>${esc(r.plate||'—')}</td><td>${esc(r.tire_type||'—')}</td><td>${esc(r.tire_id||'—')}</td><td class="si-money">${r.price!=null?money(r.price):'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">لا توجد مسحوبات مرتبطة بهذه الفاتورة</td></tr>';
+   const wr=x.withdrawals.length?x.withdrawals.map(r=>`<tr><td>${r.date?datefmt(r.date):'—'}</td><td>${esc(r.plate||'—')}</td><td>${esc(r.tire_type||'—')}</td><td>${esc(r.tire_id||'—')}</td><td class="si-money">${r.price!=null?money(r.price):'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">لا توجد عمليات «جديد» مرتبطة بهذه الفاتورة</td></tr>';
    const unmatched=x.unmatchedWithdrawals?.length?`<div class="si-note" style="margin-top:8px">تنبيه: يوجد ${x.unmatchedWithdrawals.length} مسحوب مرتبط برقم الفاتورة لم تتم مطابقة اسم صنفه نصيًا مع «إسم الصنف» في الفاتورة؛ وهو محسوب في إجمالي المسحوبات للفاتورة.</div>`:'';
-   p.innerHTML=`<div class="si-detail-head"><div><h3>تفاصيل الفاتورة ${esc(x.invoice||'—')}</h3><div class="hint">${esc(x.supplier||'مورد غير محدد')} ${x.date?' — '+datefmt(x.date):''}</div></div><span class="si-badge ${x.status}">${statusLabel(x.status)}</span></div><div class="si-detail-grid"><div><b>إجمالي الفاتورة مع الضريبة</b><strong>${x.invoiceTotal?money(x.invoiceTotal)+' SAR':'—'}</strong></div><div><b>الكمية الواردة</b><strong>${fmtQty(x.totalQty)}</strong></div><div><b>المسحوب</b><strong>${fmtQty(x.withdrawnQty)}</strong></div><div><b>المتبقي</b><strong>${fmtQty(x.remainingQty)}</strong></div></div><div class="si-detail-cols"><div><div class="si-card-title">بنود الفاتورة والتسوية حسب الصنف</div><div class="si-mini"><table><thead><tr><th>إسم الصنف</th><th>الكمية</th><th>السعر قبل الضريبة</th><th>الضريبة</th><th>الإجمالي مع الضريبة</th><th>المسحوب</th><th>المتبقي</th></tr></thead><tbody>${itemRows}</tbody></table></div>${unmatched}</div><div><div class="si-card-title">تفاصيل المسحوبات المرتبطة برقم الفاتورة</div><div class="si-mini"><table><thead><tr><th>التاريخ</th><th>المعدة</th><th>نوع الكفر ومقاسه</th><th>هوية الكفر</th><th>السعر قبل الضريبة</th></tr></thead><tbody>${wr}</tbody></table></div></div></div>`;p.classList.add('show');p.scrollIntoView({behavior:'smooth',block:'nearest'});
+   p.innerHTML=`<div class="si-detail-head"><div><h3>تفاصيل الفاتورة ${esc(x.invoice||'—')}</h3><div class="hint">${esc(x.supplier||'مورد غير محدد')} ${x.date?' — '+datefmt(x.date):''}</div></div><span class="si-badge ${x.status}">${statusLabel(x.status)}</span></div><div class="si-detail-grid"><div><b>إجمالي الفاتورة مع الضريبة</b><strong>${x.invoiceTotal?money(x.invoiceTotal)+' SAR':'—'}</strong></div><div><b>الكمية الواردة</b><strong>${fmtQty(x.totalQty)}</strong></div><div><b>المسحوب</b><strong>${fmtQty(x.withdrawnQty)}</strong></div><div><b>المتبقي</b><strong>${fmtQty(x.remainingQty)}</strong></div></div><div class="si-detail-cols"><div><div class="si-card-title">بنود الفاتورة والتسوية حسب الصنف</div><div class="si-mini"><table><thead><tr><th>إسم الصنف</th><th>الكمية</th><th>السعر قبل الضريبة</th><th>الضريبة</th><th>الإجمالي مع الضريبة</th><th>المسحوب</th><th>المتبقي</th></tr></thead><tbody>${itemRows}</tbody></table></div>${unmatched}</div><div><div class="si-card-title">تفاصيل أول تركيب المرتبط برقم الفاتورة</div><div class="si-mini"><table><thead><tr><th>التاريخ</th><th>المعدة</th><th>نوع الكفر ومقاسه</th><th>هوية الكفر</th><th>السعر قبل الضريبة</th></tr></thead><tbody>${wr}</tbody></table></div></div></div>`;p.classList.add('show');p.scrollIntoView({behavior:'smooth',block:'nearest'});
  }
  async function refreshSupplierInvoices(){
    if(SI_LOADING)return;SI_LOADING=true;const state=document.getElementById('siState');if(state){state.textContent='جاري تحميل فواتير الموردين...';state.className='si-state'}

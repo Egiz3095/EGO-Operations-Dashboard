@@ -138,8 +138,13 @@
     try{main=(typeof filters==='function'?filters():(Array.isArray(DATA)?DATA:[]))||[]}catch(e){main=[]}
 
     var invNorm=function(v){return String(v??'').trim().replace(/\.0$/,'').replace(/\s+/g,'').toLowerCase()};
-    var withdrawals=new Map();
+    var withdrawals=new Map(),seenIssued=new Set();
     main.forEach(function(r){
+      if(!window.EGOTireOps?.isPurchaseIssue?.(r))return;
+      var tid=String(r.tire_id||'').trim();
+      var u=tid?('tire:'+tid.toLowerCase()):('row:'+String(r.id||'')+'|'+String(r.date||'')+'|'+String(r.invoice||''));
+      if(seenIssued.has(u))return;
+      seenIssued.add(u);
       var k=invNorm(r.invoice); if(!k)return;
       withdrawals.set(k,(withdrawals.get(k)||0)+1);
     });
@@ -226,7 +231,7 @@
 
     var data=[];
     try{
-      data=(typeof buildInventory==='function'?buildInventory():[])||[];
+      data=(typeof window.buildInventory==='function'?window.buildInventory():[])||[];
     }catch(e){data=[]}
 
     /* Fallback: build print inventory directly from supplier raw rows. */
@@ -265,7 +270,13 @@
         if(r.supplier)o.suppliers.add(r.supplier);
       });
 
+      var seenNew=new Set();
       main.forEach(function(w){
+        if(!window.EGOTireOps?.isPurchaseIssue?.(w))return;
+        var tid=String(w.tire_id||'').trim();
+        var uk=tid?('tire:'+tid.toLowerCase()):('row:'+String(w.id||'')+'|'+String(w.date||'')+'|'+String(w.invoice||''));
+        if(seenNew.has(uk))return;
+        seenNew.add(uk);
         var inv=normInv(w.invoice), tire=normItem(w.tire_type);
         if(!inv)return;
         var target=null;
@@ -283,6 +294,7 @@
     var cleanData=data.filter(function(x){return !x.unmatched});
     var incoming=cleanData.reduce(function(s,x){return s+(Number(x.incoming)||0)},0);
     var used=cleanData.reduce(function(s,x){return s+(Number(x.used)||0)},0);
+    var parked=cleanData.reduce(function(s,x){return s+(Number(x.parkedUsed)||0)},0);
     var remain=cleanData.reduce(function(s,x){return s+(Number(x.remain)||0)},0);
     var critical=cleanData.filter(function(x){
       try{return ['low','out','over'].includes(stockStatus(x)[0])}
@@ -307,8 +319,9 @@
       '<div class="ref-kpis">'+
         '<div><strong>'+cleanData.length+'</strong><span>عدد الأصناف</span></div>'+
         '<div><strong>'+refNum(incoming)+'</strong><span>إجمالي الوارد</span></div>'+
-        '<div><strong>'+refNum(used)+'</strong><span>إجمالي المسحوب</span></div>'+
-        '<div><strong>'+refNum(remain)+'</strong><span>إجمالي المتبقي</span></div>'+
+        '<div><strong>'+refNum(used)+'</strong><span>خرج أول مرة</span></div>'+
+        '<div><strong>'+refNum(parked)+'</strong><span>مركون مستخدم</span></div>'+
+        '<div><strong>'+refNum(remain)+'</strong><span>إجمالي المتاح</span></div>'+
       '</div>'+
       '<div class="ref-main">'+
         '<div class="ref-chart-panel">'+
@@ -318,7 +331,7 @@
         '</div>'+
         '<div class="ref-table-panel">'+
           '<table><thead><tr>'+
-            '<th>الصنف</th><th>الوارد</th><th>المسحوب</th><th>المتبقي</th><th>الحالة</th>'+
+            '<th>الصنف</th><th>الوارد</th><th>خرج أول مرة</th><th>مركون مستخدم</th><th>إجمالي المتاح</th><th>الحالة</th>'+
           '</tr></thead><tbody>'+
           cleanData.slice().sort(function(a,b){return Number(a.remain||0)-Number(b.remain||0)})
             .slice(0,14).map(function(x){
@@ -329,6 +342,7 @@
                 '<td>'+refSafe(x.item||'—')+'</td>'+
                 '<td>'+refNum(x.incoming)+'</td>'+
                 '<td>'+refNum(x.used)+'</td>'+
+                '<td>'+refNum(x.parkedUsed||0)+'</td>'+
                 '<td>'+refNum(x.remain)+'</td>'+
                 '<td>'+refSafe(st[1]||'—')+'</td>'+
               '</tr>';
@@ -337,8 +351,8 @@
         '</div>'+
       '</div>'+
       '<div class="ref-comment"><b>توضيح شامل:</b> يحتوي المخزون على <b>'+cleanData.length+
-        '</b> صنفًا. إجمالي الوارد <b>'+refNum(incoming)+'</b>، والمسحوب <b>'+refNum(used)+
-        '</b>، والمتبقي <b>'+refNum(remain)+'</b>. عدد الحالات التي تحتاج انتباه حاليًا <b>'+critical+
+        '</b> صنفًا. إجمالي الوارد <b>'+refNum(incoming)+'</b>، والذي خرج لأول تركيب <b>'+refNum(used)+
+        '</b>، والمركون المستخدم <b>'+refNum(parked)+'</b>، وإجمالي المتاح <b>'+refNum(remain)+'</b>. عدد الحالات التي تحتاج انتباه حاليًا <b>'+critical+
         '</b>.</div>'+
       '<div class="ref-footer">EGO — تقرير المخزون الحالي</div>';
 

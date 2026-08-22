@@ -3,7 +3,13 @@
   let lastSig='', lastSnapshot=null, enrichTimer=0;
 
   function rows(){
-    try{return typeof filters==='function'?filters():(Array.isArray(DATA)?DATA:[])}catch(e){return Array.isArray(DATA)?DATA:[]}
+    try{
+      const a=typeof filters==='function'?filters():(Array.isArray(DATA)?DATA:[]);
+      return window.EGOTireOps?.operationalRows?.(a)||a;
+    }catch(e){
+      const a=Array.isArray(DATA)?DATA:[];
+      return window.EGOTireOps?.operationalRows?.(a)||a;
+    }
   }
   function mkey(v){return String(v||'').slice(0,7)}
   function n(v){return Number(v)||0}

@@ -19,13 +19,20 @@
     return clean(v).toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');
   }
   function isInstallationStart(op){
-    const s=normalizeLifeText(op);
-    return ['جديد','تركيب','ركب','اعاده تركيب','اعادة تركيب','استبدال','تبديل'].some(w=>s.includes(w));
+    const k=window.EGOTireOps?.tireOperationKind?.({operation:op}.operation) || '';
+    return k==='new'||k==='swap'||k==='reuse';
   }
+
   function meterNumber(v){
     const arabic='٠١٢٣٤٥٦٧٨٩', eastern='۰۱۲۳۴۵۶۷۸۹';
-    let s=clean(v).replace(/[٠-٩]/g,d=>String(arabic.indexOf(d))).replace(/[۰-۹]/g,d=>String(eastern.indexOf(d)));
+    let s=clean(v);
+    /* Empty / missing odometer is missing data — never convert it to 0.
+       This is critical for identities such as 10027 where the first "جديد"
+       movement has no installation reading. */
+    if(!s)return null;
+    s=s.replace(/[٠-٩]/g,d=>String(arabic.indexOf(d))).replace(/[۰-۹]/g,d=>String(eastern.indexOf(d)));
     s=s.replace(/,/g,'').replace(/[^\d.-]/g,'');
+    if(!s || s==='-' || s==='.' || s==='-.')return null;
     const n=Number(s);
     return Number.isFinite(n)?n:null;
   }
@@ -33,46 +40,83 @@
     return v===null||v===undefined?'—':`${Math.round(v).toLocaleString('en-US')} كم`;
   }
   function distanceByEvent(rows){
-    let base=null;
-    return rows.map(r=>{
-      const meter=meterNumber(r.odometer);
-      if(isInstallationStart(r.operation)){
-        base=meter;
-        return meter===null?null:0;
+    /* المسافة تخص المرحلة المنتهية عند الحركة الحالية:
+       قراءة العداد الحالية - قراءة العداد في الحركة السابقة لنفس هوية الكفر.
+       عمليات التركيب (جديد / إعادة استخدام) تبدأ مرحلة جديدة، لذلك لا تعرض مسافة. */
+    return rows.map((r,i)=>{
+      const kind=window.EGOTireOps?.tireOperationKind?.(r.operation)||'other';
+      const current=meterNumber(r.odometer);
+
+      if(kind==='new' || kind==='reuse'){
+        return {
+          distance:null,
+          note: current===null
+            ? 'قراءة العداد عند التركيب مفقودة'
+            : 'بداية تركيب — لا توجد مسافة بعد'
+        };
       }
-      if(base===null||meter===null)return null;
-      const d=meter-base;
-      return d>=0?d:null;
+
+      if(i===0){
+        return {
+          distance:null,
+          note:'لا توجد حركة سابقة لنفس هوية الكفر لحساب المسافة'
+        };
+      }
+
+      const prev=rows[i-1];
+      const prevMeter=meterNumber(prev.odometer);
+      const prevKind=window.EGOTireOps?.tireOperationKind?.(prev.operation)||'other';
+
+      if(current===null){
+        return {
+          distance:null,
+          note:'قراءة العداد في الحركة الحالية مفقودة'
+        };
+      }
+
+      if(prevMeter===null){
+        return {
+          distance:null,
+          note:(prevKind==='new'||prevKind==='reuse')
+            ? 'قراءة العداد عند التركيب مفقودة'
+            : 'قراءة العداد في العملية السابقة مفقودة'
+        };
+      }
+
+      const d=current-prevMeter;
+      if(d<0){
+        return {
+          distance:null,
+          note:'قراءة العداد الحالية أقل من القراءة السابقة — يحتاج مراجعة'
+        };
+      }
+
+      return {
+        distance:d,
+        note:`${Math.round(current).toLocaleString('en-US')} − ${Math.round(prevMeter).toLocaleString('en-US')}`
+      };
     });
   }
+
   function totalServiceDistance(rows){
-    let base=null,maxInSegment=null,total=0,has=false;
-    rows.forEach(r=>{
-      const meter=meterNumber(r.odometer);
-      if(isInstallationStart(r.operation)){
-        if(maxInSegment!==null){total+=maxInSegment;has=true}
-        base=meter;
-        maxInSegment=meter===null?null:0;
-        return;
-      }
-      if(base!==null&&meter!==null){
-        const d=meter-base;
-        if(d>=0)maxInSegment=Math.max(maxInSegment??0,d);
-      }
-    });
-    if(maxInSegment!==null){total+=maxInSegment;has=true}
-    return has?total:null;
+    const events=distanceByEvent(rows);
+    const valid=events.map(x=>x.distance).filter(v=>v!==null&&v!==undefined&&v>=0);
+    return valid.length?valid.reduce((s,v)=>s+v,0):null;
   }
   function lifeEquipmentLabel(r){
     const plate=clean(r.plate)||'—',activity=clean(r.activity);
     return activity&&plate!=='—'?`${plate} - ${activity}`:plate;
   }
   function classify(op){
-    const s=clean(op).toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');
-    if(['فك','ازاله','استبعاد','تالف','خرد','الغاء','منتهي'].some(w=>s.includes(w)))return {kind:'remove',label:'فك / خروج'};
-    if(['جديد','تركيب','ركب','استبدال','تبديل','نقل','تحويل'].some(w=>s.includes(w)))return {kind:'install',label:'تركيب / دخول'};
-    return {kind:'move',label:'حركة مسجلة'};
+    const k=window.EGOTireOps?.tireOperationKind?.(op)||'other';
+    if(k==='park')return {kind:'remove',subkind:'park',label:'ركن / عودة للمخزن'};
+    if(k==='service_end')return {kind:'remove',subkind:'service_end',label:'إنهاء خدمة / تالف'};
+    if(k==='new')return {kind:'install',subkind:'new',label:'أول تركيب'};
+    if(k==='reuse')return {kind:'install',subkind:'reuse',label:'إعادة استخدام'};
+    if(k==='swap')return {kind:'install',subkind:'swap',label:'تبديل / استمرار بالخدمة'};
+    return {kind:'move',subkind:'other',label:'حركة مسجلة'};
   }
+
   function history(id){
     return allRows().filter(r=>clean(r.tire_id)===clean(id)).sort((a,b)=>{
       const ad=parseDate(a.date)?.getTime()||0,bd=parseDate(b.date)?.getTime()||0;
@@ -83,10 +127,12 @@
   function statusFor(rows){
     if(!rows.length)return {kind:'unknown',label:'غير معروف',note:'لا توجد حركات'};
     const last=rows[rows.length-1],c=classify(last.operation);
-    if(c.kind==='remove')return {kind:'removed',label:'مفكوك / خارج الخدمة',note:`آخر حركة ${clean(last.operation)||'فك'} بتاريخ ${dateText(last.date)}`};
-    if(c.kind==='install')return {kind:'installed',label:'مركب حسب آخر حركة',note:`${lifeEquipmentLabel(last)} • ${clean(last.position)||'موضع غير محدد'}`};
+    if(c.subkind==='park')return {kind:'parked',label:'مركون — مستخدم سابقًا',note:`عاد للمخزن بتاريخ ${dateText(last.date)} ومتاح لإعادة الاستخدام`};
+    if(c.subkind==='service_end')return {kind:'ended',label:'منتهي الخدمة — تالف',note:`تم إنهاء الخدمة بتاريخ ${dateText(last.date)} ولا يعود للمخزون المتاح`};
+    if(c.kind==='install')return {kind:'installed',label:'مركب / قيد الاستخدام',note:`${lifeEquipmentLabel(last)} • ${clean(last.position)||'موضع غير محدد'}`};
     return {kind:'unknown',label:'حالة غير محسومة',note:`آخر حركة: ${clean(last.operation)||'غير محددة'}`};
   }
+
   function installCount(rows){return rows.filter(r=>classify(r.operation).kind==='install').length}
   function removeCount(rows){return rows.filter(r=>classify(r.operation).kind==='remove').length}
   function serviceDays(rows){
@@ -130,7 +176,7 @@
       ['مرات التركيب',installCount(rows),'حسب وصف العملية'],
       ['مرات الفك',removeCount(rows),'حسب وصف العملية'],
       ['عدد المعدات',eq.length,eq.slice(0,4).join('، ')||'—'],
-      ['المسافة المقطوعة المسجلة',kmText(totalKm),'مجموع المسافات المحتسبة من قراءة التركيب حتى آخر حدث مسجل بكل دورة تركيب'],
+      ['المسافة المقطوعة المسجلة',kmText(totalKm),'مجموع الفروق الصحيحة بين قراءة كل حركة والقراءة السابقة لنفس الهوية؛ ولا تُحسب مسافة في حركة التركيب'],
       ['مدة الخدمة التقديرية',durationText(serviceDays(rows)),'محسوبة من تسلسل الحركات']
     ];
     $id('lifeKpis').innerHTML=items.map(([a,b,c])=>`<tr><td>${escLife(a)}</td><td><b>${escLife(b)}</b></td><td>${escLife(c)}</td></tr>`).join('');
@@ -139,7 +185,7 @@
   function renderTimeline(rows){
     const distances=distanceByEvent(rows);
     $id('lifeTimeline').innerHTML=rows.map((r,i)=>{
-      const c=classify(r.operation),next=rows[i+1];
+      const c=classify(r.operation),next=rows[i+1],d=distances[i];
       const duration=next?durationText(daysBetween(r.date,next.date)):durationText(daysBetween(r.date,new Date().toISOString().slice(0,10)));
       const extra=[clean(r.vehicle),clean(r.activity),clean(r.odometer)?'العداد '+clean(r.odometer):''].filter(Boolean).join(' • ');
       return `<tr>
@@ -150,7 +196,8 @@
         <td><b>${escLife(lifeEquipmentLabel(r))}</b></td>
         <td>${escLife(clean(r.position)||'—')}</td>
         <td>${escLife(extra||'—')}</td>
-        <td><b>${escLife(kmText(distances[i]))}</b></td>
+        <td><b>${escLife(kmText(d.distance))}</b></td>
+        <td class="tlc-distance-note">${escLife(d.note||'—')}</td>
         <td>${escLife(duration)}</td>
       </tr>`;
     }).join('');
@@ -175,15 +222,16 @@
   function renderRecords(rows){
     const distances=distanceByEvent(rows);
     $id('lifeTableBody').innerHTML=rows.map((r,i)=>{
-      const c=classify(r.operation),next=rows[i+1];
+      const c=classify(r.operation),next=rows[i+1],d=distances[i];
       return `<tr>
         <td>${i+1}</td><td>${escLife(dateText(r.date))}</td>
         <td><span class="tlc-action ${c.kind}">${escLife(clean(r.operation)||'غير محدد')}</span></td>
         <td>${escLife(c.label)}</td>
         <td>${escLife(lifeEquipmentLabel(r))}</td><td>${escLife(clean(r.vehicle)||'—')}</td>
         <td>${escLife(clean(r.position)||'—')}</td><td>${escLife(clean(r.activity)||'—')}</td>
-        <td>${escLife(clean(r.odometer)||'—')}</td>
-        <td><b>${escLife(kmText(distances[i]))}</b></td>
+        <td>${escLife(clean(r.odometer)||((c.subkind==='new'||c.subkind==='reuse')?'مفقودة عند التركيب':'—'))}</td>
+        <td><b>${escLife(kmText(d.distance))}</b></td>
+        <td class="tlc-distance-note">${escLife(d.note||'—')}</td>
         <td>${escLife(next?durationText(daysBetween(r.date,next.date)):'آخر حركة')}</td>
         <td>${escLife(clean(r.invoice)||'—')}</td><td>${escLife(clean(r.supplier)||'—')}</td>
       </tr>`;
@@ -199,7 +247,7 @@
       ['اتساق التركيب والفك',`${installs} تركيب / ${removes} فك`,Math.abs(installs-removes)<=1?'متوازن وفق البيانات':'يحتاج مراجعة'],
       ['المعدات المستخدمة',`${eq.length} معدة`,eq.join('، ')||'لا توجد بيانات'],
       ['مدة الخدمة التقديرية',durationText(serviceDays(rows)),'محسوبة من تسلسل الحركات'],
-      ['المسافة المقطوعة المسجلة',kmText(totalKm),'من قراءة العداد عند التركيب إلى آخر حدث متاح في كل دورة تركيب'],
+      ['المسافة المقطوعة المسجلة',kmText(totalKm),'مجموع المسافات بين الحركات المتتالية لنفس الهوية، مع استبعاد حركة التركيب نفسها'],
       ['المواضع المستخدمة',`${pos.length} موضع`,pos.join('، ')||'لا توجد بيانات'],
       ['أقصر فترة بين حركتين',shortest===null?'—':durationText(shortest),shortest!==null&&shortest<7?'قصيرة وتحتاج مراجعة':'ضمن النمط المسجل'],
       ['أطول فترة بين حركتين',longest===null?'—':durationText(longest),'بين حركتين متتاليتين']

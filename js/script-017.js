@@ -100,7 +100,7 @@
 
  function renderInventoryHomeMini(){
    const raw=window.getSupplierInvoiceRawData?.()||[];
-   const data=(typeof inventoryFilteredData==='function'?inventoryFilteredData():(typeof buildInventory==='function'?buildInventory():[]))||[];
+   const data=(typeof window.inventoryFilteredData==='function'?window.inventoryFilteredData():(typeof window.buildInventory==='function'?window.buildInventory():[]))||[];
    if(!raw.length){
      const k=document.getElementById('homeMiniKpis_inventoryReport');
      if(k)k.innerHTML=[['الأصناف','…'],['المتبقي','…'],['تنبيهات','…']].map(([l,v])=>`<div class="home-mini-kpi"><span>${l}</span><strong>${v}</strong></div>`).join('');
@@ -110,14 +110,18 @@
    }
    const incoming=data.reduce((s,x)=>s+(Number(x.incoming)||0),0);
    const used=data.reduce((s,x)=>s+(Number(x.used)||0),0);
+   const parked=data.reduce((s,x)=>s+(Number(x.parkedUsed)||0),0);
    const remain=data.reduce((s,x)=>s+(Number(x.remain)||0),0);
-   const alerts=data.filter(x=>{const s=stockStatus(x)[0];return s!=='ok'}).length;
+   const alerts=data.filter(x=>{const s=window.stockStatus?.(x)?.[0]||'ok';return s!=='ok'}).length;
    const k=document.getElementById('homeMiniKpis_inventoryReport');
    if(k)k.innerHTML=[
-     ['الأصناف',data.length],['المتبقي',remain.toLocaleString('en-US',{maximumFractionDigits:1})],['تنبيهات',alerts]
+     ['الأصناف',data.length],
+     ['المتاح',remain.toLocaleString('en-US',{maximumFractionDigits:1})],
+     ['مركون مستخدم',parked.toLocaleString('en-US',{maximumFractionDigits:0})],
+     ['تنبيهات',alerts]
    ].map(([l,v])=>`<div class="home-mini-kpi"><span>${l}</span><strong>${v}</strong></div>`).join('');
    const c=document.getElementById('homeMiniChart_inventoryReport');if(c){
-     const vals=[['الوارد',incoming,'inv-in'],['المسحوب',used,'inv-out'],['المتبقي',Math.max(0,remain),'inv-rem']],mx=Math.max(1,...vals.map(x=>x[1]));
+     const vals=[['الوارد',incoming,'inv-in'],['خرج أول مرة',used,'inv-out'],['مركون مستخدم',parked,'inv-rem'],['المتاح',Math.max(0,remain),'inv-rem']],mx=Math.max(1,...vals.map(x=>x[1]));
      c.innerHTML='<div class="home-mini-bars">'+vals.map(([n,v,cl])=>`<div class="home-mini-row"><span class="home-mini-label">${n}</span><div class="home-mini-track"><div class="home-mini-fill ${cl}" style="width:${Math.max(3,v/mx*100)}%"></div></div><strong class="home-mini-value">${Number(v).toLocaleString('en-US',{maximumFractionDigits:1})}</strong></div>`).join('')+'</div>';
    }
  }

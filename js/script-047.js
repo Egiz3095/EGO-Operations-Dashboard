@@ -5,8 +5,13 @@
   const norm=v=>String(v??'').trim().replace(/\.0$/,'').replace(/\s+/g,'').toLowerCase();
 
   function rowsNow(){
-    try{return typeof filters==='function'?filters():(Array.isArray(DATA)?DATA:[])}
-    catch(e){return Array.isArray(DATA)?DATA:[]}
+    try{
+      const rows=typeof filters==='function'?filters():(Array.isArray(DATA)?DATA:[]);
+      return window.EGOTireOps?.operationalRows?.(rows)||rows;
+    }catch(e){
+      const rows=Array.isArray(DATA)?DATA:[];
+      return window.EGOTireOps?.operationalRows?.(rows)||rows;
+    }
   }
   function supplierInvoices(){
     try{

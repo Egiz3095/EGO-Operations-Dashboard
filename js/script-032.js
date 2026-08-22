@@ -5,8 +5,8 @@
   function q(id){return document.getElementById(id)}
   function escx(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
   function rowsNow(){
-    try{if(typeof filters==='function'){var a=filters();if(Array.isArray(a))return a}}catch(e){}
-    try{if(typeof DATA!=='undefined'&&Array.isArray(DATA))return DATA}catch(e){}
+    try{if(typeof filters==='function'){var a=filters();if(Array.isArray(a))return window.EGOTireOps?.operationalRows?.(a)||a}}catch(e){}
+    try{if(typeof DATA!=='undefined'&&Array.isArray(DATA))return window.EGOTireOps?.operationalRows?.(DATA)||DATA}catch(e){}
     return [];
   }
   function n(v){var x=Number(v||0);return Number.isFinite(x)?x:0}

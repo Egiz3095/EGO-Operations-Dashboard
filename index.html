@@ -81,6 +81,9 @@
 <link rel="stylesheet" href="css/style-075.css" data-feature="tire-position-report">
 <link href="css/style-072.css" rel="stylesheet"/>
 <link rel="stylesheet" href="css/style-079.css" data-feature="all-table-sort-only">
+<link rel="stylesheet" href="css/style-080.css" data-feature="tire-lifecycle-professional-layout">
+<link rel="stylesheet" href="css/style-081.css" data-feature="tire-status-center">
+<link rel="stylesheet" href="css/style-082.css?v=targeted-only-20260822-1707" data-feature="unified-print-pdf-engine">
 </head>
 <body>
 <button aria-controls="filterSidebar" aria-label="فتح الفلاتر" class="filter-sidebar-toggle" id="filterSidebarToggle" type="button"><span class="launcher-icon">⚙</span><b class="launcher-label">فلتر</b></button>
@@ -179,6 +182,7 @@
 <button class="report-nav-item" data-report-target="reportActivity" type="button"><span>◆</span><b>الإنفاق حسب النشاط</b></button>
 <button class="report-nav-item" data-report-target="reportTireId" type="button"><span>#</span><b>تقرير هوية الكفر</b></button>
 <button class="report-nav-item" data-report-target="tireLifecycleReport" type="button"><span>↻</span><b>دورة حياة الكفر</b></button>
+<button class="report-nav-item" data-report-target="tireStatusReport" type="button"><span>●</span><b>حالة الكفرات</b></button>
 <button class="report-nav-item" data-report-target="tirePositionReport" type="button"><span>◈</span><b>موضع الكفر</b></button>
 <button class="report-nav-item" data-report-target="reportMonthly" type="button"><span>▥</span><b>المسحوبات الشهرية</b></button>
 <button class="report-nav-item" data-report-target="supplierInvoicesReport" type="button"><span>▧</span><b>فواتير الموردين</b></button>
@@ -515,6 +519,7 @@
 <div class="home-mini-kpis" id="homeMiniKpis_tireLifecycleReport"></div>
 <div class="home-mini-chart" id="homeMiniChart_tireLifecycleReport"><div class="home-mini-empty">جاري تحليل دورات حياة الكفرات…</div></div>
 </button>
+<button class="home-report-card" data-report-target="tireStatusReport" type="button"><div class="home-card-head"><span class="home-card-icon">●</span><div class="home-card-title"><b>حالة الكفرات</b><small>الحالة الحالية وملخص عمليات الكفرات في مكان واحد</small></div></div><div class="home-mini-kpis" id="homeMiniKpis_tireStatusReport"></div><div class="home-mini-chart" id="homeMiniChart_tireStatusReport"><div class="home-mini-empty">جاري تحليل الحالات…</div></div></button>
 <button class="home-report-card" data-report-target="tirePositionReport" type="button">
 <div class="home-card-head"><span class="home-card-icon">◈</span><div class="home-card-title"><b>موضع الكفر</b><small>نقاط التلف والاستبدال الأكثر تكرارًا حسب موضع الكفر</small></div></div>
 <div class="home-mini-kpis" id="homeMiniKpis_tirePositionReport"></div>
@@ -567,7 +572,7 @@
 <div>
 <div class="compare-eyebrow">تحليل دورة الأصل</div>
 <h2>دورة حياة الكفر</h2>
-<p>تقرير مستقل يعرض التاريخ الكامل لهوية الكفر من جميع البيانات المتاحة بدون التأثر بأي فلتر خارجي.</p>
+<p>تسلسل مهني واضح يبدأ بالحالة الحالية، ثم المؤشرات، ثم الحركات والمسافات، وينتهي بالسجل التفصيلي الكامل.</p>
 </div>
 <div class="tlc-independent-pill">● مستقل عن الفلاتر</div>
 </div>
@@ -616,7 +621,7 @@
 <div aria-hidden="true" class="tlc-physical-gap"></div>
 <div class="compare-section-title">
 <b>المؤشرات الرئيسية</b>
-<small>أهم أرقام دورة الحياة</small>
+<small>ملخص رقمي سريع قبل الدخول في تفاصيل الحركات</small>
 </div>
 <div class="compare-table-wrap">
 <table class="compare-table tlc-kpi-table">
@@ -633,7 +638,7 @@
 <div aria-hidden="true" class="tlc-physical-gap"></div>
 <div class="compare-section-title">
 <b>الخط الزمني لدورة الحياة</b>
-<small id="lifeEventCount">0 حركة</small>
+<small id="lifeEventCount">0 حركة — اضغط على رأس أي عمود للترتيب</small>
 </div>
 <div class="compare-table-wrap">
 <table class="compare-table tlc-timeline-table">
@@ -647,43 +652,11 @@
 <th>الموضع</th>
 <th>المركبة / النشاط / العداد</th>
 <th>المسافة المقطوعة</th>
+<th>ملاحظة المسافة</th>
 <th>مدة المرحلة</th>
 </tr>
 </thead>
 <tbody id="lifeTimeline"></tbody>
-</table>
-</div>
-<div aria-hidden="true" class="tlc-physical-gap"></div>
-<div class="compare-section-title">
-<b>مسار الكفر بين المعدات والمواضع</b>
-<small>ترتيب انتقال الهوية حسب البيانات المسجلة</small>
-</div>
-<div id="lifeRouteSummary"></div>
-<div aria-hidden="true" class="tlc-physical-gap"></div>
-<div class="compare-section-title">
-<b>السجل الكامل للحركات</b>
-<small>كل تفاصيل الهوية كما وردت في المصدر</small>
-</div>
-<div class="compare-table-wrap">
-<table class="compare-table tlc-records-table">
-<thead>
-<tr>
-<th>#</th>
-<th>التاريخ</th>
-<th>الحركة</th>
-<th>الحالة</th>
-<th>المعدة</th>
-<th>المركبة</th>
-<th>الموضع</th>
-<th>النشاط</th>
-<th>العداد</th>
-<th>المسافة المقطوعة</th>
-<th>مدة المرحلة</th>
-<th>الفاتورة</th>
-<th>المورد</th>
-</tr>
-</thead>
-<tbody id="lifeTableBody"></tbody>
 </table>
 </div>
 <div aria-hidden="true" class="tlc-physical-gap"></div>
@@ -702,9 +675,53 @@
 </thead>
 <tbody id="lifeInsights"></tbody>
 </table>
+</div><div aria-hidden="true" class="tlc-physical-gap"></div>
+<div class="compare-section-title">
+<b>مسار الكفر بين المعدات والمواضع</b>
+<small>ترتيب انتقال الهوية حسب البيانات المسجلة</small>
+</div>
+<div id="lifeRouteSummary"></div>
+<div aria-hidden="true" class="tlc-physical-gap"></div>
+<div class="compare-section-title">
+<b>السجل الكامل للحركات</b>
+<small>المرجع التفصيلي الكامل — قابل للترتيب من رؤوس الأعمدة</small>
+</div>
+<div class="compare-table-wrap">
+<table class="compare-table tlc-records-table">
+<thead>
+<tr>
+<th>#</th>
+<th>التاريخ</th>
+<th>الحركة</th>
+<th>الحالة</th>
+<th>المعدة</th>
+<th>المركبة</th>
+<th>الموضع</th>
+<th>النشاط</th>
+<th>العداد</th>
+<th>المسافة المقطوعة</th>
+<th>ملاحظة المسافة</th>
+<th>مدة المرحلة</th>
+<th>الفاتورة</th>
+<th>المورد</th>
+</tr>
+</thead>
+<tbody id="lifeTableBody"></tbody>
+</table>
+</div>
+
 </div>
 </div>
-</div>
+</section>
+<section class="dashboard-report nav-report-view tire-status-report" data-nav-report="tireStatusReport" id="tireStatusReport">
+<div class="tire-status-head"><div><div class="home-eyebrow">مركز المتابعة</div><h2>حالة الكفرات</h2><p>الحالة الحالية لكل هوية، مع ملخص مستقل لجميع العمليات المسجلة ضمن الفلاتر الحالية.</p></div><span class="tire-status-scope">يتبع الفلاتر العامة</span></div>
+<div class="tire-status-section-title"><b>الحالة الحالية للكفرات</b><small>حسب آخر عملية مسجلة لكل هوية</small></div><div class="tire-status-kpis" id="tireStatusCurrentKpis"></div>
+<div class="tire-status-section-title"><b>ملخص العمليات</b><small>جديد • تبديل • ركن • إعادة استخدام • إنهاء خدمة</small></div><div class="tire-status-operation-grid" id="tireStatusOperationGrid"></div>
+<div class="tire-status-section-title"><b>توزيع العمليات</b><small>مقارنة بصرية لعدد الحركات</small></div><div class="tire-status-chart" id="tireStatusChart"></div>
+<div class="tire-status-section-title"><b>جدول العمليات</b><small>اضغط على أي عملية لعرض الهويات المرتبطة بها</small></div>
+<div class="compare-table-wrap tire-status-table-wrap"><table class="tire-status-table"><thead><tr><th>العملية</th><th>عدد العمليات</th><th>هويات فريدة</th><th>% من الإجمالي</th><th>آخر عملية مسجلة</th></tr></thead><tbody id="tireStatusSummaryBody"></tbody></table></div>
+<div class="tire-status-section-title"><b id="tireStatusDetailsTitle">تفاصيل الكفرات</b><small id="tireStatusDetailsHint">جميع الهويات ضمن الفلاتر الحالية</small></div>
+<div class="compare-table-wrap tire-status-table-wrap"><table class="tire-status-details-table"><thead><tr><th>هوية الكفر</th><th>الحالة الحالية</th><th>آخر عملية</th><th>التاريخ</th><th>النوع / المقاس</th><th>المعدة / السيارة</th><th>الموضع</th><th>المورد</th><th>الفاتورة</th></tr></thead><tbody id="tireStatusDetailsBody"></tbody></table></div>
 </section>
 <section aria-label="تقرير موضع الكفر" class="nav-report-view tire-position-report" data-nav-report="tirePositionReport" id="tirePositionReport">
 <div class="section-title">موضع الكفر <span class="hint">نقاط التلف والاستبدال الأكثر تكرارًا — اضغط على أي موضع لتصفية الداشبورد بالكامل</span></div>
@@ -781,11 +798,26 @@
 <div class="inventory-card-title">تفاصيل المخزون</div>
 <div class="inventory-table-wrap">
 <table class="inventory-table">
-<thead><tr><th>الصنف</th><th>الوارد</th><th>المسحوب</th><th>المتبقي</th><th>الحالة</th><th>الفواتير</th></tr></thead>
+<thead><tr><th>الصنف</th><th>الوارد</th><th>خرج أول مرة</th><th>جديد متاح</th><th>مركون مستخدم</th><th>إجمالي المتاح</th><th>الحالة</th><th>الفواتير</th></tr></thead>
 <tbody id="inventoryTbody"></tbody>
 </table>
 </div>
 </div>
+</div>
+<div class="inventory-parked-card">
+  <div class="inventory-card-title">
+    <span>الكفرات المركونة — مستخدمة سابقًا</span>
+    <small class="hint" id="inventoryParkedCount">0 كفر مركون</small>
+  </div>
+  <div class="inventory-table-wrap">
+    <table class="inventory-table inventory-parked-table">
+      <thead><tr>
+        <th>هوية الكفر</th><th>النوع/المقاس</th><th>الحالة</th><th>تاريخ الركن</th>
+        <th>آخر لوحة</th><th>المعدة/النشاط</th><th>المورد</th><th>رقم الفاتورة</th>
+      </tr></thead>
+      <tbody id="inventoryParkedTbody"></tbody>
+    </table>
+  </div>
 </div>
 <div class="inventory-problem-panel" id="inventoryProblemPanel">
 <h3>مصدر مشاكل المخزون وكيفية الإصلاح</h3>
@@ -813,7 +845,7 @@
 <div class="si-card-title"><span>الفواتير والكميات</span><small class="hint" id="siCount">—</small></div>
 <div class="si-table-wrap">
 <table class="si-table">
-<thead><tr><th>التاريخ</th><th>المورد</th><th>رقم الفاتورة</th><th>إجمالي الفاتورة مع الضريبة</th><th>كمية الفاتورة</th><th>المسحوب</th><th>المتبقي</th><th>الحالة</th></tr></thead>
+<thead><tr><th>التاريخ</th><th>المورد</th><th>رقم الفاتورة</th><th>إجمالي الفاتورة مع الضريبة</th><th>كمية الفاتورة</th><th>خرج لأول تركيب</th><th>المتبقي الجديد</th><th>الحالة</th></tr></thead>
 <tbody id="siTbody"></tbody>
 </table>
 </div>
@@ -825,7 +857,7 @@
 </div>
 <div class="si-detail" id="siDetail"></div>
 <div class="report-explain report-explain-full" id="siExplain"></div>
-<div class="si-note">طريقة الحساب: كل صف في تقرير الكفرات يحمل رقم فاتورة يُحتسب كسحب كفر واحد. المتبقي = مجموع «الكمية» في الفاتورة − عدد المسحوبات المرتبطة بنفس رقم الفاتورة. قيمة الفاتورة تُجمع مباشرة من عمود «الإجمالي مع الضريبة». تفاصيل الصنف تحاول مطابقة «إسم الصنف» مع «نوع الكفر ومقاسه».</div>
+<div class="si-note">طريقة الحساب: فاتورة المورد تمثل الكفرات المشتراة. لا تُخصم الكمية إلا مرة واحدة عند أول تركيب لهوية الكفر بعملية «جديد». «ركن» يعيد الكفر للمخزن كمستخدم سابقًا، و«إعادة استخدام» تخرجه من المخزن مرة أخرى، و«إنهاء خدمة» يخرجه نهائيًا من دورة الاستخدام دون احتسابه كسحب جديد.</div>
 </section>
 <div class="invoice-panel" id="invoicePanel"></div>
 <div class="print-reports" id="printReports"></div>
@@ -967,4 +999,54 @@
 <script src="js/script-049.js" data-feature="tire-position-report"></script>
 <script src="js/script-050.js"></script>
 <script src="js/script-053.js" data-feature="all-table-sort-only"></script>
+<script src="js/script-054.js" data-feature="tire-status-center"></script>
+
+<div aria-hidden="true" class="ego-output-modal" id="egoOutputModal">
+  <div class="ego-output-backdrop" data-output-close></div>
+  <section class="ego-output-dialog" role="dialog" aria-modal="true" aria-labelledby="egoOutputTitle">
+    <div class="ego-output-head">
+      <div>
+        <span class="home-eyebrow">إخراج التقارير</span>
+        <h2 id="egoOutputTitle">الطباعة وتصدير PDF</h2>
+        <p>الطباعة وPDF يستخدمان نفس القالب ونفس ترتيب الصفحات ونفس الفلاتر.</p>
+      </div>
+      <button class="btn" type="button" data-output-close>✕ إغلاق</button>
+    </div>
+
+    <div class="ego-output-mode">
+      <label><input type="radio" name="egoOutputScope" value="current" checked> <span>التقرير الحالي</span></label>
+      <label><input type="radio" name="egoOutputScope" value="selected"> <span>مجموعة تقارير</span></label>
+      <label><input type="radio" name="egoOutputScope" value="all"> <span>جميع التقارير</span></label>
+    </div>
+
+    <div class="ego-output-current" id="egoOutputCurrent"></div>
+
+    <div class="ego-output-selection" id="egoOutputSelection" hidden>
+      <div class="ego-output-select-head">
+        <b>اختر التقارير</b>
+        <div>
+          <button type="button" class="btn" data-output-select-all>تحديد الكل</button>
+          <button type="button" class="btn" data-output-clear-all>إلغاء الكل</button>
+        </div>
+      </div>
+      <div class="ego-output-report-grid" id="egoOutputReportGrid"></div>
+    </div>
+
+    <div class="ego-output-options">
+      <label><input id="egoOutputCharts" type="checkbox" checked> <span>إظهار الرسوم البيانية</span></label>
+      <label><input id="egoOutputDetails" type="checkbox" checked> <span>إظهار التفاصيل الكاملة</span></label>
+    </div>
+
+    <div class="ego-output-note">
+      <b>ملاحظة:</b> كل تقرير يبدأ في صفحة مستقلة، والجداول العريضة تتحول تلقائيًا إلى A4 أفقي، مع تكرار رأس الجدول في الصفحات التالية.
+    </div>
+
+    <div class="ego-output-actions">
+      <button class="btn ego-output-print" id="egoOutputPrint" type="button">🖨 طباعة</button>
+      <button class="btn gold ego-output-pdf" id="egoOutputPdf" type="button">📄 تصدير PDF</button>
+    </div>
+  </section>
+</div>
+
+<script src="js/script-055.js?v=bad-reports-only-20260822" data-feature="unified-print-pdf-engine"></script>
 </body></html>

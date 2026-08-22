@@ -67,6 +67,42 @@ function invalidateDashboardCaches(){
 }
 window.invalidateDashboardCaches=invalidateDashboardCaches;
 
+
+function normalizeOperationText(v){
+ return String(v??'').trim().toLowerCase()
+  .replace(/[\u064B-\u065F\u0670]/g,'')
+  .replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')
+  .replace(/\s+/g,' ').trim();
+}
+function tireOperationKind(v){
+ const s=normalizeOperationText(v);
+ if(s==='جديد')return 'new';
+ if(s==='تبديل')return 'swap';
+ if(s==='ركن')return 'park';
+ if(s==='اعاده استخدام' || s==='اعادة استخدام')return 'reuse';
+ if(s==='انهاء خدمه' || s==='انتهاء خدمه')return 'service_end';
+ return 'other';
+}
+function isOperationalWithdrawal(row){
+ const k=tireOperationKind(row?.operation);
+ return k==='new'||k==='swap'||k==='reuse';
+}
+function isPurchaseIssue(row){
+ return tireOperationKind(row?.operation)==='new';
+}
+function isStockReturn(row){
+ return tireOperationKind(row?.operation)==='park';
+}
+function isServiceEnd(row){
+ return tireOperationKind(row?.operation)==='service_end';
+}
+function operationalRows(rows){
+ return (Array.isArray(rows)?rows:[]).filter(isOperationalWithdrawal);
+}
+window.EGOTireOps={
+ normalizeOperationText,tireOperationKind,isOperationalWithdrawal,isPurchaseIssue,isStockReturn,isServiceEnd,operationalRows
+};
+
 function filters(){
  const sig=dashboardFilterSignature();
  if(__FILTER_CACHE.sig===sig)return __FILTER_CACHE.rows;
@@ -520,6 +556,7 @@ function buildMonthlyPrintPage(rows){
 }
 
 function renderPrintReports(rows){
+  rows=operationalRows(rows);
   const box=$('#printReports');
   if(!box)return;
   box.innerHTML=[
@@ -593,6 +630,7 @@ function monthlyGroups(rows){
   return [...m.entries()].sort((a,b)=>a[0].localeCompare(b[0]));
 }
 function renderMonthlyReport(rows){
+  rows=operationalRows(rows);
   const chart=$('#monthlyChart'), summary=$('#monthlySummary');
   if(!chart || !summary)return;
 
@@ -1095,6 +1133,7 @@ function renderDashboardExplanation(selector, rows, key, label){
   </div>`;
 }
 function renderMonthlyExplanation(rows){
+ rows=operationalRows(rows);
  const el=$('#monthlyExplain'); if(!el)return;el.classList.add('report-explain-full');
  const groups=monthlyGroups(rows),m=metrics(rows);
  if(!groups.length){el.innerHTML='<div class="explain-empty"><b>التوضيح الكامل:</b> لا توجد بيانات شهرية ضمن الفلاتر الحالية.</div>';return}
@@ -1177,6 +1216,7 @@ function renderTreemap(sel,items,type){
  });
 }
 function renderMonthlyArea(rows){
+ rows=operationalRows(rows);
  const el=$('#monthlyChart'), groups=monthlyGroups(rows);
  if(!el || !groups.length)return;
  const vals=groups.map(([k,rs])=>[k,rs.reduce((s,r)=>s+(r.price||0),0)]);
@@ -1300,6 +1340,7 @@ function buildReferenceMonthlyPage(rows){
   </section>`;
 }
 function renderReferencePrintReports(rows){
+  rows=operationalRows(rows);
   const box=document.getElementById('referencePrintReports');
   if(!box)return;
   box.innerHTML=[
@@ -1317,7 +1358,8 @@ let __heavyRenderTimer=0,__heavyRenderIdle=0,__heavyRenderRows=null,__heavyRende
 
 function runHeavyDashboardRender(a,seq){
  if(seq!==__heavyRenderSeq)return;
- a=Array.isArray(a)?a:filters();
+ const allRows=Array.isArray(a)?a:filters();
+ a=operationalRows(allRows);
 
  renderPrintReports(a);
  renderMonthlyReport(a);
@@ -1346,8 +1388,8 @@ function runHeavyDashboardRender(a,seq){
  renderBars('#tireIdChart',tireIdGroupsAsc(a),'tireId');
  renderTireIdSummary(a);
  renderInvoice(a);
- renderTable(a);
- renderRecordsExplanation(a);
+ renderTable(allRows);
+ renderRecordsExplanation(allRows);
 
  if(typeof window.renderSupplierInvoiceReport==='function')window.renderSupplierInvoiceReport();
 
@@ -1379,7 +1421,7 @@ window.flushHeavyDashboardRender=function(){
 
 function render(){
  invalidateDashboardCaches();
- const a=filters(),m=metrics(a);
+ const allRows=filters(),a=operationalRows(allRows),m=metrics(a);
  updateDynamicReportTitle();
 
  $('#kpis').innerHTML=[
@@ -1388,7 +1430,7 @@ function render(){
  ].map(([l,v,s])=>`<div class="card kpi"><label>${l}</label><strong>${v}</strong><small>${s}</small></div>`).join('');
 
  updateClearFilterButton();
- $('#filteredStatus').textContent=a.length.toLocaleString('en-US')+' نتيجة | '+activeFilterCount()+' فلتر نشط';
+ $('#filteredStatus').textContent=allRows.length.toLocaleString('en-US')+' نتيجة | '+activeFilterCount()+' فلتر نشط';
 
  if(typeof window.renderHomeMiniSummaries==='function')window.renderHomeMiniSummaries(a);
 

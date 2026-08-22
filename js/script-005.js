@@ -9,6 +9,7 @@
     reportActivity:'الإنفاق حسب النشاط',
     reportTireId:'تقرير هوية الكفر',
     tireLifecycleReport:'دورة حياة الكفر',
+    tireStatusReport:'حالة الكفرات',
     tirePositionReport:'موضع الكفر',
     reportMonthly:'تقرير المسحوبات الشهرية',
     supplierInvoicesReport:'تقرير فواتير الموردين',

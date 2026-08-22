@@ -10,7 +10,7 @@
     : (v=>String(v).replace(/[^a-zA-Z0-9_-]/g,ch=>'\\'+ch));
   let ALL_PERMS=[
     'reportInvoice','reportEquipment','reportSupplier','reportTire','reportActivity',
-    'reportTireId','tireLifecycleReport','tirePositionReport','reportMonthly','supplierInvoicesReport','inventoryReport','records',
+    'reportTireId','tireLifecycleReport','tireStatusReport','tirePositionReport','reportMonthly','supplierInvoicesReport','inventoryReport','records',
     ...SYSTEM_PERMS
   ];
 
