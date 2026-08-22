@@ -1,0 +1,480 @@
+
+/* ==========================================================
+   دورة حياة الكفر — Professional report layout
+   Uses the existing design system; no new theme.
+   ========================================================== */
+
+#tireLifecycleReport{
+  --tlc-gap:14px;
+  --tlc-border:var(--line,rgba(138,155,170,.18));
+  --tlc-panel:var(--panel,rgba(255,255,255,.025));
+  --tlc-soft:rgba(255,255,255,.035);
+}
+
+#tireLifecycleReport .tlc-compare-shell{
+  display:flex;
+  flex-direction:column;
+  gap:var(--tlc-gap);
+}
+
+#tireLifecycleReport .tlc-compare-head{
+  margin:0!important;
+  padding:18px 20px!important;
+  border:1px solid var(--tlc-border);
+  border-radius:14px;
+  background:var(--tlc-panel);
+}
+#tireLifecycleReport .tlc-compare-head h2{
+  margin:3px 0 4px!important;
+  font-size:22px!important;
+  line-height:1.25;
+}
+#tireLifecycleReport .tlc-compare-head p{
+  margin:0!important;
+  max-width:900px;
+  line-height:1.7;
+}
+#tireLifecycleReport .tlc-independent-pill{
+  white-space:nowrap;
+}
+
+#tireLifecycleReport .tlc-toolbar{
+  margin:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(220px,1fr) minmax(280px,1.35fr) minmax(130px,.55fr);
+  gap:10px!important;
+  align-items:end;
+  padding:13px!important;
+  border:1px solid var(--tlc-border);
+  border-radius:13px;
+  background:var(--tlc-soft);
+}
+#tireLifecycleReport .tlc-toolbar label{
+  min-width:0;
+}
+#tireLifecycleReport .tlc-toolbar select,
+#tireLifecycleReport .tlc-toolbar input{
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box;
+}
+#tireLifecycleReport .tlc-toolbar-stat{
+  min-height:42px;
+  display:flex!important;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 11px!important;
+  border-radius:9px;
+}
+
+/* Every report block has the same visual hierarchy. */
+#tireLifecycleReport .compare-section-title{
+  margin:4px 0 0!important;
+  padding:10px 12px!important;
+  min-height:42px;
+  display:flex!important;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border:1px solid var(--tlc-border);
+  border-bottom:0;
+  border-radius:12px 12px 0 0;
+  background:var(--tlc-soft);
+}
+#tireLifecycleReport .compare-section-title b{
+  font-size:13px!important;
+  font-weight:900!important;
+}
+#tireLifecycleReport .compare-section-title small{
+  text-align:left;
+  font-size:10px!important;
+  opacity:.75;
+}
+#tireLifecycleReport .tlc-physical-gap{
+  display:none!important;
+}
+
+/* Uniform table containers. */
+#tireLifecycleReport .compare-table-wrap,
+#tireLifecycleReport #lifeRouteSummary{
+  margin:0!important;
+  border:1px solid var(--tlc-border)!important;
+  border-radius:0 0 12px 12px!important;
+  overflow:hidden!important;
+  background:var(--tlc-panel);
+  box-shadow:none!important;
+}
+#tireLifecycleReport #lifeRouteSummary .compare-table-wrap{
+  border:0!important;
+  border-radius:0!important;
+}
+
+/* All lifecycle tables obey one system. */
+#tireLifecycleReport table{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  table-layout:fixed!important;
+  border-collapse:separate!important;
+  border-spacing:0!important;
+  margin:0!important;
+}
+#tireLifecycleReport th,
+#tireLifecycleReport td{
+  box-sizing:border-box!important;
+  padding:8px 7px!important;
+  vertical-align:middle!important;
+  line-height:1.45!important;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  border-inline-start:0!important;
+}
+#tireLifecycleReport th{
+  position:sticky;
+  top:0;
+  z-index:2;
+  font-size:9px!important;
+  font-weight:900!important;
+  text-align:center!important;
+  white-space:normal!important;
+  background:var(--card,#111a21)!important;
+}
+#tireLifecycleReport td{
+  font-size:9.5px!important;
+}
+#tireLifecycleReport tbody tr:nth-child(even) td{
+  background:rgba(127,145,160,.025);
+}
+#tireLifecycleReport tbody tr:hover td{
+  background:rgba(80,170,210,.055);
+}
+#tireLifecycleReport tbody tr:last-child td{
+  border-bottom:0!important;
+}
+
+/* Summary identity is compact and prominent. */
+#tireLifecycleReport .tlc-summary-table{
+  table-layout:fixed!important;
+}
+#tireLifecycleReport .tlc-summary-table td{
+  padding:10px 11px!important;
+}
+#tireLifecycleReport .tlc-summary-table tr:first-child td:nth-child(odd){
+  width:12%;
+  opacity:.68;
+  font-size:9px!important;
+  font-weight:800;
+}
+#tireLifecycleReport .tlc-summary-table tr:first-child td:nth-child(even){
+  width:21.33%;
+  font-size:11px!important;
+  font-weight:900;
+}
+#tireLifecycleReport #lifeHeroId{
+  font-family:'IBM Plex Mono',Cairo,sans-serif!important;
+}
+#tireLifecycleReport #lifeHeroStatusNote{
+  line-height:1.65!important;
+}
+
+/* KPI table: readable 3-column summary. */
+#tireLifecycleReport .tlc-kpi-table th:nth-child(1){width:25%}
+#tireLifecycleReport .tlc-kpi-table th:nth-child(2){width:22%}
+#tireLifecycleReport .tlc-kpi-table th:nth-child(3){width:53%}
+#tireLifecycleReport .tlc-kpi-table td:nth-child(1){
+  font-weight:800;
+}
+#tireLifecycleReport .tlc-kpi-table td:nth-child(2){
+  text-align:center;
+  font-family:'IBM Plex Mono',Cairo,sans-serif;
+}
+
+/* Main timeline — the most important table. */
+#tireLifecycleReport .tlc-timeline-table th:nth-child(1){width:3%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(2){width:8%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(3){width:8%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(4){width:9%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(5){width:14%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(6){width:10%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(7){width:14%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(8){width:9%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(9){width:17%}
+#tireLifecycleReport .tlc-timeline-table th:nth-child(10){width:8%}
+#tireLifecycleReport .tlc-timeline-table td:nth-child(1),
+#tireLifecycleReport .tlc-timeline-table td:nth-child(2),
+#tireLifecycleReport .tlc-timeline-table td:nth-child(8),
+#tireLifecycleReport .tlc-timeline-table td:nth-child(10){
+  text-align:center!important;
+}
+#tireLifecycleReport .tlc-timeline-table td:nth-child(9){
+  font-size:8.7px!important;
+  line-height:1.55!important;
+}
+
+/* Analysis before route: decision-oriented reading order. */
+#tireLifecycleReport .tlc-analysis-table th:nth-child(1){width:25%}
+#tireLifecycleReport .tlc-analysis-table th:nth-child(2){width:23%}
+#tireLifecycleReport .tlc-analysis-table th:nth-child(3){width:52%}
+#tireLifecycleReport .tlc-analysis-table td:nth-child(2){
+  text-align:center;
+  font-weight:800;
+}
+
+/* Route table. */
+#tireLifecycleReport .tlc-route-table th:nth-child(1){width:5%}
+#tireLifecycleReport .tlc-route-table th:nth-child(2){width:22%}
+#tireLifecycleReport .tlc-route-table th:nth-child(3){width:18%}
+#tireLifecycleReport .tlc-route-table th:nth-child(4){width:21%}
+#tireLifecycleReport .tlc-route-table th:nth-child(5){width:12%}
+#tireLifecycleReport .tlc-route-table th:nth-child(6){width:12%}
+#tireLifecycleReport .tlc-route-table th:nth-child(7){width:10%}
+#tireLifecycleReport .tlc-route-table td:nth-child(1),
+#tireLifecycleReport .tlc-route-table td:nth-child(n+5){
+  text-align:center;
+}
+
+/* Full audit log: dense but still fully visible without horizontal wheel on desktop. */
+#tireLifecycleReport .tlc-records-table th:nth-child(1){width:2.5%}
+#tireLifecycleReport .tlc-records-table th:nth-child(2){width:6.5%}
+#tireLifecycleReport .tlc-records-table th:nth-child(3){width:6.5%}
+#tireLifecycleReport .tlc-records-table th:nth-child(4){width:7%}
+#tireLifecycleReport .tlc-records-table th:nth-child(5){width:8%}
+#tireLifecycleReport .tlc-records-table th:nth-child(6){width:7%}
+#tireLifecycleReport .tlc-records-table th:nth-child(7){width:7%}
+#tireLifecycleReport .tlc-records-table th:nth-child(8){width:7%}
+#tireLifecycleReport .tlc-records-table th:nth-child(9){width:6%}
+#tireLifecycleReport .tlc-records-table th:nth-child(10){width:7%}
+#tireLifecycleReport .tlc-records-table th:nth-child(11){width:13%}
+#tireLifecycleReport .tlc-records-table th:nth-child(12){width:7%}
+#tireLifecycleReport .tlc-records-table th:nth-child(13){width:7.5%}
+#tireLifecycleReport .tlc-records-table th:nth-child(14){width:7%}
+#tireLifecycleReport .tlc-records-table td{
+  font-size:8.4px!important;
+  padding:7px 5px!important;
+}
+#tireLifecycleReport .tlc-records-table td:nth-child(1),
+#tireLifecycleReport .tlc-records-table td:nth-child(2),
+#tireLifecycleReport .tlc-records-table td:nth-child(9),
+#tireLifecycleReport .tlc-records-table td:nth-child(10),
+#tireLifecycleReport .tlc-records-table td:nth-child(12){
+  text-align:center;
+}
+#tireLifecycleReport .tlc-records-table td:nth-child(11){
+  font-size:8px!important;
+  line-height:1.45!important;
+}
+
+/* Existing sort-only behavior remains, with cleaner affordance. */
+#tireLifecycleReport th.ego-sortable-th{
+  padding-inline-end:18px!important;
+}
+#tireLifecycleReport th.ego-sortable-th::after{
+  inset-inline-end:5px!important;
+  opacity:.34!important;
+}
+#tireLifecycleReport th.ego-sort-active::after{
+  opacity:.95!important;
+}
+
+/* Keep action/status badges compact. */
+#tireLifecycleReport .tlc-action,
+#tireLifecycleReport .tlc-status{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  max-width:100%;
+  padding:3px 7px!important;
+  border-radius:999px!important;
+  font-size:8.5px!important;
+  line-height:1.35!important;
+  white-space:normal!important;
+  text-align:center;
+}
+
+/* Responsive: preserve readability instead of forcing a wide desktop table. */
+@media(max-width:900px){
+  #tireLifecycleReport .tlc-toolbar{
+    grid-template-columns:1fr 1fr;
+  }
+  #tireLifecycleReport .tlc-toolbar-stat{
+    grid-column:1/-1;
+  }
+  #tireLifecycleReport .compare-section-title{
+    align-items:flex-start!important;
+    flex-direction:column;
+    gap:3px;
+  }
+  #tireLifecycleReport .compare-section-title small{text-align:right}
+  #tireLifecycleReport .tlc-timeline-table,
+  #tireLifecycleReport .tlc-records-table{
+    table-layout:auto!important;
+    min-width:900px!important;
+  }
+  #tireLifecycleReport .compare-table-wrap{
+    overflow-x:auto!important;
+    overscroll-behavior-inline:contain;
+  }
+}
+@media(max-width:600px){
+  #tireLifecycleReport .tlc-toolbar{
+    grid-template-columns:1fr;
+  }
+  #tireLifecycleReport .tlc-toolbar-stat{
+    grid-column:auto;
+  }
+  #tireLifecycleReport .tlc-summary-table{
+    table-layout:auto!important;
+  }
+}
+
+/* Light mode follows existing theme variables. */
+html[data-theme="light"] #tireLifecycleReport th{
+  background:#f2f5f7!important;
+}
+html[data-theme="light"] #tireLifecycleReport tbody tr:nth-child(even) td{
+  background:rgba(25,50,70,.025);
+}
+
+@media print{
+  #tireLifecycleReport .tlc-toolbar,
+  #tireLifecycleReport .tlc-independent-pill{
+    display:none!important;
+  }
+  #tireLifecycleReport .compare-table-wrap,
+  #tireLifecycleReport #lifeRouteSummary{
+    overflow:visible!important;
+    break-inside:avoid;
+  }
+  #tireLifecycleReport th{
+    position:static!important;
+  }
+  #tireLifecycleReport .tlc-records-table td{
+    font-size:7.4pt!important;
+  }
+}
+
+
+/* ==========================================================
+   Lifecycle tables v2 — explicit row/column grid + separation
+   ========================================================== */
+
+/* Clear row/column planning: every cell has a visible grid boundary. */
+#tireLifecycleReport table{
+  border:1px solid var(--tlc-border)!important;
+  border-radius:0!important;
+}
+#tireLifecycleReport th,
+#tireLifecycleReport td{
+  border-bottom:1px solid var(--tlc-border)!important;
+  border-inline-end:1px solid var(--tlc-border)!important;
+}
+#tireLifecycleReport tr > :last-child{
+  border-inline-end:0!important;
+}
+#tireLifecycleReport tbody tr:last-child > td{
+  border-bottom:0!important;
+}
+#tireLifecycleReport thead tr:last-child > th{
+  border-bottom:1px solid var(--tlc-border)!important;
+}
+
+/* Stronger visual distinction between header and data rows. */
+#tireLifecycleReport thead th{
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.035);
+}
+html[data-theme="light"] #tireLifecycleReport thead th{
+  box-shadow:inset 0 -1px 0 rgba(20,40,55,.055);
+}
+
+/* Horizontal separator band between every lifecycle table.
+   This restores breathing room and prevents tables from visually running together. */
+#tireLifecycleReport .tlc-physical-gap{
+  display:block!important;
+  height:30px!important;
+  min-height:30px!important;
+  position:relative;
+  margin:0!important;
+}
+#tireLifecycleReport .tlc-physical-gap::after{
+  content:"";
+  position:absolute;
+  left:5%;
+  right:5%;
+  top:50%;
+  height:1px;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    var(--tlc-border) 14%,
+    var(--tlc-border) 86%,
+    transparent
+  );
+}
+
+/* Keep each title physically attached to its own table, but separated from the previous one. */
+#tireLifecycleReport .compare-section-title{
+  margin-top:0!important;
+}
+#tireLifecycleReport .compare-table-wrap,
+#tireLifecycleReport #lifeRouteSummary{
+  margin-bottom:0!important;
+}
+
+/* Give columns a more deliberate internal rhythm. */
+#tireLifecycleReport th{
+  padding-block:9px!important;
+  padding-inline:7px!important;
+}
+#tireLifecycleReport td{
+  padding-block:9px!important;
+  padding-inline:8px!important;
+}
+
+/* Missing installation meter is an explicit data-quality state, not a numeric value. */
+#tireLifecycleReport .tlc-records-table td:nth-child(9){
+  font-family:'IBM Plex Mono',Cairo,sans-serif!important;
+}
+
+
+/* Lifecycle table headers — stronger hierarchy */
+#tireLifecycleReport table thead th{
+  font-size:11.5px!important;
+  font-weight:900!important;
+  line-height:1.5!important;
+  letter-spacing:.05px;
+  background:rgba(37,57,69,.96)!important;
+  color:var(--text,#f3f7f9)!important;
+  border-bottom:2px solid rgba(108,178,207,.34)!important;
+  padding-block:11px!important;
+}
+#tireLifecycleReport table tbody td{
+  font-size:9.5px!important;
+}
+#tireLifecycleReport .tlc-records-table tbody td{
+  font-size:8.6px!important;
+}
+#tireLifecycleReport .tlc-records-table thead th{
+  font-size:10.5px!important;
+}
+
+/* Light theme: distinct header surface while preserving contrast */
+html[data-theme="light"] #tireLifecycleReport table thead th{
+  background:#dce7ec!important;
+  color:#17242b!important;
+  border-bottom-color:#9bb7c4!important;
+}
+
+/* Print keeps the same visual hierarchy */
+@media print{
+  #tireLifecycleReport table thead th{
+    font-size:9pt!important;
+    font-weight:900!important;
+    background:#e7ecef!important;
+    color:#111!important;
+    border-bottom:1.5pt solid #8b9aa2!important;
+  }
+  #tireLifecycleReport table tbody td{
+    font-size:7.5pt!important;
+  }
+}

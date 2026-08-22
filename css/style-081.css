@@ -1,0 +1,311 @@
+#tireStatusReport{display:none}.tire-status-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:20px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}.tire-status-head h2{margin:3px 0 5px;font-size:24px}.tire-status-head p{margin:0;color:var(--muted)}.tire-status-scope{padding:7px 11px;border:1px solid var(--line);border-radius:999px;color:var(--muted);white-space:nowrap}.tire-status-section-title{display:flex;justify-content:space-between;gap:12px;margin:28px 0 10px}.tire-status-section-title b{font-size:14px}.tire-status-section-title small{color:var(--muted)}.tire-status-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.tire-status-kpi,.tire-op-card{border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:14px;text-align:right}.tire-status-kpi span,.tire-op-card span{display:block;color:var(--muted);font-size:10px;margin-bottom:7px}.tire-status-kpi strong,.tire-op-card strong{font-size:23px}.tire-status-kpi small,.tire-op-card small{display:block;margin-top:7px;color:var(--muted)}.tire-status-operation-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.tire-op-card{cursor:pointer;transition:.18s}.tire-op-card:hover,.tire-op-card.active{transform:translateY(-2px);border-color:#5aa6c7}.tire-op-card[data-kind=new]{border-top:3px solid #39a86b}.tire-op-card[data-kind=swap]{border-top:3px solid #df9141}.tire-op-card[data-kind=park]{border-top:3px solid #d7b53e}.tire-op-card[data-kind=reuse]{border-top:3px solid #4c94d8}.tire-op-card[data-kind=service_end]{border-top:3px solid #d95858}.tire-status-chart{display:flex;align-items:flex-end;gap:12px;min-height:230px;padding:22px 18px 14px;border:1px solid var(--line);border-radius:13px;background:var(--panel)}.tire-status-bar-wrap{flex:1;text-align:center}.tire-status-bar-value{font-weight:900;margin-bottom:6px}.tire-status-bar-track{height:150px;display:flex;align-items:flex-end;justify-content:center}.tire-status-bar{width:min(58px,70%);min-height:3px;border-radius:7px 7px 2px 2px;background:currentColor}.tire-status-bar-label{margin-top:8px;font-size:10px;font-weight:800}.tire-status-table-wrap{border:1px solid var(--line)!important;border-radius:12px!important;overflow:hidden!important}#tireStatusReport table{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0}#tireStatusReport th{font-size:11px!important;font-weight:900!important;background:rgba(37,57,69,.96)!important;padding:11px 8px!important;border-bottom:2px solid rgba(108,178,207,.34)!important}#tireStatusReport td{font-size:9.5px;padding:9px 8px;border-bottom:1px solid var(--line);border-inline-end:1px solid var(--line);overflow-wrap:anywhere}#tireStatusReport tr>:last-child{border-inline-end:0}.tire-status-badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:9px;font-weight:900;border:1px solid var(--line)}.tire-status-badge.installed{color:#69c78e}.tire-status-badge.parked{color:#dfbf4d}.tire-status-badge.ended{color:#e67575}html[data-theme=light] #tireStatusReport th{background:#dce7ec!important;color:#17242b!important}@media(max-width:900px){.tire-status-kpis{grid-template-columns:repeat(2,1fr)}.tire-status-operation-grid{grid-template-columns:repeat(2,1fr)}.tire-status-table-wrap{overflow-x:auto!important}#tireStatusReport table{min-width:850px}.tire-status-head{flex-direction:column}}
+
+/* ==========================================================
+   حالة الكفرات — readability / contrast correction
+   Header is clearly separated; data cells stay calm and bright.
+   ========================================================== */
+#tireStatusReport{
+  --ts-head-bg:#253943;
+  --ts-head-text:#f7fafb;
+  --ts-cell-text:#e6edf1;
+  --ts-cell-muted:#aebbc3;
+  --ts-row-even:rgba(255,255,255,.025);
+  --ts-row-hover:rgba(88,166,199,.075);
+}
+
+/* Table headings: distinctive but not excessively dark/heavy. */
+#tireStatusReport table thead th{
+  background:var(--ts-head-bg)!important;
+  color:var(--ts-head-text)!important;
+  font-size:11.5px!important;
+  font-weight:800!important;
+  line-height:1.55!important;
+  text-shadow:none!important;
+  letter-spacing:0!important;
+  border-bottom:2px solid rgba(116,184,210,.42)!important;
+}
+
+/* Data: lighter weight and stronger contrast against the dark dashboard. */
+#tireStatusReport table tbody td{
+  color:var(--ts-cell-text)!important;
+  background:transparent!important;
+  font-size:10px!important;
+  font-weight:400!important;
+  line-height:1.6!important;
+  text-shadow:none!important;
+}
+#tireStatusReport table tbody tr:nth-child(even) td{
+  background:var(--ts-row-even)!important;
+}
+#tireStatusReport table tbody tr:hover td{
+  background:var(--ts-row-hover)!important;
+}
+
+/* Only truly important values remain bold. */
+#tireStatusReport table tbody td b,
+#tireStatusReport table tbody td strong{
+  color:#f6f9fa!important;
+  font-weight:700!important;
+}
+#tireStatusReport .tire-status-details-table td:first-child b{
+  font-weight:700!important;
+}
+
+/* Cards: label and number have a clean hierarchy without dark-on-dark text. */
+#tireStatusReport .tire-status-kpi,
+#tireStatusReport .tire-op-card{
+  color:var(--ts-cell-text)!important;
+}
+#tireStatusReport .tire-status-kpi span,
+#tireStatusReport .tire-op-card span,
+#tireStatusReport .tire-status-kpi small,
+#tireStatusReport .tire-op-card small{
+  color:var(--ts-cell-muted)!important;
+  font-weight:400!important;
+}
+#tireStatusReport .tire-status-kpi strong,
+#tireStatusReport .tire-op-card strong{
+  color:#f7fafb!important;
+  font-weight:800!important;
+}
+
+/* Status badges keep their semantic color but use a readable surface. */
+#tireStatusReport .tire-status-badge{
+  background:rgba(255,255,255,.055)!important;
+  font-weight:700!important;
+}
+#tireStatusReport .tire-status-badge.installed{
+  color:#83d9a5!important;
+  background:rgba(57,168,107,.12)!important;
+}
+#tireStatusReport .tire-status-badge.parked{
+  color:#f0d46d!important;
+  background:rgba(215,181,62,.12)!important;
+}
+#tireStatusReport .tire-status-badge.ended{
+  color:#f08c8c!important;
+  background:rgba(217,88,88,.12)!important;
+}
+#tireStatusReport .tire-status-badge.unknown{
+  color:#c5d0d6!important;
+}
+
+/* Section titles stay visible without using an unnecessarily heavy weight. */
+#tireStatusReport .tire-status-section-title b{
+  color:var(--text,#eef4f6)!important;
+  font-weight:800!important;
+}
+#tireStatusReport .tire-status-section-title small{
+  color:var(--ts-cell-muted)!important;
+}
+
+/* Light theme gets its own high-contrast palette. */
+html[data-theme="light"] #tireStatusReport{
+  --ts-head-bg:#d8e5eb;
+  --ts-head-text:#17262d;
+  --ts-cell-text:#24343c;
+  --ts-cell-muted:#61727b;
+  --ts-row-even:rgba(31,61,75,.035);
+  --ts-row-hover:rgba(61,137,170,.09);
+}
+html[data-theme="light"] #tireStatusReport table tbody td{
+  color:var(--ts-cell-text)!important;
+}
+html[data-theme="light"] #tireStatusReport table tbody td b,
+html[data-theme="light"] #tireStatusReport table tbody td strong,
+html[data-theme="light"] #tireStatusReport .tire-status-kpi strong,
+html[data-theme="light"] #tireStatusReport .tire-op-card strong{
+  color:#17262d!important;
+}
+html[data-theme="light"] #tireStatusReport .tire-status-kpi span,
+html[data-theme="light"] #tireStatusReport .tire-op-card span,
+html[data-theme="light"] #tireStatusReport .tire-status-kpi small,
+html[data-theme="light"] #tireStatusReport .tire-op-card small{
+  color:#61727b!important;
+}
+
+
+/* ==========================================================
+   Tire Status Center — Design 3
+   Professional dark dashboard for large screens
+   ========================================================== */
+#tireStatusReport{
+  --d3-bg:#0b1017;
+  --d3-card:#111923;
+  --d3-card-2:#151f2a;
+  --d3-line:rgba(155,177,194,.16);
+  --d3-text:#edf4f7;
+  --d3-muted:#91a3af;
+  --d3-purple:#a06af3;
+  --d3-green:#43c77a;
+  --d3-yellow:#e8bb3f;
+  --d3-red:#e35d66;
+  --d3-blue:#4da3e6;
+  background:var(--d3-bg)!important;
+  color:var(--d3-text)!important;
+  padding:18px!important;
+  border-radius:16px;
+}
+
+/* Header */
+#tireStatusReport .tire-status-head{
+  background:linear-gradient(135deg,#111b27,#0e151e)!important;
+  border:1px solid var(--d3-line)!important;
+  color:var(--d3-text)!important;
+  box-shadow:0 14px 35px rgba(0,0,0,.18)!important;
+}
+#tireStatusReport .tire-status-head h2{color:#fff!important;font-size:25px!important}
+#tireStatusReport .tire-status-head p{color:#a8b7c1!important}
+#tireStatusReport .tire-status-scope{
+  color:#b9c8d1!important;
+  background:rgba(255,255,255,.035)!important;
+  border-color:var(--d3-line)!important;
+}
+
+/* Section headings */
+#tireStatusReport .tire-status-section-title{
+  margin-top:30px!important;
+  padding:0 2px 9px!important;
+  border-bottom:1px solid var(--d3-line);
+}
+#tireStatusReport .tire-status-section-title b{
+  color:#f3f7f9!important;
+  font-size:15px!important;
+  font-weight:800!important;
+}
+#tireStatusReport .tire-status-section-title small{
+  color:var(--d3-muted)!important;
+}
+
+/* Current-state KPI cards */
+#tireStatusReport .tire-status-kpis{gap:14px!important}
+#tireStatusReport .tire-status-kpi{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(145deg,var(--d3-card-2),var(--d3-card))!important;
+  border:1px solid var(--d3-line)!important;
+  border-radius:14px!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.14)!important;
+  padding:17px!important;
+}
+#tireStatusReport .tire-status-kpi::after{
+  content:"";
+  position:absolute;
+  width:72px;height:72px;
+  inset-inline-end:-22px;top:-26px;
+  border-radius:50%;
+  background:currentColor;
+  opacity:.08;
+  filter:blur(2px);
+}
+#tireStatusReport .tire-status-kpi:nth-child(1){color:var(--d3-purple)!important;border-top:3px solid var(--d3-purple)!important}
+#tireStatusReport .tire-status-kpi:nth-child(2){color:var(--d3-green)!important;border-top:3px solid var(--d3-green)!important}
+#tireStatusReport .tire-status-kpi:nth-child(3){color:var(--d3-yellow)!important;border-top:3px solid var(--d3-yellow)!important}
+#tireStatusReport .tire-status-kpi:nth-child(4){color:var(--d3-red)!important;border-top:3px solid var(--d3-red)!important}
+#tireStatusReport .tire-status-kpi span{
+  color:#aab9c3!important;font-size:10.5px!important;font-weight:600!important
+}
+#tireStatusReport .tire-status-kpi strong{
+  color:currentColor!important;font-size:29px!important;font-weight:800!important;
+  text-shadow:0 0 18px currentColor;
+}
+#tireStatusReport .tire-status-kpi small{color:#8396a3!important}
+
+/* Operation cards */
+#tireStatusReport .tire-status-operation-grid{gap:11px!important}
+#tireStatusReport .tire-op-card{
+  background:var(--d3-card)!important;
+  color:var(--d3-text)!important;
+  border:1px solid var(--d3-line)!important;
+  border-radius:12px!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.12)!important;
+}
+#tireStatusReport .tire-op-card span{color:#aebcc5!important;font-weight:700!important}
+#tireStatusReport .tire-op-card strong{color:#f5f9fa!important;font-size:25px!important;font-weight:800!important}
+#tireStatusReport .tire-op-card small{color:#7f929f!important}
+#tireStatusReport .tire-op-card:hover,#tireStatusReport .tire-op-card.active{
+  background:#182431!important;
+  border-color:rgba(94,174,224,.48)!important;
+  box-shadow:0 10px 25px rgba(0,0,0,.18)!important;
+}
+
+/* Dark chart panel */
+#tireStatusReport .tire-status-chart{
+  background:linear-gradient(145deg,#111a24,#0f1720)!important;
+  border:1px solid var(--d3-line)!important;
+  box-shadow:0 10px 25px rgba(0,0,0,.14)!important;
+}
+#tireStatusReport .tire-status-bar-value{color:#f1f6f8!important;font-weight:800!important}
+#tireStatusReport .tire-status-bar-label{color:#aebcc5!important}
+
+/* Dark professional tables */
+#tireStatusReport .tire-status-table-wrap{
+  background:var(--d3-card)!important;
+  border:1px solid var(--d3-line)!important;
+  box-shadow:0 10px 25px rgba(0,0,0,.13)!important;
+}
+#tireStatusReport table{background:var(--d3-card)!important}
+#tireStatusReport table thead th{
+  background:#1b2835!important;
+  color:#eaf2f5!important;
+  font-size:11.5px!important;
+  font-weight:800!important;
+  border-bottom:2px solid rgba(77,163,230,.34)!important;
+  border-inline-end:1px solid rgba(155,177,194,.12)!important;
+  padding:12px 9px!important;
+}
+#tireStatusReport table tbody td{
+  color:#d5e0e5!important;
+  background:#111923!important;
+  border-bottom:1px solid rgba(155,177,194,.10)!important;
+  border-inline-end:1px solid rgba(155,177,194,.08)!important;
+  font-size:10px!important;
+  font-weight:400!important;
+}
+#tireStatusReport table tbody tr:nth-child(even) td{background:#141e29!important}
+#tireStatusReport table tbody tr:hover td{background:#192735!important}
+#tireStatusReport table tbody td b,
+#tireStatusReport table tbody td strong{color:#f4f8fa!important;font-weight:700!important}
+
+/* Semantic badges */
+#tireStatusReport .tire-status-badge{
+  border:1px solid transparent!important;
+  font-weight:700!important;
+  padding:4px 9px!important;
+}
+#tireStatusReport .tire-status-badge.installed{
+  color:#72dda0!important;background:rgba(67,199,122,.12)!important;border-color:rgba(67,199,122,.22)!important
+}
+#tireStatusReport .tire-status-badge.parked{
+  color:#f0cd69!important;background:rgba(232,187,63,.12)!important;border-color:rgba(232,187,63,.22)!important
+}
+#tireStatusReport .tire-status-badge.ended{
+  color:#f0848b!important;background:rgba(227,93,102,.12)!important;border-color:rgba(227,93,102,.22)!important
+}
+#tireStatusReport .tire-status-badge.unknown{
+  color:#b7c5cd!important;background:rgba(155,177,194,.09)!important
+}
+
+/* Design 3 intentionally remains dark in both global themes. */
+html[data-theme="light"] #tireStatusReport{
+  background:var(--d3-bg)!important;color:var(--d3-text)!important
+}
+html[data-theme="light"] #tireStatusReport table thead th{
+  background:#1b2835!important;color:#eaf2f5!important
+}
+html[data-theme="light"] #tireStatusReport table tbody td{
+  color:#d5e0e5!important;background:#111923!important
+}
+html[data-theme="light"] #tireStatusReport table tbody tr:nth-child(even) td{background:#141e29!important}
+html[data-theme="light"] #tireStatusReport .tire-status-section-title b{color:#f3f7f9!important}
+html[data-theme="light"] #tireStatusReport .tire-status-section-title small{color:var(--d3-muted)!important}
+
+/* Large-screen emphasis, as in proposal 3 */
+@media(min-width:1200px){
+  #tireStatusReport .tire-status-kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  #tireStatusReport .tire-status-operation-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+  #tireStatusReport{padding:22px!important}
+}
+@media(max-width:700px){
+  #tireStatusReport{padding:10px!important}
+}

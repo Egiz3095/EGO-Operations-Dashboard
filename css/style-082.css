@@ -1,0 +1,1618 @@
+
+/* ==========================================================
+   Unified Print / PDF Engine
+   Same prepared DOM stage for both outputs.
+   ========================================================== */
+.ego-output-modal{position:fixed;inset:0;z-index:2147481000;display:none}
+.ego-output-modal.open{display:block}
+.ego-output-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(5px)}
+.ego-output-dialog{
+  position:relative;z-index:2;width:min(900px,calc(100vw - 28px));max-height:calc(100vh - 34px);
+  overflow:auto;margin:17px auto;padding:20px;border:1px solid var(--line);border-radius:16px;
+  background:var(--panel,#101820);box-shadow:0 30px 80px rgba(0,0,0,.42);direction:rtl
+}
+.ego-output-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding-bottom:15px;border-bottom:1px solid var(--line)}
+.ego-output-head h2{margin:3px 0 5px;font-size:22px}.ego-output-head p{margin:0;color:var(--muted)}
+.ego-output-mode{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.ego-output-mode label,.ego-output-options label{
+  display:flex;align-items:center;gap:8px;padding:11px;border:1px solid var(--line);border-radius:10px;cursor:pointer
+}
+.ego-output-mode label:has(input:checked){border-color:rgba(80,180,220,.62);background:rgba(80,180,220,.08)}
+.ego-output-current{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.025);margin-bottom:14px}
+.ego-output-selection{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px}
+.ego-output-select-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.ego-output-report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ego-output-report-grid label{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid var(--line);border-radius:9px;font-size:11px}
+.ego-output-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.ego-output-note{padding:11px 13px;border-radius:10px;background:rgba(80,170,210,.07);border:1px solid rgba(80,170,210,.18);color:var(--muted);font-size:11px;line-height:1.7}
+.ego-output-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+.ego-output-actions .btn{min-width:150px}
+@media(max-width:700px){.ego-output-mode,.ego-output-report-grid,.ego-output-options{grid-template-columns:1fr}.ego-output-head{flex-direction:column}}
+
+/* Output stage is hidden on screen, visible only during print or PDF rendering. */
+#egoUnifiedOutputStage{display:none}
+body.ego-unified-pdf-rendering #egoUnifiedOutputStage{
+  display:block!important;
+  position:absolute!important;
+  left:0!important;
+  top:0!important;
+  width:1123px!important;
+  background:#fff!important;
+  color:#111!important;
+  z-index:2147480000!important;
+  pointer-events:none!important;
+}
+body.ego-unified-pdf-rendering #egoUnifiedOutputStage .ego-output-page{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+body.ego-unified-pdf-rendering #egoUnifiedOutputStage .ego-output-live-clone,
+body.ego-unified-pdf-rendering #egoUnifiedOutputStage .nav-report-view,
+body.ego-unified-pdf-rendering #egoUnifiedOutputStage [data-nav-report]{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:static!important;
+  transform:none!important;
+}
+body.ego-unified-pdf-rendering #egoUnifiedOutputStage [hidden]{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+/* Shared professional page */
+.ego-output-page{
+  box-sizing:border-box;background:#fff!important;color:#17232b!important;direction:rtl;
+  font-family:Cairo,'IBM Plex Sans Arabic',Arial,sans-serif!important;
+  break-after:page;page-break-after:always;position:relative
+}
+.ego-output-page:last-child{break-after:auto;page-break-after:auto}
+.ego-output-page.ego-page-portrait{page:egoPortrait}
+.ego-output-page.ego-page-landscape{page:egoLandscape}
+.ego-output-page-inner{padding:12mm 10mm 13mm;box-sizing:border-box;min-height:100%}
+.ego-output-brand-head{
+  display:grid;grid-template-columns:1fr 1.5fr .8fr;align-items:center;gap:8mm;
+  border-bottom:2px solid #315e75;padding-bottom:4mm;margin-bottom:3mm
+}
+.ego-output-brand{display:flex;align-items:center;gap:3mm}.ego-output-brand img{width:16mm;height:16mm;object-fit:contain}
+.ego-output-brand b{display:block;font-size:12pt}.ego-output-brand small{display:block;font-size:7.2pt;color:#667681;margin-top:1mm}
+.ego-output-title{text-align:center}.ego-output-title strong{display:block;font-size:15pt}.ego-output-title span{font-size:7.5pt;color:#667681}
+.ego-output-meta{text-align:left;font-size:7.5pt;line-height:1.65;color:#455762}
+.ego-output-filter-strip{display:flex;flex-wrap:wrap;align-items:center;gap:2mm;padding:2.5mm 3mm;margin-bottom:4mm;background:#eef4f7;border:1px solid #d2e0e7;border-radius:2mm;font-size:7.2pt}
+.ego-output-filter-chip{padding:1mm 2mm;background:#fff;border:1px solid #d6e1e6;border-radius:1.5mm}
+.ego-output-content{width:100%;overflow:visible!important}
+.ego-output-content *{box-sizing:border-box}
+.ego-output-content .report-breadcrumb,.ego-output-content button,.ego-output-content .si-filters,.ego-output-content .inventory-linked-filter,.ego-output-content .filter-chips,.ego-output-content .single-report-print-btn,.ego-output-content .single-report-pdf-btn{display:none!important}
+.ego-output-content [class*="table-wrap"],.ego-output-content .tablewrap,.ego-output-content .safe-extra-scroll,.ego-output-content .records-direct-table-wrap{height:auto!important;max-height:none!important;overflow:visible!important}
+.ego-output-content table{width:100%!important;max-width:100%!important;border-collapse:collapse!important}
+.ego-output-content thead{display:table-header-group!important}
+.ego-output-content tfoot{display:table-footer-group!important}
+.ego-output-content tr{break-inside:avoid!important;page-break-inside:avoid!important}
+.ego-output-content th{background:#dce8ee!important;color:#17232b!important;font-weight:900!important;border:1px solid #aebfc8!important}
+.ego-output-content td{color:#24353f!important;background:#fff!important;border:1px solid #ccd8de!important}
+.ego-output-content tbody tr:nth-child(even) td{background:#f7fafb!important}
+.ego-output-content canvas{max-width:100%!important}
+.ego-output-footer{
+  position:absolute;left:10mm;right:10mm;bottom:5mm;border-top:1px solid #cbd7dd;padding-top:2mm;
+  display:flex;justify-content:space-between;gap:5mm;color:#60717b;font-size:6.7pt
+}
+.ego-output-cover .ego-output-page-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ego-output-cover-logo{width:34mm;height:34mm;object-fit:contain;margin-bottom:7mm}
+.ego-output-cover h1{font-size:24pt;margin:0 0 3mm}.ego-output-cover h2{font-size:15pt;margin:0 0 8mm;color:#315e75}.ego-output-cover p{font-size:10pt;color:#60717b;line-height:1.8}
+.ego-output-cover-scope{margin-top:8mm;padding:4mm 6mm;border:1px solid #d1dde3;border-radius:3mm;background:#f5f8fa;max-width:150mm}
+.ego-output-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin:5mm 0}
+.ego-output-summary-card{padding:4mm;border:1px solid #d4e0e6;border-radius:2mm;background:#f8fafb;text-align:center}
+.ego-output-summary-card span{display:block;color:#677983;font-size:7.5pt}.ego-output-summary-card b{display:block;font-size:15pt;margin-top:2mm;color:#18384a}
+
+@page egoPortrait{size:A4 portrait;margin:0}
+@page egoLandscape{size:A4 landscape;margin:0}
+
+@media print{
+  body.print-mode-single #singlePrintStage,body.print-mode-full #fullPrintStage,#pdfExportStage{display:none!important}
+  body.ego-unified-printing > *:not(#egoUnifiedOutputStage){display:none!important}
+  body.ego-unified-printing #egoUnifiedOutputStage{display:block!important}
+  body.ego-unified-printing #egoUnifiedOutputStage .ego-output-page{display:block!important}
+  .ego-output-modal{display:none!important}
+  .ego-output-page-inner{padding-top:10mm}
+}
+
+
+/* Force all cloned report roots to render in output mode, even if the live report
+   is hidden by navigation CSS such as #tireStatusReport{display:none}. */
+#egoUnifiedOutputStage .ego-output-live-clone{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  max-height:none!important;
+  height:auto!important;
+  overflow:visible!important;
+}
+#egoUnifiedOutputStage .ego-output-live-clone.nav-report-view{
+  display:block!important;
+}
+#egoUnifiedOutputStage .ego-output-content{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  min-height:20mm;
+}
+
+
+/* ==========================================================
+   DESIGN 2 — Modern Light Corporate Print System
+   White / very light gray + deep blue + soft blue gradients
+   Applies ONLY to the unified print/PDF stage.
+   ========================================================== */
+
+#egoUnifiedOutputStage{
+  --d2-blue:#123c7a;
+  --d2-blue-2:#1f65ad;
+  --d2-blue-3:#6ea5d8;
+  --d2-ink:#19324c;
+  --d2-muted:#6f8191;
+  --d2-line:#d7e1ea;
+  --d2-soft:#f3f7fb;
+  --d2-soft2:#eaf2f9;
+  --d2-gold:#d7a72d;
+  --d2-green:#2c9a64;
+  --d2-orange:#d99121;
+  --d2-red:#d9534f;
+}
+
+#egoUnifiedOutputStage .ego-output-page{
+  background:#fff!important;
+  color:var(--d2-ink)!important;
+  overflow:hidden!important;
+}
+#egoUnifiedOutputStage .ego-output-page-inner{
+  padding:10mm 11mm 13mm!important;
+  min-height:100%!important;
+  background:
+    radial-gradient(circle at 0 0,rgba(98,163,219,.07),transparent 34%),
+    #fff!important;
+}
+
+/* Modern top header */
+#egoUnifiedOutputStage .ego-output-brand-head{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:1.1fr 1.7fr .9fr!important;
+  gap:6mm!important;
+  align-items:center!important;
+  border:0!important;
+  border-bottom:1px solid var(--d2-line)!important;
+  padding:0 0 3mm!important;
+  margin:0 0 3mm!important;
+}
+#egoUnifiedOutputStage .ego-output-brand-head::before{
+  content:""!important;
+  position:absolute!important;
+  top:-10mm!important;
+  right:-11mm!important;
+  width:70mm!important;
+  height:26mm!important;
+  background:linear-gradient(135deg,rgba(68,133,194,.05),rgba(28,87,153,.13))!important;
+  border-radius:0 0 0 65mm!important;
+  pointer-events:none!important;
+}
+#egoUnifiedOutputStage .ego-output-brand img{
+  width:12mm!important;height:12mm!important;object-fit:contain!important;
+}
+#egoUnifiedOutputStage .ego-output-brand b{
+  color:var(--d2-blue)!important;
+  font-size:10.5pt!important;
+  font-weight:900!important;
+}
+#egoUnifiedOutputStage .ego-output-brand small{
+  color:var(--d2-muted)!important;
+  font-size:6.2pt!important;
+}
+#egoUnifiedOutputStage .ego-output-title strong{
+  color:var(--d2-blue)!important;
+  font-size:15pt!important;
+  font-weight:900!important;
+  line-height:1.25!important;
+}
+#egoUnifiedOutputStage .ego-output-title span{
+  color:var(--d2-muted)!important;
+  font-size:6.7pt!important;
+}
+#egoUnifiedOutputStage .ego-output-meta{
+  color:var(--d2-muted)!important;
+  font-size:6.3pt!important;
+  line-height:1.6!important;
+}
+#egoUnifiedOutputStage .ego-output-meta b{
+  color:var(--d2-blue)!important;
+}
+
+/* Scope / filters */
+#egoUnifiedOutputStage .ego-output-filter-strip{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:1.5mm!important;
+  background:var(--d2-soft)!important;
+  border:1px solid var(--d2-line)!important;
+  border-radius:2mm!important;
+  padding:2mm 2.5mm!important;
+  margin:0 0 4mm!important;
+  color:var(--d2-muted)!important;
+  font-size:6.3pt!important;
+}
+#egoUnifiedOutputStage .ego-output-filter-strip>b{color:var(--d2-blue)!important}
+#egoUnifiedOutputStage .ego-output-filter-chip{
+  background:#fff!important;
+  color:var(--d2-ink)!important;
+  border:1px solid #dbe5ed!important;
+  border-radius:1.5mm!important;
+  padding:.7mm 1.5mm!important;
+}
+
+/* Section hierarchy */
+#egoUnifiedOutputStage .ego-output-content .section-title,
+#egoUnifiedOutputStage .ego-output-content .compare-section-title,
+#egoUnifiedOutputStage .ego-output-content .tire-status-section-title,
+#egoUnifiedOutputStage .ego-output-content .inventory-card-title,
+#egoUnifiedOutputStage .ego-output-content h2,
+#egoUnifiedOutputStage .ego-output-content h3{
+  color:var(--d2-blue)!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  font-weight:900!important;
+}
+#egoUnifiedOutputStage .ego-output-content .section-title,
+#egoUnifiedOutputStage .ego-output-content .compare-section-title,
+#egoUnifiedOutputStage .ego-output-content .tire-status-section-title{
+  position:relative!important;
+  padding:1.5mm 0 2mm 0!important;
+  margin:2.5mm 0!important;
+  border-bottom:1px solid var(--d2-line)!important;
+}
+#egoUnifiedOutputStage .ego-output-content .section-title::after,
+#egoUnifiedOutputStage .ego-output-content .compare-section-title::after,
+#egoUnifiedOutputStage .ego-output-content .tire-status-section-title::after{
+  content:""!important;
+  position:absolute!important;
+  bottom:-1px!important;
+  right:0!important;
+  width:18mm!important;
+  height:1.2px!important;
+  background:var(--d2-gold)!important;
+}
+
+/* KPI cards */
+#egoUnifiedOutputStage .ego-output-content [class*="kpi"],
+#egoUnifiedOutputStage .ego-output-content .tire-status-kpi,
+#egoUnifiedOutputStage .ego-output-content .inventory-kpi,
+#egoUnifiedOutputStage .ego-output-content .executive-insight-card{
+  background:linear-gradient(180deg,#fff,var(--d2-soft))!important;
+  color:var(--d2-ink)!important;
+  border:1px solid var(--d2-line)!important;
+  border-radius:2.2mm!important;
+  box-shadow:0 1.2mm 3mm rgba(29,64,98,.05)!important;
+}
+#egoUnifiedOutputStage .ego-output-content [class*="kpi"] span,
+#egoUnifiedOutputStage .ego-output-content .tire-status-kpi span,
+#egoUnifiedOutputStage .ego-output-content .inventory-kpi span{
+  color:var(--d2-muted)!important;
+  font-weight:700!important;
+}
+#egoUnifiedOutputStage .ego-output-content [class*="kpi"] b,
+#egoUnifiedOutputStage .ego-output-content [class*="kpi"] strong,
+#egoUnifiedOutputStage .ego-output-content .tire-status-kpi strong,
+#egoUnifiedOutputStage .ego-output-content .inventory-kpi b{
+  color:var(--d2-blue)!important;
+  font-weight:900!important;
+}
+
+/* Clean chart frames */
+#egoUnifiedOutputStage .ego-output-content [class*="chart"],
+#egoUnifiedOutputStage .ego-output-content .report-chart,
+#egoUnifiedOutputStage .ego-output-content .invoice-chart-full,
+#egoUnifiedOutputStage .ego-output-content .tire-status-chart{
+  background:#fff!important;
+  border:1px solid var(--d2-line)!important;
+  border-radius:2mm!important;
+  box-shadow:none!important;
+}
+
+/* Tables — crisp and printable */
+#egoUnifiedOutputStage .ego-output-content table{
+  width:100%!important;
+  max-width:100%!important;
+  border-collapse:collapse!important;
+  table-layout:fixed!important;
+  background:#fff!important;
+  border:1px solid var(--d2-line)!important;
+}
+#egoUnifiedOutputStage .ego-output-content thead{display:table-header-group!important}
+#egoUnifiedOutputStage .ego-output-content table thead th{
+  background:linear-gradient(180deg,var(--d2-blue-2),var(--d2-blue))!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  font-size:7pt!important;
+  line-height:1.35!important;
+  font-weight:800!important;
+  padding:1.8mm 1.2mm!important;
+  white-space:normal!important;
+}
+#egoUnifiedOutputStage .ego-output-content table tbody td{
+  color:var(--d2-ink)!important;
+  background:#fff!important;
+  border:1px solid #e1e8ee!important;
+  font-size:6.8pt!important;
+  line-height:1.4!important;
+  padding:1.5mm 1.2mm!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+#egoUnifiedOutputStage .ego-output-content table tbody tr:nth-child(even) td{
+  background:#f7f9fc!important;
+}
+#egoUnifiedOutputStage .ego-output-content table tfoot td,
+#egoUnifiedOutputStage .ego-output-content .ego-print-total-row td{
+  background:#e7f0fb!important;
+  color:var(--d2-blue)!important;
+  font-weight:900!important;
+}
+
+/* Notes */
+#egoUnifiedOutputStage .ego-output-content .report-explain,
+#egoUnifiedOutputStage .ego-output-content small,
+#egoUnifiedOutputStage .ego-output-content .hint{
+  color:var(--d2-muted)!important;
+}
+
+/* Footer */
+#egoUnifiedOutputStage .ego-output-footer{
+  left:11mm!important;right:11mm!important;bottom:4.5mm!important;
+  color:#8593a1!important;
+  border-top:1px solid #e2e9ef!important;
+  padding-top:1.4mm!important;
+  font-size:6.1pt!important;
+}
+
+/* Cover — light, modern, elegant */
+#egoUnifiedOutputStage .ego-output-cover{
+  background:#fff!important;
+  color:var(--d2-ink)!important;
+}
+#egoUnifiedOutputStage .ego-output-cover::before{
+  content:""!important;
+  position:absolute!important;
+  width:160mm!important;height:105mm!important;
+  top:-36mm!important;right:-50mm!important;
+  background:linear-gradient(145deg,#eff6fc,#cfe3f5)!important;
+  border-radius:0 0 0 100mm!important;
+}
+#egoUnifiedOutputStage .ego-output-cover::after{
+  content:""!important;
+  position:absolute!important;
+  width:180mm!important;height:36mm!important;
+  right:-20mm!important;bottom:-8mm!important;
+  background:linear-gradient(90deg,var(--d2-blue),#0b2c61)!important;
+  transform:skewY(-4deg)!important;
+  transform-origin:right bottom!important;
+}
+#egoUnifiedOutputStage .ego-output-cover .ego-output-page-inner{
+  position:relative!important;z-index:2!important;
+  display:flex!important;flex-direction:column!important;
+  align-items:flex-start!important;justify-content:center!important;
+  text-align:right!important;
+  padding:18mm!important;
+}
+#egoUnifiedOutputStage .ego-output-cover-logo{
+  width:26mm!important;height:26mm!important;
+  object-fit:contain!important;
+  margin:0 0 9mm!important;
+}
+#egoUnifiedOutputStage .ego-output-cover h1{
+  color:var(--d2-blue)!important;font-size:12pt!important;
+  margin:0 0 3mm!important;font-weight:800!important;
+}
+#egoUnifiedOutputStage .ego-output-cover h2{
+  color:var(--d2-blue)!important;font-size:24pt!important;
+  line-height:1.3!important;margin:0 0 3mm!important;font-weight:900!important;
+}
+#egoUnifiedOutputStage .ego-output-cover p{
+  color:var(--d2-muted)!important;font-size:9pt!important;margin:0!important;
+}
+#egoUnifiedOutputStage .ego-output-cover-scope{
+  width:100%!important;max-width:none!important;
+  margin-top:13mm!important;padding:0!important;
+  border:0!important;background:transparent!important;
+  display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:4mm!important;
+}
+#egoUnifiedOutputStage .ego-output-cover-scope .d2-cover-stat{
+  background:#fff!important;
+  border:1px solid var(--d2-line)!important;
+  border-radius:2.2mm!important;
+  padding:4mm!important;
+  text-align:center!important;
+  box-shadow:0 1.5mm 4mm rgba(30,76,112,.06)!important;
+}
+#egoUnifiedOutputStage .ego-output-cover-scope .d2-cover-stat b{
+  display:block!important;color:var(--d2-blue)!important;font-size:11pt!important;font-weight:900!important;
+}
+#egoUnifiedOutputStage .ego-output-cover-scope .d2-cover-stat span{
+  display:block!important;color:var(--d2-muted)!important;font-size:6.5pt!important;margin-top:1mm!important;
+}
+
+/* Executive summary page */
+#egoUnifiedOutputStage .ego-output-executive{
+  background:#fff!important;
+  color:var(--d2-ink)!important;
+}
+#egoUnifiedOutputStage .ego-output-executive .ego-output-page-inner{
+  padding:15mm!important;
+}
+#egoUnifiedOutputStage .ego-output-executive h1{
+  color:var(--d2-blue)!important;font-size:21pt!important;margin:0 0 2mm!important
+}
+#egoUnifiedOutputStage .ego-output-executive p{
+  color:var(--d2-muted)!important;font-size:8pt!important;margin:0 0 8mm!important
+}
+#egoUnifiedOutputStage .ego-output-summary-grid{
+  grid-template-columns:repeat(4,1fr)!important;gap:4mm!important;margin:0!important
+}
+#egoUnifiedOutputStage .ego-output-summary-card{
+  background:linear-gradient(180deg,#fff,var(--d2-soft))!important;
+  border:1px solid var(--d2-line)!important;
+  border-radius:2.2mm!important;
+  padding:5mm 3mm!important;
+  text-align:center!important;
+}
+#egoUnifiedOutputStage .ego-output-summary-card span{
+  color:var(--d2-muted)!important;font-size:6.8pt!important
+}
+#egoUnifiedOutputStage .ego-output-summary-card b{
+  color:var(--d2-blue)!important;font-size:15pt!important;font-weight:900!important
+}
+
+/* Print page blocks created by pagination engine */
+#egoUnifiedOutputStage .d2-print-block{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+  margin-bottom:3mm!important;
+}
+#egoUnifiedOutputStage .d2-print-table-page table{
+  margin:0!important;
+}
+#egoUnifiedOutputStage .d2-continuation-title{
+  font-size:8pt!important;
+  color:var(--d2-blue)!important;
+  font-weight:900!important;
+  margin:0 0 2mm!important;
+  padding-bottom:1.5mm!important;
+  border-bottom:1px solid var(--d2-line)!important;
+}
+
+/* Never let print-only copies inherit a screen dark theme */
+html[data-theme="dark"] #egoUnifiedOutputStage .ego-output-page,
+html[data-theme="light"] #egoUnifiedOutputStage .ego-output-page{
+  color:var(--d2-ink)!important;
+}
+
+/* Grayscale safe */
+@media print{
+  #egoUnifiedOutputStage .ego-output-content table thead th{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+}
+
+/* ==========================================================
+   MANUAL PAGINATION ENGINE - physical A4 pages
+   Browser print and jsPDF consume the exact same DOM pages.
+   ========================================================== */
+#egoUnifiedOutputStage .ego-output-page,
+.ego-pagination-measure .ego-output-page,
+#egoPaginationScratch .ego-output-page{
+  box-sizing:border-box!important;
+  position:relative!important;
+  overflow:hidden!important;
+  background:#fff!important;
+}
+#egoUnifiedOutputStage .ego-page-portrait,
+.ego-pagination-measure .ego-page-portrait,
+#egoPaginationScratch .ego-page-portrait{
+  width:794px!important;
+  height:1123px!important;
+  min-width:794px!important;
+  min-height:1123px!important;
+  max-width:794px!important;
+  max-height:1123px!important;
+}
+#egoUnifiedOutputStage .ego-page-landscape,
+.ego-pagination-measure .ego-page-landscape,
+#egoPaginationScratch .ego-page-landscape{
+  width:1123px!important;
+  height:794px!important;
+  min-width:1123px!important;
+  min-height:794px!important;
+  max-width:1123px!important;
+  max-height:794px!important;
+}
+#egoUnifiedOutputStage .ego-output-page-inner,
+.ego-pagination-measure .ego-output-page-inner,
+#egoPaginationScratch .ego-output-page-inner{
+  box-sizing:border-box!important;
+  height:100%!important;
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  padding:38px 42px 48px!important;
+}
+#egoUnifiedOutputStage .ego-output-brand-head,
+.ego-pagination-measure .ego-output-brand-head,
+#egoPaginationScratch .ego-output-brand-head{flex:0 0 auto!important}
+#egoUnifiedOutputStage .ego-output-filter-strip,
+.ego-pagination-measure .ego-output-filter-strip,
+#egoPaginationScratch .ego-output-filter-strip{flex:0 0 auto!important}
+#egoUnifiedOutputStage .ego-manual-content,
+.ego-pagination-measure .ego-manual-content,
+#egoPaginationScratch .ego-manual-content{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  display:block!important;
+}
+#egoUnifiedOutputStage .ego-output-footer,
+.ego-pagination-measure .ego-output-footer,
+#egoPaginationScratch .ego-output-footer{
+  position:absolute!important;
+  left:42px!important;
+  right:42px!important;
+  bottom:16px!important;
+}
+.ego-pagination-measure,#egoPaginationScratch{
+  position:fixed!important;
+  left:-20000px!important;
+  top:0!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  z-index:-1!important;
+  background:#fff!important;
+}
+.ego-pagination-measure .ego-output-page,#egoPaginationScratch .ego-output-page{display:block!important;visibility:visible!important;opacity:1!important}
+.ego-manual-block{display:block!important;break-inside:avoid!important;page-break-inside:avoid!important;margin:0 0 12px!important}
+.ego-title-pair{margin-bottom:14px!important}
+.ego-scale-to-page{max-height:100%!important;overflow:hidden!important;transform-origin:top center!important}
+#egoUnifiedOutputStage .ego-output-content table,
+.ego-pagination-measure .ego-output-content table,
+#egoPaginationScratch .ego-output-content table{width:100%!important;max-width:100%!important;border-collapse:collapse!important}
+#egoUnifiedOutputStage .ego-output-content thead,
+.ego-pagination-measure .ego-output-content thead,
+#egoPaginationScratch .ego-output-content thead{display:table-header-group!important}
+#egoUnifiedOutputStage .ego-output-content tr,
+.ego-pagination-measure .ego-output-content tr,
+#egoPaginationScratch .ego-output-content tr{break-inside:avoid!important;page-break-inside:avoid!important}
+#egoUnifiedOutputStage .ego-output-page{break-after:page!important;page-break-after:always!important}
+#egoUnifiedOutputStage .ego-output-page:last-child{break-after:auto!important;page-break-after:auto!important}
+
+body.ego-unified-pdf-rendering #egoUnifiedOutputStage{
+  display:block!important;position:absolute!important;left:0!important;top:0!important;z-index:2147480000!important;background:#fff!important
+}
+body.ego-unified-pdf-rendering #egoUnifiedOutputStage .ego-output-page{display:block!important;visibility:visible!important;opacity:1!important;margin:0!important}
+
+@media print{
+  body.ego-unified-printing > *:not(#egoUnifiedOutputStage){display:none!important}
+  body.ego-unified-printing #egoUnifiedOutputStage{display:block!important}
+  body.ego-unified-printing #egoUnifiedOutputStage .ego-output-page{margin:0!important;box-shadow:none!important}
+  .ego-pagination-measure,#egoPaginationScratch{display:none!important}
+}
+
+
+/* ==========================================================
+   TABLE-FIRST PRINTING
+   Every table owns a physical A4 sheet. Small tables stay whole.
+   Long tables split only between rows with a real repeated THEAD.
+   ========================================================== */
+#egoUnifiedOutputStage .ego-table-dedicated-page .ego-output-content{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  overflow:visible!important;
+}
+#egoUnifiedOutputStage .ego-table-dedicated-page .ego-output-content > *{
+  width:100%!important;
+  max-width:100%!important;
+}
+#egoUnifiedOutputStage .ego-table-dedicated-page table{
+  width:100%!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  margin:0!important;
+}
+#egoUnifiedOutputStage .ego-table-dedicated-page table thead{
+  display:table-header-group!important;
+}
+#egoUnifiedOutputStage .ego-table-dedicated-page table tfoot{
+  display:table-footer-group!important;
+}
+#egoUnifiedOutputStage .ego-table-dedicated-page table tr{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+
+/* No screen-dashboard heights are allowed to create artificial white areas. */
+#egoUnifiedOutputStage .ego-table-dedicated-page .tablewrap,
+#egoUnifiedOutputStage .ego-table-dedicated-page [class*="table-wrap"],
+#egoUnifiedOutputStage .ego-table-dedicated-page .report-summary,
+#egoUnifiedOutputStage .ego-table-dedicated-page .report-chart{
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+
+/* The table title stays attached to the table. */
+#egoUnifiedOutputStage .ego-table-dedicated-page .section-title,
+#egoUnifiedOutputStage .ego-table-dedicated-page .compare-section-title,
+#egoUnifiedOutputStage .ego-table-dedicated-page .tire-status-section-title,
+#egoUnifiedOutputStage .ego-table-dedicated-page .inventory-card-title{
+  margin-top:0!important;
+}
+
+/* Continuation sheets remain visually explicit. */
+#egoUnifiedOutputStage .ego-table-continuation-page .ego-output-title span::after{
+  content:" • متابعة الجدول";
+  font-weight:700;
+}
+
+
+/* ==========================================================
+   INVOICE REPORT PRINT PROTOTYPE
+   Only reportInvoice uses this layout. Other reports are unchanged.
+   ========================================================== */
+#egoUnifiedOutputStage .ego-invoice-print-page .ego-output-content{
+  overflow:visible!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-section-title{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:flex-end!important;
+  gap:5mm!important;
+  padding:0 0 2.2mm!important;
+  margin:0 0 3mm!important;
+  border-bottom:1px solid var(--d2-line,#d7e1ea)!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-section-title b{
+  color:var(--d2-blue,#123c7a)!important;
+  font-size:12pt!important;
+  font-weight:900!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-section-title small{
+  color:var(--d2-muted,#6f8191)!important;
+  font-size:6.7pt!important;
+}
+
+/* Page 1: chart + compact numbers only */
+#egoUnifiedOutputStage .ego-invoice-overview-page .section-title{
+  color:var(--d2-blue,#123c7a)!important;
+  font-size:13pt!important;
+  font-weight:900!important;
+  border-bottom:1px solid var(--d2-line,#d7e1ea)!important;
+  margin:0 0 4mm!important;
+  padding:0 0 2.5mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-chart{
+  background:#fff!important;
+  border:1px solid var(--d2-line,#d7e1ea)!important;
+  border-radius:2.2mm!important;
+  padding:4mm!important;
+  margin:0 0 5mm!important;
+  min-height:65mm!important;
+  max-height:95mm!important;
+  overflow:hidden!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-chart img,
+#egoUnifiedOutputStage .ego-invoice-print-chart canvas,
+#egoUnifiedOutputStage .ego-invoice-print-chart svg{
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-kpis{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:3mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-kpis>div{
+  background:linear-gradient(180deg,#fff,#f2f6fb)!important;
+  border:1px solid #d8e2ec!important;
+  border-radius:2mm!important;
+  padding:4mm 2.5mm!important;
+  text-align:center!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-kpis span{
+  display:block!important;
+  color:#728392!important;
+  font-size:6.5pt!important;
+  margin-bottom:1.5mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-kpis b{
+  display:block!important;
+  color:#123c7a!important;
+  font-size:11pt!important;
+  font-weight:900!important;
+}
+
+/* Page 2: summary table is one indivisible unit */
+#egoUnifiedOutputStage .ego-invoice-summary-page .ego-invoice-summary-print-block{
+  width:100%!important;
+  overflow:visible!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-page .summary-table-wrap{
+  width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-page table{
+  width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-page table th{
+  font-size:8pt!important;
+  padding:2.4mm 1.4mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-page table td{
+  font-size:8pt!important;
+  padding:2.3mm 1.4mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-page table tfoot td{
+  background:#dce9f8!important;
+  color:#143d72!important;
+  font-weight:900!important;
+  border-top:1.6px solid #7c9abb!important;
+}
+
+/* Detail table pages */
+#egoUnifiedOutputStage .ego-invoice-detail-table-wrap{
+  width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-page table{
+  width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-page table th{
+  font-size:7.5pt!important;
+  padding:2.1mm 1.2mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-page table td{
+  font-size:7.2pt!important;
+  padding:1.9mm 1.2mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-page table tr{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+
+/* Analysis owns its own page and is allowed to use the full width. */
+#egoUnifiedOutputStage .ego-invoice-analysis-page .report-explain{
+  width:100%!important;
+  margin:0!important;
+  background:#fff!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+
+
+/* ==========================================================
+   FINAL INVOICE PRINT LAYOUT — reference-driven
+   PAGE 1 chart / PAGE 2 summary / PAGE 3+ details / LAST analysis
+   ========================================================== */
+#egoUnifiedOutputStage .ego-invoice-final-page{
+  background:#fff!important;
+  color:#18324d!important;
+}
+#egoUnifiedOutputStage .ego-invoice-final-page .ego-output-page-inner{
+  padding:9mm 10mm 12mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-final-page .ego-output-content{
+  display:block!important;
+  width:100%!important;
+  overflow:hidden!important;
+}
+#egoUnifiedOutputStage .ego-invoice-final-section-head{
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:space-between!important;
+  gap:5mm!important;
+  margin:0 0 3mm!important;
+  padding:0 0 2mm!important;
+  border-bottom:1px solid #d7e1ea!important;
+}
+#egoUnifiedOutputStage .ego-invoice-final-section-head b{
+  color:#123c7a!important;
+  font-size:12pt!important;
+  font-weight:900!important;
+}
+#egoUnifiedOutputStage .ego-invoice-final-section-head small{
+  color:#687b8e!important;
+  font-size:6.7pt!important;
+  max-width:55%!important;
+  text-align:left!important;
+}
+
+/* PAGE 1 — chart is a single bounded print object */
+#egoUnifiedOutputStage .ego-invoice-chart-page .ego-invoice-chart-print-block{
+  width:100%!important;
+  height:145mm!important;
+  min-height:145mm!important;
+  max-height:145mm!important;
+  box-sizing:border-box!important;
+  padding:7mm!important;
+  margin:0!important;
+  overflow:hidden!important;
+  border:1px solid #d5e0ea!important;
+  border-radius:2.5mm!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-page .ego-invoice-chart-print-block *{
+  box-sizing:border-box!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-page .ego-invoice-chart-print-block canvas,
+#egoUnifiedOutputStage .ego-invoice-chart-page .ego-invoice-chart-print-block img,
+#egoUnifiedOutputStage .ego-invoice-chart-page .ego-invoice-chart-print-block svg{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  max-height:128mm!important;
+  object-fit:contain!important;
+  margin:auto!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-page .invoice-chart-full{
+  background:#fff!important;color:#18324d!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-page .bar-row,
+#egoUnifiedOutputStage .ego-invoice-chart-page [class*="bar-row"]{
+  min-height:16mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-page .bar-label,
+#egoUnifiedOutputStage .ego-invoice-chart-page [class*="bar-label"]{
+  color:#18324d!important;
+  font-size:8pt!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-page .bar-value,
+#egoUnifiedOutputStage .ego-invoice-chart-page [class*="bar-value"]{
+  color:#123c7a!important;
+  font-size:8pt!important;
+  font-weight:900!important;
+}
+
+/* PAGE 2 — full invoice summary + total, all columns inside A4 landscape */
+#egoUnifiedOutputStage .ego-invoice-summary-table-final{
+  width:100%!important;
+  overflow:visible!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-table-final table{
+  width:100%!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+  margin:0!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-table-final th{
+  background:#123c7a!important;
+  color:#fff!important;
+  font-size:8.2pt!important;
+  font-weight:900!important;
+  line-height:1.35!important;
+  padding:3mm 1.5mm!important;
+  white-space:normal!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-table-final td{
+  color:#19324c!important;
+  background:#fff!important;
+  font-size:8.2pt!important;
+  line-height:1.4!important;
+  padding:3mm 1.5mm!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-table-final tbody tr:nth-child(even) td{
+  background:#f5f8fb!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-table-final tfoot td{
+  background:#e2edf8!important;
+  color:#123c7a!important;
+  font-weight:900!important;
+  border-top:1.5px solid #6f91b4!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-table-final tr{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+
+/* DETAIL PAGES — exactly one real table chunk per sheet */
+#egoUnifiedOutputStage .ego-invoice-details-table-final{
+  width:100%!important;
+  overflow:visible!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-table-final table{
+  width:100%!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+  margin:0!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-table-final thead{
+  display:table-header-group!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-table-final th{
+  background:#123c7a!important;
+  color:#fff!important;
+  font-size:7.2pt!important;
+  font-weight:900!important;
+  line-height:1.3!important;
+  padding:2.2mm 1mm!important;
+  white-space:normal!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-table-final td{
+  color:#19324c!important;
+  background:#fff!important;
+  font-size:6.9pt!important;
+  line-height:1.35!important;
+  padding:2mm 1mm!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-table-final tbody tr:nth-child(even) td{
+  background:#f6f8fb!important;
+}
+#egoUnifiedOutputStage .ego-invoice-details-table-final tr{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+
+/* LAST PAGE — analysis follows the live report structure, but print-clean */
+#egoUnifiedOutputStage .ego-invoice-analysis-final-page .ego-invoice-analysis-print-block{
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  max-height:160mm!important;
+  overflow:hidden!important;
+  background:#fff!important;
+  color:#19324c!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-final-page .ego-invoice-analysis-print-block *{
+  box-sizing:border-box!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-final-page .ego-invoice-analysis-print-block [class*="card"],
+#egoUnifiedOutputStage .ego-invoice-analysis-final-page .ego-invoice-analysis-print-block [class*="box"]{
+  background:#f6f8fb!important;
+  color:#19324c!important;
+  border:1px solid #d9e2eb!important;
+  box-shadow:none!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-final-page .ego-invoice-analysis-print-block b,
+#egoUnifiedOutputStage .ego-invoice-analysis-final-page .ego-invoice-analysis-print-block strong{
+  color:#123c7a!important;
+}
+#egoUnifiedOutputStage .ego-invoice-print-empty{
+  padding:20mm!important;
+  text-align:center!important;
+  color:#758596!important;
+  border:1px dashed #cbd8e3!important;
+  border-radius:2mm!important;
+}
+
+
+/* ==========================================================
+   reportInvoice — targeted layout corrections
+   ========================================================== */
+
+/* Keep all invoice print pages in the same RTL flow as the chart page. */
+#egoUnifiedOutputStage .ego-invoice-final-page,
+#egoUnifiedOutputStage .ego-invoice-final-page .ego-output-page-inner,
+#egoUnifiedOutputStage .ego-invoice-final-page .ego-output-content,
+#egoUnifiedOutputStage .ego-invoice-final-page .ego-table-dedicated-page,
+#egoUnifiedOutputStage .ego-invoice-final-page .ego-invoice-summary-table-final,
+#egoUnifiedOutputStage .ego-invoice-final-page .ego-invoice-details-table-final,
+#egoUnifiedOutputStage .ego-invoice-final-page .ego-invoice-analysis-print-block{
+  direction:rtl!important;
+  text-align:right!important;
+}
+
+/* dedicated-page flex is not needed for invoice pages and can alter visual alignment */
+#egoUnifiedOutputStage .ego-invoice-final-page.ego-table-dedicated-page .ego-output-content{
+  display:block!important;
+  flex-direction:initial!important;
+  align-items:initial!important;
+  justify-content:initial!important;
+}
+
+/* Preserve numeric/table-cell alignment where the table itself defines it. */
+#egoUnifiedOutputStage .ego-invoice-final-page table{
+  direction:rtl!important;
+}
+#egoUnifiedOutputStage .ego-invoice-final-page table th,
+#egoUnifiedOutputStage .ego-invoice-final-page table td{
+  text-align:center!important;
+}
+#egoUnifiedOutputStage .ego-invoice-final-page table th:first-child,
+#egoUnifiedOutputStage .ego-invoice-final-page table td:first-child{
+  text-align:right!important;
+}
+
+/* Summary footer is a normal final row, not a repeating browser footer group. */
+#egoUnifiedOutputStage .ego-invoice-summary-table-final table tfoot{
+  display:table-row-group!important;
+}
+#egoUnifiedOutputStage .ego-invoice-summary-table-final table tfoot tr{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+
+
+/* ==========================================================
+   reportInvoice — chart + summary same page + visible analysis
+   ========================================================== */
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-chart-print-block{
+  height:78mm!important;
+  min-height:78mm!important;
+  max-height:78mm!important;
+  padding:3.5mm!important;
+  margin:0 0 3mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-chart-print-block canvas,
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-chart-print-block img,
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-chart-print-block svg{
+  max-height:68mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-summary-inline-block{
+  width:100%!important;
+  margin-top:1mm!important;
+  direction:rtl!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-summary-inline-block .ego-invoice-final-section-head{
+  margin-bottom:1.5mm!important;
+  padding-bottom:1.2mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-summary-table-final table{
+  width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-summary-table-final th{
+  font-size:7pt!important;
+  padding:1.7mm .9mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-summary-table-final td{
+  font-size:6.8pt!important;
+  padding:1.6mm .9mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-summary-table-final tfoot{
+  display:table-row-group!important;
+}
+#egoUnifiedOutputStage .ego-invoice-chart-summary-page .ego-invoice-summary-table-final tfoot td{
+  background:#e2edf8!important;
+  color:#123c7a!important;
+  font-weight:900!important;
+}
+
+/* Guaranteed analysis: never inherit hidden/empty dashboard state */
+#egoUnifiedOutputStage .ego-invoice-analysis-final-block,
+#egoUnifiedOutputStage .ego-invoice-analysis-guaranteed,
+#egoUnifiedOutputStage .ego-invoice-analysis-built{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  direction:rtl!important;
+  color:#19324c!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-kpis{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:3mm!important;
+  margin-bottom:4mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-kpis>div{
+  display:block!important;
+  background:#f5f8fb!important;
+  border:1px solid #d8e2ea!important;
+  border-radius:2mm!important;
+  padding:3.5mm!important;
+  min-height:18mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-kpis span{
+  display:block!important;
+  color:#71818e!important;
+  font-size:6.5pt!important;
+  margin-bottom:1mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-kpis strong{
+  display:block!important;
+  color:#123c7a!important;
+  font-size:9pt!important;
+  font-weight:900!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-grid{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:4mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-box{
+  display:block!important;
+  background:#f7f9fb!important;
+  border:1px solid #d8e2ea!important;
+  border-radius:2mm!important;
+  padding:4mm!important;
+  min-height:45mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-box h3{
+  color:#123c7a!important;
+  font-size:9pt!important;
+  margin:0 0 2.5mm!important;
+}
+#egoUnifiedOutputStage .ego-invoice-analysis-box p,
+#egoUnifiedOutputStage .ego-invoice-analysis-box li{
+  color:#354b5c!important;
+  font-size:7pt!important;
+  line-height:1.75!important;
+}
+
+
+/* ==========================================================
+   FULL DETAIL PRINT ROOT — same page, original report components
+   ========================================================== */
+#egoPrintRoot{display:none;direction:rtl;background:#fff;color:#19324c}
+#egoPrintRoot .ego-output-page{background:#fff!important;color:#19324c!important;direction:rtl!important;text-align:right!important}
+#egoPrintRoot .ego-output-content{display:block!important;overflow:hidden!important}
+#egoPrintRoot .ego-full-detail-block{width:100%!important;max-width:100%!important;margin:0 0 3mm!important;break-inside:avoid!important;page-break-inside:avoid!important}
+#egoPrintRoot .ego-full-detail-block *{box-sizing:border-box!important}
+#egoPrintRoot [class*="table-wrap"],#egoPrintRoot .tablewrap,#egoPrintRoot .safe-extra-scroll,#egoPrintRoot .records-direct-table-wrap{width:100%!important;max-width:100%!important;height:auto!important;max-height:none!important;overflow:visible!important}
+#egoPrintRoot table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;direction:rtl!important}
+#egoPrintRoot thead{display:table-header-group!important}
+#egoPrintRoot tfoot{display:table-row-group!important}
+#egoPrintRoot tr{break-inside:avoid!important;page-break-inside:avoid!important}
+#egoPrintRoot th{background:#123c7a!important;color:#fff!important;font-weight:900!important;white-space:normal!important;overflow-wrap:anywhere!important}
+#egoPrintRoot td{color:#19324c!important;white-space:normal!important;overflow-wrap:anywhere!important}
+#egoPrintRoot tfoot td{background:#e2edf8!important;color:#123c7a!important;font-weight:900!important}
+#egoPrintRoot canvas,#egoPrintRoot img,#egoPrintRoot svg{max-width:100%!important;height:auto!important;object-fit:contain!important}
+#egoPrintRoot .report-explain,#egoPrintRoot [id$="Explain"]{display:block!important;visibility:visible!important;opacity:1!important;height:auto!important;max-height:none!important;overflow:visible!important;background:#fff!important;color:#19324c!important}
+#egoPrintRoot .ego-page-portrait th{font-size:7pt!important;padding:1.8mm .8mm!important}
+#egoPrintRoot .ego-page-portrait td{font-size:6.8pt!important;padding:1.55mm .8mm!important}
+#egoPrintRoot .ego-page-landscape th{font-size:7.3pt!important;padding:1.9mm .9mm!important}
+#egoPrintRoot .ego-page-landscape td{font-size:7.05pt!important;padding:1.65mm .9mm!important}
+@media print{
+ body.ego-unified-printing>*:not(#egoPrintRoot){display:none!important}
+ body.ego-unified-printing #egoPrintRoot{display:block!important}
+ body.ego-unified-printing #egoPrintRoot .ego-output-page{display:block!important}
+}
+
+
+/* ==========================================================
+   FINAL PRINT / PDF OVERRIDES — 2026-08-22
+   Full-width print, preserved colors, safe page breaks.
+   ========================================================== */
+#egoPrintRoot{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  direction:rtl!important;
+  background:#fff!important;
+  -webkit-print-color-adjust:exact!important;
+  print-color-adjust:exact!important;
+  color-adjust:exact!important;
+}
+#egoPrintRoot,
+#egoPrintRoot *{
+  -webkit-print-color-adjust:exact!important;
+  print-color-adjust:exact!important;
+  color-adjust:exact!important;
+}
+#egoPrintRoot .ego-output-page{
+  margin:0 auto!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  background:#fff!important;
+  overflow:hidden!important;
+}
+#egoPrintRoot .ego-output-page-inner,
+#egoPrintRoot .ego-output-content,
+#egoPrintRoot .ego-output-live-clone{
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+#egoPrintRoot .ego-output-content{
+  overflow:visible!important;
+}
+#egoPrintRoot .report-sidebar,
+#egoPrintRoot .sidebar,
+#egoPrintRoot nav,
+#egoPrintRoot .topbar,
+#egoPrintRoot .header-actions,
+#egoPrintRoot .actions,
+#egoPrintRoot button,
+#egoPrintRoot input,
+#egoPrintRoot select,
+#egoPrintRoot .report-breadcrumb,
+#egoPrintRoot .si-filters,
+#egoPrintRoot .inventory-linked-filter,
+#egoPrintRoot .filter-chips,
+#egoPrintRoot .single-report-print-btn,
+#egoPrintRoot .single-report-pdf-btn{
+  display:none!important;
+}
+
+/* Full-width tables with strong page-break protection. */
+#egoPrintRoot [class*="table-wrap"],
+#egoPrintRoot .tablewrap,
+#egoPrintRoot .safe-extra-scroll,
+#egoPrintRoot .records-direct-table-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+#egoPrintRoot table{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+#egoPrintRoot thead{display:table-header-group!important}
+#egoPrintRoot tfoot{display:table-row-group!important}
+#egoPrintRoot tr,
+#egoPrintRoot th,
+#egoPrintRoot td{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+#egoPrintRoot .ego-full-detail-block,
+#egoPrintRoot .ego-manual-block,
+#egoPrintRoot .report-chart,
+#egoPrintRoot .invoice-chart-full,
+#egoPrintRoot .report-explain,
+#egoPrintRoot [class*="kpi"]{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+
+/* Force visible print colors for cards/tables. */
+#egoPrintRoot th{
+  background:#123c7a!important;
+  color:#fff!important;
+}
+#egoPrintRoot tbody tr:nth-child(even) td{
+  background:#f5f8fb!important;
+}
+#egoPrintRoot tfoot td{
+  background:#e2edf8!important;
+  color:#123c7a!important;
+  font-weight:900!important;
+}
+
+/* PDF render mode is always A4 landscape and uses the full frame. */
+body.ego-unified-pdf-rendering #egoPrintRoot{
+  display:block!important;
+  position:fixed!important;
+  left:0!important;
+  top:0!important;
+  z-index:2147480000!important;
+  background:#fff!important;
+}
+body.ego-unified-pdf-rendering #egoPrintRoot .ego-output-page.ego-pdf-landscape-render{
+  width:1123px!important;
+  max-width:1123px!important;
+  min-height:794px!important;
+  height:auto!important;
+}
+
+@media print{
+  @page{margin:0}
+  html,body{
+    margin:0!important;
+    padding:0!important;
+    background:#fff!important;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  body.ego-unified-printing > *:not(#egoPrintRoot){
+    display:none!important;
+  }
+  body.ego-unified-printing #egoPrintRoot{
+    display:block!important;
+    position:static!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  body.ego-unified-printing #egoPrintRoot .ego-output-page{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+  }
+  body.ego-unified-printing #egoPrintRoot .ego-output-page-inner{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  .ego-output-modal,
+  .sidebar,
+  .report-sidebar,
+  .topbar,
+  nav,
+  header .actions,
+  button{
+    display:none!important;
+  }
+}
+
+
+/* ==========================================================
+   TARGETED REPORT PRINT FIXES
+   ========================================================== */
+#egoPrintRoot .ego-target-page,
+#egoPrintRoot .ego-target-page *{
+  -webkit-print-color-adjust:exact!important;
+  print-color-adjust:exact!important;
+}
+#egoPrintRoot .ego-target-page .ego-output-content{
+  display:block!important;
+  overflow:hidden!important;
+  direction:rtl!important;
+}
+#egoPrintRoot .ego-target-block{
+  width:100%!important;max-width:100%!important;margin:0 0 3mm!important;
+  break-inside:avoid!important;page-break-inside:avoid!important;
+}
+#egoPrintRoot .ego-target-table-wrap,
+#egoPrintRoot .ego-target-table-wrap table{
+  width:100%!important;max-width:100%!important;margin:0!important;table-layout:fixed!important;
+}
+#egoPrintRoot .ego-target-table-wrap thead{display:table-header-group!important}
+#egoPrintRoot .ego-target-table-wrap tfoot{display:table-row-group!important}
+#egoPrintRoot .ego-target-table-wrap tr{break-inside:avoid!important;page-break-inside:avoid!important}
+#egoPrintRoot .ego-target-table-wrap th{
+  background:#123c7a!important;color:#fff!important;font-size:7.1pt!important;font-weight:900!important;
+  padding:1.8mm .8mm!important;white-space:normal!important;overflow-wrap:anywhere!important
+}
+#egoPrintRoot .ego-target-table-wrap td{
+  color:#19324c!important;background:#fff!important;font-size:6.8pt!important;
+  padding:1.55mm .8mm!important;white-space:normal!important;overflow-wrap:anywhere!important
+}
+#egoPrintRoot .ego-target-table-wrap tbody tr:nth-child(even) td{background:#f6f8fb!important}
+#egoPrintRoot .ego-target-table-wrap tfoot td{background:#e2edf8!important;color:#123c7a!important;font-weight:900!important}
+
+/* Equipment: one chart, one summary, same page. */
+#egoPrintRoot .ego-equipment-first .report-layout{
+  display:grid!important;grid-template-columns:1fr!important;gap:2.5mm!important
+}
+#egoPrintRoot .ego-equipment-first .report-chart{max-height:65mm!important;overflow:hidden!important}
+#egoPrintRoot .ego-equipment-first .report-chart canvas,
+#egoPrintRoot .ego-equipment-first .report-chart img,
+#egoPrintRoot .ego-equipment-first .report-chart svg{max-height:60mm!important;width:100%!important;object-fit:contain!important}
+#egoPrintRoot .ego-equipment-first .report-summary{width:100%!important}
+#egoPrintRoot .ego-equipment-first table{font-size:6.5pt!important}
+
+/* Tire ID: table only */
+#egoPrintRoot .ego-tireid-only-page .ego-output-content{padding-top:0!important}
+#egoPrintRoot .ego-tireid-table-only{margin-top:0!important}
+
+/* Lifecycle */
+#egoPrintRoot .ego-lifecycle-target .tlc-physical-gap,
+#egoPrintRoot .ego-lifecycle-target .compare-toolbar{display:none!important}
+#egoPrintRoot .ego-lifecycle-section .compare-table-wrap{height:auto!important;max-height:none!important;overflow:visible!important}
+#egoPrintRoot .ego-lifecycle-section table{width:100%!important;table-layout:fixed!important}
+#egoPrintRoot .ego-lifecycle-section th{font-size:6.4pt!important}
+#egoPrintRoot .ego-lifecycle-section td{font-size:6.1pt!important}
+
+/* Status */
+#egoPrintRoot .ego-status-top .tire-status-head,
+#egoPrintRoot .ego-status-top .tire-status-kpis,
+#egoPrintRoot .ego-status-top .tire-status-operation-grid{
+  background:#fff!important;color:#19324c!important;box-shadow:none!important
+}
+#egoPrintRoot .ego-status-top .tire-status-chart{max-height:48mm!important;overflow:hidden!important}
+#egoPrintRoot .ego-status-table-block table{width:100%!important;table-layout:fixed!important}
+
+/* Position first page */
+#egoPrintRoot .ego-position-first{
+  display:block!important;background:#fff!important;color:#19324c!important
+}
+#egoPrintRoot .ego-position-first .tp-kpis{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:2.5mm!important}
+#egoPrintRoot .ego-position-first .tp-card{background:#fff!important;box-shadow:none!important;border:1px solid #d8e2ea!important}
+#egoPrintRoot .ego-position-first #tpChart{max-height:70mm!important;overflow:hidden!important}
+
+/* Inventory: force light and prevent repeated chart */
+#egoPrintRoot .ego-inventory-target,
+#egoPrintRoot .ego-inventory-target .inventory-chart-card,
+#egoPrintRoot .ego-inventory-target .inventory-card-title,
+#egoPrintRoot .ego-inventory-target .inventory-kpis>*{
+  background:#fff!important;color:#19324c!important;box-shadow:none!important
+}
+#egoPrintRoot .ego-inventory-first .inventory-bars{max-height:68mm!important;overflow:hidden!important}
+#egoPrintRoot .ego-inventory-table-block{background:#fff!important;color:#19324c!important}
+
+/* Records: no artificial gaps; use every available line. */
+#egoPrintRoot .ego-records-target .ego-output-content{display:block!important}
+#egoPrintRoot .ego-records-table-block{margin:0!important}
+#egoPrintRoot .ego-records-table-block .tablewrap,
+#egoPrintRoot .ego-records-table-block #recordsTable{
+  height:auto!important;max-height:none!important;overflow:visible!important;margin:0!important
+}
+#egoPrintRoot .ego-records-table-block th{font-size:5.8pt!important;padding:1.35mm .5mm!important}
+#egoPrintRoot .ego-records-table-block td{font-size:5.5pt!important;padding:1.2mm .5mm!important}
+
+
+/* ==========================================================
+   TARGETED FIXES v2
+   ========================================================== */
+
+/* Tire ID: denser rows and maximum use of portrait A4 height. */
+#egoPrintRoot .ego-tireid-only-page .ego-output-page-inner{padding-top:7mm!important;padding-bottom:10mm!important}
+#egoPrintRoot .ego-tireid-only-page .ego-output-brand-head{margin-bottom:1.5mm!important;padding-bottom:1.5mm!important}
+#egoPrintRoot .ego-tireid-only-page .ego-output-filter-strip{margin-bottom:1.5mm!important;padding:1mm 1.5mm!important}
+#egoPrintRoot .ego-tireid-only-page .section-title{margin:0 0 1.2mm!important;padding:0 0 1mm!important}
+#egoPrintRoot .ego-tireid-only-page table{width:100%!important;table-layout:fixed!important}
+#egoPrintRoot .ego-tireid-only-page th{font-size:5.8pt!important;padding:1.05mm .45mm!important;line-height:1.15!important}
+#egoPrintRoot .ego-tireid-only-page td{font-size:5.55pt!important;padding:.9mm .45mm!important;line-height:1.15!important}
+#egoPrintRoot .ego-tireid-only-page .ego-target-table-block{margin:0!important}
+
+/* Status: professional light tables, fixed geometry and readable columns. */
+#egoPrintRoot .ego-status-target .tire-status-head{
+  background:#fff!important;color:#19324c!important;border:0!important;box-shadow:none!important;padding:0 0 2mm!important
+}
+#egoPrintRoot .ego-status-target .tire-status-head h2{color:#123c7a!important}
+#egoPrintRoot .ego-status-overview .tire-status-kpis,
+#egoPrintRoot .ego-status-overview .tire-status-operation-grid{
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:2mm!important
+}
+#egoPrintRoot .ego-status-overview .tire-status-kpis>*,
+#egoPrintRoot .ego-status-overview .tire-status-operation-grid>*{
+  background:#f5f8fb!important;color:#19324c!important;border:1px solid #d8e2ea!important;box-shadow:none!important;padding:2.5mm!important
+}
+#egoPrintRoot .ego-status-table-page .ego-output-page-inner{padding-top:7mm!important;padding-bottom:10mm!important}
+#egoPrintRoot .ego-status-table-page .ego-output-filter-strip{margin-bottom:1.5mm!important}
+#egoPrintRoot .ego-status-table-page .ego-status-details-table th{font-size:6pt!important;padding:1.25mm .55mm!important}
+#egoPrintRoot .ego-status-table-page .ego-status-details-table td{font-size:5.8pt!important;padding:1.1mm .55mm!important}
+#egoPrintRoot .ego-status-table-page .ego-status-summary-table th{font-size:6.7pt!important}
+#egoPrintRoot .ego-status-table-page .ego-status-summary-table td{font-size:6.4pt!important}
+
+/* Position: guaranteed printable chart on first page. */
+#egoPrintRoot .ego-position-first{background:#fff!important}
+#egoPrintRoot .ego-position-first .tp-kpis{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:2.2mm!important;margin-bottom:3mm!important
+}
+#egoPrintRoot .ego-position-print-chart{
+  background:#fff!important;border:1px solid #d8e2ea!important;border-radius:2mm!important;padding:3mm!important
+}
+#egoPrintRoot .ego-position-print-bars{display:flex!important;flex-direction:column!important;gap:2.2mm!important}
+#egoPrintRoot .ego-position-print-row{
+  display:grid!important;grid-template-columns:7mm 35mm 1fr 14mm!important;gap:2.2mm!important;align-items:center!important
+}
+#egoPrintRoot .ego-position-print-row>span{
+  width:6mm!important;height:6mm!important;border-radius:50%!important;background:#1f65ad!important;color:#fff!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;font-size:6pt!important;font-weight:900!important
+}
+#egoPrintRoot .ego-position-print-row>b{font-size:7pt!important;color:#19324c!important}
+#egoPrintRoot .ego-position-print-row>i{height:3mm!important;background:#edf2f5!important;border-radius:999px!important;overflow:hidden!important}
+#egoPrintRoot .ego-position-print-row>i>em{display:block!important;height:100%!important;background:#1f65ad!important;border-radius:999px!important}
+#egoPrintRoot .ego-position-print-row>strong{font-size:7pt!important;color:#123c7a!important;text-align:center!important}
+
+/* Records: portrait, dense, and no wasted vertical space. */
+#egoPrintRoot .ego-records-target.ego-page-portrait{width:210mm!important}
+#egoPrintRoot .ego-records-target .ego-output-page-inner{padding:6mm 6mm 9mm!important}
+#egoPrintRoot .ego-records-target .ego-output-brand-head{margin-bottom:1mm!important;padding-bottom:1mm!important}
+#egoPrintRoot .ego-records-target .ego-output-brand-head .ego-output-title strong{font-size:10pt!important}
+#egoPrintRoot .ego-records-target .ego-output-filter-strip{margin:0 0 1mm!important;padding:.8mm 1mm!important;font-size:5.4pt!important}
+#egoPrintRoot .ego-records-target .section-title{margin:0 0 .8mm!important;padding:0 0 .8mm!important}
+#egoPrintRoot .ego-records-target .ego-records-table-block{margin:0!important}
+#egoPrintRoot .ego-records-target table{width:100%!important;table-layout:fixed!important}
+#egoPrintRoot .ego-records-target th{font-size:4.35pt!important;padding:.75mm .25mm!important;line-height:1.08!important}
+#egoPrintRoot .ego-records-target td{font-size:4.15pt!important;padding:.65mm .25mm!important;line-height:1.08!important}
+#egoPrintRoot .ego-records-target .ego-output-footer{font-size:4.8pt!important}
+
+
+/* ==========================================================
+   TARGETED-ONLY PATCH — no global report styles changed
+   ========================================================== */
+/* Tire ID: compact portrait rows; EXACT same rules in measuring scratch. */
+#egoPrintRoot .ego-tireid-only-page .ego-output-page-inner,
+.ego-pagination-measure .ego-tireid-only-page .ego-output-page-inner{padding:24px 28px 34px!important}
+#egoPrintRoot .ego-tireid-only-page .ego-output-brand-head,
+.ego-pagination-measure .ego-tireid-only-page .ego-output-brand-head{margin-bottom:4px!important;padding-bottom:4px!important}
+#egoPrintRoot .ego-tireid-only-page .ego-output-filter-strip,
+.ego-pagination-measure .ego-tireid-only-page .ego-output-filter-strip{margin:0 0 4px!important;padding:3px 5px!important}
+#egoPrintRoot .ego-tireid-only-page .section-title,
+.ego-pagination-measure .ego-tireid-only-page .section-title{margin:0 0 3px!important;padding:0 0 3px!important}
+#egoPrintRoot .ego-tireid-only-page .ego-target-table-block,
+.ego-pagination-measure .ego-tireid-only-page .ego-target-table-block{margin:0!important}
+#egoPrintRoot .ego-tireid-only-page th,
+.ego-pagination-measure .ego-tireid-only-page th{font-size:8px!important;padding:3px 2px!important;line-height:1.06!important}
+#egoPrintRoot .ego-tireid-only-page td,
+.ego-pagination-measure .ego-tireid-only-page td{font-size:7.5px!important;padding:2.5px 2px!important;line-height:1.06!important}
+
+/* Status overview: chart and operation table visible on first page. */
+#egoPrintRoot .ego-status-overview-page .ego-output-page-inner{padding:26px 30px 36px!important}
+#egoPrintRoot .ego-status-overview-page .ego-output-brand-head{margin-bottom:5px!important;padding-bottom:5px!important}
+#egoPrintRoot .ego-status-overview-page .ego-output-filter-strip{margin:0 0 5px!important;padding:4px 6px!important}
+#egoPrintRoot .ego-status-overview .tire-status-head{background:#fff!important;color:#19324c!important;border:0!important;box-shadow:none!important;padding:0 0 5px!important;margin:0 0 6px!important}
+#egoPrintRoot .ego-status-overview .tire-status-head h2{color:#123c7a!important;margin:0 0 2px!important;font-size:16px!important}
+#egoPrintRoot .ego-status-overview .tire-status-head p{margin:0!important;font-size:8px!important}
+#egoPrintRoot .ego-status-overview .tire-status-kpis,
+#egoPrintRoot .ego-status-overview .tire-status-operation-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;margin:0 0 6px!important}
+#egoPrintRoot .ego-status-overview .tire-status-kpis>*,
+#egoPrintRoot .ego-status-overview .tire-status-operation-grid>*{background:#f5f8fb!important;color:#19324c!important;border:1px solid #d8e2ea!important;box-shadow:none!important;padding:5px!important;min-height:0!important}
+#egoPrintRoot .ego-status-print-chart{margin:4px 0 7px!important}
+#egoPrintRoot .ego-status-print-bars{border:1px solid #d8e2ea!important;border-radius:7px!important;padding:6px!important;background:#fff!important}
+#egoPrintRoot .ego-status-print-row{display:grid!important;grid-template-columns:20px 70px 1fr 28px!important;gap:6px!important;align-items:center!important;min-height:22px!important}
+#egoPrintRoot .ego-status-print-row>span{width:18px!important;height:18px!important;border-radius:50%!important;background:#1f65ad!important;color:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:7px!important}
+#egoPrintRoot .ego-status-print-row>b{font-size:8px!important}
+#egoPrintRoot .ego-status-print-row>i{height:7px!important;background:#edf2f5!important;border-radius:10px!important;overflow:hidden!important}
+#egoPrintRoot .ego-status-print-row>i>em{display:block!important;height:100%!important;background:#1f65ad!important}
+#egoPrintRoot .ego-status-print-row>strong{font-size:8px!important;color:#123c7a!important}
+#egoPrintRoot .ego-status-summary-table th{font-size:8px!important;padding:4px 3px!important}
+#egoPrintRoot .ego-status-summary-table td{font-size:7.5px!important;padding:4px 3px!important}
+
+/* Status details: same sizes in measurement + output; dense 9 columns. */
+#egoPrintRoot .ego-status-details-page .ego-output-page-inner,
+.ego-pagination-measure .ego-status-details-page .ego-output-page-inner{padding:22px 25px 32px!important}
+#egoPrintRoot .ego-status-details-page .ego-output-brand-head,
+.ego-pagination-measure .ego-status-details-page .ego-output-brand-head{margin-bottom:4px!important;padding-bottom:4px!important}
+#egoPrintRoot .ego-status-details-page .ego-output-filter-strip,
+.ego-pagination-measure .ego-status-details-page .ego-output-filter-strip{margin:0 0 4px!important;padding:3px 5px!important;font-size:7px!important}
+#egoPrintRoot .ego-status-details-page .ego-target-table-block,
+.ego-pagination-measure .ego-status-details-page .ego-target-table-block{margin:0!important}
+#egoPrintRoot .ego-status-details-page th,
+.ego-pagination-measure .ego-status-details-page th{font-size:7.4px!important;padding:3px 2px!important;line-height:1.06!important}
+#egoPrintRoot .ego-status-details-page td,
+.ego-pagination-measure .ego-status-details-page td{font-size:7px!important;padding:2.7px 2px!important;line-height:1.06!important}
+
+/* Position: print-only chart guaranteed on first page. */
+#egoPrintRoot .ego-position-first{background:#fff!important}
+#egoPrintRoot .ego-position-first .tp-kpis{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;margin-bottom:8px!important}
+#egoPrintRoot .ego-position-print-chart{border:1px solid #d8e2ea!important;border-radius:7px!important;background:#fff!important;padding:8px!important}
+#egoPrintRoot .ego-position-print-bars{display:flex!important;flex-direction:column!important;gap:5px!important}
+#egoPrintRoot .ego-position-print-row{display:grid!important;grid-template-columns:20px 100px 1fr 34px!important;gap:7px!important;align-items:center!important;min-height:24px!important}
+#egoPrintRoot .ego-position-print-row>span{width:18px!important;height:18px!important;border-radius:50%!important;background:#1f65ad!important;color:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:7px!important}
+#egoPrintRoot .ego-position-print-row>i{height:8px!important;background:#edf2f5!important;border-radius:10px!important;overflow:hidden!important}
+#egoPrintRoot .ego-position-print-row>i>em{display:block!important;height:100%!important;background:#1f65ad!important}
+
+/* Records: portrait and dense; measurement parity prevents large blank bottoms. */
+#egoPrintRoot .ego-records-target .ego-output-page-inner,
+.ego-pagination-measure .ego-records-target .ego-output-page-inner{padding:20px 20px 30px!important}
+#egoPrintRoot .ego-records-target .ego-output-brand-head,
+.ego-pagination-measure .ego-records-target .ego-output-brand-head{margin-bottom:3px!important;padding-bottom:3px!important}
+#egoPrintRoot .ego-records-target .ego-output-filter-strip,
+.ego-pagination-measure .ego-records-target .ego-output-filter-strip{margin:0 0 3px!important;padding:2px 4px!important;font-size:6.5px!important}
+#egoPrintRoot .ego-records-target .section-title,
+.ego-pagination-measure .ego-records-target .section-title{margin:0 0 3px!important;padding:0 0 3px!important}
+#egoPrintRoot .ego-records-target .ego-records-table-block,
+.ego-pagination-measure .ego-records-target .ego-records-table-block{margin:0!important}
+#egoPrintRoot .ego-records-target th,
+.ego-pagination-measure .ego-records-target th{font-size:5.5px!important;padding:2px .8px!important;line-height:1.02!important}
+#egoPrintRoot .ego-records-target td,
+.ego-pagination-measure .ego-records-target td{font-size:5.15px!important;padding:1.7px .8px!important;line-height:1.02!important}
